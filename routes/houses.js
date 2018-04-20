@@ -15,6 +15,20 @@ router.get("/", function(req, res) {
   })
 })
 
+// Show
+router.get("/:id", function(req, res) {
+  House.findById(req.params.id).populate("hosts").exec(function(err, foundHouse) {
+    if (err || !foundHouse) {
+      console.log(err);
+      return res.redirect('/houses');
+    }
+    console.log(foundHouse)
+    res.render("houses/show", {
+      house: foundHouse
+    });
+  });
+});
+
 // New
 router.get("/new", function(req, res) {
   res.render("houses/new");
@@ -23,9 +37,7 @@ router.get("/new", function(req, res) {
 // Create
 router.post("/", function(req, res) {
   var house = {
-    name: req.body.name,
-    hosts: [],
-    alarms: []
+    name: req.body.name
   }
   House.create(house, function(err, newlyCreated) {
     if (err) {

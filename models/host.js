@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 var hostSchema = new mongoose.Schema({
   hostname: String,
+  name: String,
   house: {
     id: {
       type: mongoose.Schema.Types.ObjectId,

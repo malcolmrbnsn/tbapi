@@ -1,0 +1,7 @@
+<h1><%= house.name %></h1>
+<a href="/houses/<%= house._id %>/hosts/new">New Host</a>
+<h2>Hosts: </h2>
+ <% house.hosts.forEach(function(host) {%>
+  <li>Name: <%= host.name %></li>
+  <li>Hostname: <%= host.hostname %></li>
+ <% }) %>

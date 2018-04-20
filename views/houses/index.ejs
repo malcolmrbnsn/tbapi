@@ -1,6 +1,7 @@
-<h1>Houses page</h1>
+<h1>TBAPi</h1>
 <a href="/houses/new">New House</a>
 
 <% houses.forEach(function(house) {%>
   <p><%= house.name %></p>
+  <a href="/houses/<%= house._id %>">More Info</a>
  <% }) %>
