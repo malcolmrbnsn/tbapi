@@ -5,22 +5,17 @@ var alarmSchema = new mongoose.Schema({
   file: String,
   minute: Number,
   hour: Number,
-  dow: {
-    mon: Boolean,
-    tue: Boolean,
-    wed: Boolean,
-    thu: Boolean,
-    fri: Boolean,
-    sat: Boolean,
-    sun: Boolean
-  },
+  dow: [],
   house: {
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "House"
-    },
-    name: String
+    }
   },
+  hosts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Host"
+  }],
   created: {
     type: Date,
     default: Date.now

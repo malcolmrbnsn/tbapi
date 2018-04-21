@@ -16,8 +16,15 @@ router.get("/", function(req, res) {
 })
 
 // Show
+var populateQuery = [{
+  path: 'hosts'
+}, {
+  path: 'alarms'
+}];
 router.get("/:id", function(req, res) {
-  House.findById(req.params.id).populate("hosts").exec(function(err, foundHouse) {
+  House.findById(req.params.id).
+  populate(populateQuery).
+  exec(function(err, foundHouse) {
     if (err || !foundHouse) {
       console.log(err);
       return res.redirect('/houses');
@@ -30,7 +37,7 @@ router.get("/:id", function(req, res) {
 });
 
 // New
-router.get("/new", function(req, res) {
+router.get("/houses/new", function(req, res) {
   res.render("houses/new");
 })
 

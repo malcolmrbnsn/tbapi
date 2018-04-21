@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+// TODO: add mongoose-ip-address plugin
 
 var hostSchema = new mongoose.Schema({
   hostname: String,

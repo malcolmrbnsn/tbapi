@@ -1,7 +1,78 @@
+<style>
+  table {
+    font-family: arial, sans-serif;
+    border-collapse: collapse;
+    width: 100%;
+  }
+
+  td,
+  th {
+    border: 1px solid #131923;
+    text-align: left;
+    padding: 8px;
+  }
+
+  tr:nth-child(even) {
+    background-color: #dddddd;
+  }
+</style>
+
 <h1><%= house.name %></h1>
 <a href="/houses/<%= house._id %>/hosts/new">New Host</a>
+<a href="/houses/<%= house._id %>/alarms/new">New Alarm</a>
+
 <h2>Hosts: </h2>
- <% house.hosts.forEach(function(host) {%>
-  <li>Name: <%= host.name %></li>
-  <li>Hostname: <%= host.hostname %></li>
- <% }) %>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Hostname</th>
+  </tr>
+  <% house.hosts.forEach(function(host) {%>
+    <tr>
+      <td>
+        <%= host.name %>
+      </td>
+      <td>
+        <%= host.hostname %>
+      </td>
+    </tr>
+    <% }) %>
+</table>
+
+<h2>Alarms: </h2>
+<table>
+  <tr>
+    <th>Name</th>
+    <th>Time</th>
+    <th>Days</th>
+    <th>Hosts</th>
+    <th>Active</th>
+    <th>Edit</th>
+    <th>Delete</th>
+  </tr>
+  <% house.alarms.forEach(function(alarm) {%>
+    <tr>
+      <td>
+        <%= alarm.name %>
+      </td>
+      <td>
+        <%= alarm.hour %>:<%= alarm.minute %>
+      </td>
+      <td>
+      <%= alarm.dow %>
+      </td>
+      <td>
+        <% house.hosts.forEach(function(host, i, arr){ %>
+          <%= host.name %><%= ( arr.length > 0 && i < arr.length-1 ? ( i == arr.length-2 ? ', ' : ', ' ) : '' ) %>
+              <% }) %>
+      </td>
+      <td>
+        <% if (alarm.active === true) { %>
+          Yes
+          <% } else { %>
+            No
+            <% }%>
+      </td>
+    </tr>
+    <% }) %>
+</table>

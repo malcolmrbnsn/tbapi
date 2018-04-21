@@ -15,6 +15,7 @@ const House = require('./models/house'),
 const indexRoutes = require("./routes/index")
 const houseRoutes = require("./routes/houses")
 const hostRoutes = require("./routes/hosts")
+const alarmRoutes = require("./routes/alarms")
 
 // Mongoose
 mongoose.Promise = global.Promise;
@@ -37,5 +38,6 @@ app.use(bodyParser.urlencoded({
 app.use(indexRoutes);
 app.use("/houses", houseRoutes);
 app.use("/houses/:id/hosts", hostRoutes);
+app.use("/houses/:id/alarms", alarmRoutes);
 // Server //
 app.listen(3000, () => console.log("Server is running at port 3000"));

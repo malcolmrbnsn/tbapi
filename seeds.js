@@ -1,6 +1,7 @@
 var mongoose = require("mongoose");
 var Host = require("./models/host");
 var House = require("./models/house");
+var Alarm = require("./models/alarm");
 
 var data = [{
     name: "Macarthur Waddy"
@@ -32,20 +33,23 @@ function seedDB() {
         console.log(err);
       }
       console.log("Hosts dropped");
-      //add a few campgrounds
-      data.forEach(function(seed) {
-        House.create(seed, function(err, campground) {
-          if (err) {
-            console.log(err)
-          } else {
-            console.log("House added");
-            //create a comment
-          }
+      Alarm.remove({}, function(err) {
+        if (err) {
+          console.log(err);
+        }
+        console.log("Alarms dropped");
+        data.forEach(function(seed) {
+          House.create(seed, function(err, house) {
+            if (err) {
+              console.log(err)
+            } else {
+              console.log("House added");
+            }
+          });
         });
       });
     });
   });
-  //add a few comments
 }
 
 module.exports = seedDB;

@@ -1,0 +1,19 @@
+<h1>New Alarm in <%= house.name %></h1>
+<form action="/houses/<%= house._id %>/alarms" method="POST">
+  <input type="text" name="alarm[name]" placeholder="name">
+  <input type="number" name="alarm[minute]" placeholder="minute">
+  <input type="number" name="alarm[hour]" placeholder="hour">
+  <p>Days of the week:</p>
+  <input type="checkbox" name="alarm[dow]" value="mon">Monday
+  <input type="checkbox" name="alarm[dow]" value="tue">Tuesday
+  <input type="checkbox" name="alarm[dow]" value="wed">Wednesday
+  <input type="checkbox" name="alarm[dow]" value="thu">Thursday
+  <input type="checkbox" name="alarm[dow]" value="fri">Friday
+  <input type="checkbox" name="alarm[dow]" value="sat">Saturday
+  <input type="checkbox" name="alarm[dow]" value="sun">Sunday
+  <p>Hosts:</p>
+  <% house.hosts.forEach(function(host) {%>
+    <input type="checkbox" name="alarm[hosts]" value="<%= host.id %>"><%= host.name %>
+   <% }) %>
+   <button>Submit</button>
+</form>
