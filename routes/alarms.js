@@ -52,4 +52,49 @@ router.post("/", function(req, res) {
   })
 })
 
+//Edit
+router.get("/:alarm_id/edit", function(req, res) {
+  House.findById(req.params.id).
+  populate("hosts").
+  exec(function(err, house) {
+    if (err) {
+      console.log(err)
+    } else {
+      Alarm.findById(req.params.alarm_id, function(err, alarm) {
+        if (err) {
+          console.log(err)
+        } else {
+          res.render("alarms/edit", {
+            house: house,
+            alarm: alarm
+          })
+        }
+      })
+    }
+  })
+})
+
+// Update
+router.put("/:alarm_id", function(req, res) {
+  Alarm.findByIdAndUpdate(req.params.alarm_id, req.body.alarm, function(err, alarm) {
+    if (err) {
+      console.log(err)
+    } else {
+      res.redirect("/houses/" + req.params.id)
+    }
+  })
+})
+
+// Delete
+router.delete("/:alarm_id", function(req, res) {
+  Alarm.findByIdAndRemove(req.params.alarm_id, function(err) {
+    if (err) {
+      console.log(err);
+      res.redirect("/houses")
+    } else {
+      res.redirect("/houses/" + req.params.id)
+    }
+  })
+})
+
 module.exports = router;

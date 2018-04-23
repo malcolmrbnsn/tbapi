@@ -1,15 +1,8 @@
-<style media="screen">
-  .time {
-    width: 60px;
-    height: 20px;
-  }
-</style>
-<h1>New Alarm in <%= house.name %></h1>
-<form action="/houses/<%= house._id %>/alarms" method="POST">
-  <input type="text" name="alarm[name]" placeholder="name" required> <br>
-  <p>Please note: time is in 24 hour format</p>
-  <input type="number" class="time" name="alarm[minute]" placeholder="minute" min="0" max="59" required>
-  <input type="number" class="time" name="alarm[hour]" placeholder="hour" min="0" max="24" required>
+<h1>Edit alarm</h1>
+<form action="/houses/<%= house._id %>/alarms/<%= alarm._id %>?_method=PUT" method="POST">
+  <input type="text" name="alarm[name]" value="<%= alarm.name %>">
+  <input type="number" name="alarm[minute]" value="<%= alarm.minute %>">
+  <input type="number" name="alarm[hour]" value="<%= alarm.hour %>">
   <p>Days of the week:</p>
   <input type="checkbox" name="alarm[dow]" value="mon">Monday
   <input type="checkbox" name="alarm[dow]" value="tue">Tuesday
@@ -24,3 +17,9 @@
    <% }) %>
    <button>Submit</button>
 </form>
+
+House:
+<%= house %>
+
+Alarm:
+<%= alarm %>

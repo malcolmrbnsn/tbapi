@@ -8,8 +8,7 @@ var hostSchema = new mongoose.Schema({
     id: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "House"
-    },
-    name: String
+    }
   },
   alarms: [{
     type: mongoose.Schema.Types.ObjectId,

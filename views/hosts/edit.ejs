@@ -1,0 +1,10 @@
+<h1>Edit Alarm</h1>
+<form action="/houses/<%= house._id %>/hosts/<%= host._id %>?_method=PUT" method="POST">
+  <input type="text" name="host[name]" value="<%= host.name %>">
+  <input type="text" name="host[hostname]" value="<%= host.hostname %>">
+  <button>Submit</button>
+</form>
+
+<%= house %>
+<hr>
+<%= host %>
