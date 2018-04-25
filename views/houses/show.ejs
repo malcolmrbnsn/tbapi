@@ -1,84 +1,71 @@
-<style>
-  table {
-    font-family: arial, sans-serif;
-    border-collapse: collapse;
-    width: 100%;
-  }
-
-  td,
-  th {
-    border: 1px solid #131923;
-    text-align: left;
-    padding: 3px;
-  }
-
-  tr:nth-child(even) {
-    background-color: #dddddd;
-  }
-</style>
-
-<h1><%= house.name %></h1>
-<a href="/houses/<%= house._id %>/edit">Edit House</a>
-<form action="/houses/<%= house._id %>?_method=DELETE" method="post">
-  <button>Delete House</button>
+<% include ../partials/header %>
+<div class="ui container space">
+<h1 class="ui left aligned header"><%= house.name %></h1>
+<a class="ui yellow button" href="/houses/<%= house._id %>/edit">Edit House</a>
+<form class="delete" action="/houses/<%= house._id %>?_method=DELETE" method="post">
+  <button class="ui red button">Delete House</button>
 </form>
-<br>
-<a href="/houses/<%= house._id %>/hosts/new">New Host</a>
-<a href="/houses/<%= house._id %>/alarms/new">New Alarm</a>
+<a class="ui right floated green button" href="/houses/<%= house._id %>/hosts/new">New Host</a>
+<a class="ui right floated green button" href="/houses/<%= house._id %>/alarms/new">New Alarm</a>
 
-<h2>Hosts: </h2>
-<table>
-  <tr>
-    <th>Name</th>
-    <th>Hostname</th>
-    <th>Edit</th>
-    <th>Delete</th>
-  </tr>
-  <% house.hosts.forEach(function(host) {%>
+<table class="ui padded celled table">
+  <thead>
     <tr>
-      <td>
-        <%= host.name %>
-      </td>
-      <td>
-        <%= host.hostname %>
-      </td>
-      <td><a href="/houses/<%= house._id %>/hosts/<%= host._id %>/edit">Edit</a></td>
-      <td>
-        <form action="/houses/<%= house._id %>/hosts/<%= host._id %>?_method=DELETE" method="post">
-        <button>Delete</button>
-      </form>
+      <th>Name</th>
+      <th>Hostname</th>
+      <th>Options</th>
     </tr>
-    <% }) %>
+  </thead>
+  <tbody>
+    <% house.hosts.forEach(function(host) {%>
+      <tr>
+        <td>
+          <%= host.name %>
+        </td>
+        <td>
+          <%= host.hostname %>
+        </td>
+        <td><a class="ui yellow button" href="/houses/<%= house._id %>/hosts/<%= host._id %>/edit">Edit</a>
+          <form class="delete" action="/houses/<%= house._id %>/hosts/<%= host._id %>?_method=DELETE" method="post">
+          <button class="ui red button">Delete</button>
+        </form>
+      </tr>
+      <% }) %>
+  </tbody>
 </table>
 
+
 <h2>Alarms: </h2>
-<table>
-  <tr>
+<table class="ui padded celled table">
+  <thead>
     <th>Name</th>
     <th>Time</th>
     <th>Days</th>
     <th>Hosts</th>
     <th>Active</th>
-    <th>Edit</th>
-    <th>Delete</th>
-  </tr>
+    <th>Options</th>
+  </thead>
+  <tbody>
   <% house.alarms.forEach(function(alarm) {%>
     <tr>
       <td>
         <%= alarm.name %>
       </td>
       <td>
-        <%= alarm.hour %>:
-          <%= alarm.minute %>
+        <%= alarm.hour %>:<%= alarm.minute %>
       </td>
       <td>
-        <%= alarm.dow %>
+      <% days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %>
+      <% nDays = [0,1,2,3,4,5,6,] %>
+        <% alarm.dow.forEach(function(i) {%>
+          <%= days[i] %>
+            <% }) %>
       </td>
       <td>
-        <% house.hosts.forEach(function(host, i, arr){ %>
-          <%= host.name %>
-            <%= ( arr.length > 0 && i < arr.length-1 ? ( i == arr.length-2 ? ', ' : ', ' ) : '' ) %>
+        <% alarm.hosts.forEach(function(host, i, arr){ %>
+          <%= host.name %><%= ( arr.length > 0 && i < arr.length-1 ? ( i == arr.length-2 ? ', ' : ', ' ) : '' ) %>
               <% }) %>
+              <%= alarm.hosts %>
       </td>
       <td>
         <% if (alarm.active === true) { %>
@@ -87,12 +74,14 @@
             No
             <% }%>
       </td>
-      <td><a href="/houses/<%= house._id %>/alarms/<%= alarm._id %>/edit">Edit</a></td>
-      <td>
-        <form action="/houses/<%= house._id %>/alarms/<%= alarm._id %>?_method=DELETE" method="post">
-          <button>Delete</button>
+      <td><a class="ui yellow button" href="/houses/<%= house._id %>/alarms/<%= alarm._id %>/edit">Edit</a>
+        <form class="delete" action="/houses/<%= house._id %>/alarms/<%= alarm._id %>?_method=DELETE" method="post">
+          <button class="ui red button">Delete</button>
         </form>
       </td>
     </tr>
     <% }) %>
+    </tbody>
 </table>
+</div>
+<% include ../partials/footer %>

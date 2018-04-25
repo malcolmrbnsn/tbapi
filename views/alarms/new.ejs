@@ -1,26 +1,46 @@
-<style media="screen">
-  .time {
-    width: 60px;
-    height: 20px;
-  }
-</style>
-<h1>New Alarm in <%= house.name %></h1>
-<form action="/houses/<%= house._id %>/alarms" method="POST">
-  <input type="text" name="alarm[name]" placeholder="name" required> <br>
-  <p>Please note: time is in 24 hour format</p>
-  <input type="number" class="time" name="alarm[minute]" placeholder="minute" min="0" max="59" required>
-  <input type="number" class="time" name="alarm[hour]" placeholder="hour" min="0" max="24" required>
-  <p>Days of the week:</p>
-  <input type="checkbox" name="alarm[dow]" value="mon">Monday
-  <input type="checkbox" name="alarm[dow]" value="tue">Tuesday
-  <input type="checkbox" name="alarm[dow]" value="wed">Wednesday
-  <input type="checkbox" name="alarm[dow]" value="thu">Thursday
-  <input type="checkbox" name="alarm[dow]" value="fri">Friday
-  <input type="checkbox" name="alarm[dow]" value="sat">Saturday
-  <input type="checkbox" name="alarm[dow]" value="sun">Sunday
-  <p>Hosts:</p>
-  <% house.hosts.forEach(function(host) {%>
-    <input type="checkbox" name="alarm[hosts]" value="<%= host.id %>"><%= host.name %>
-   <% }) %>
-   <button>Submit</button>
-</form>
+<% include ../partials/header %>
+  <div class="ui container space">
+    <h1 class="ui center aligned header">New Alarm in <%= house.name %></h1>
+    <form class="ui form" action="/houses/<%= house._id %>/alarms" method="POST">
+      <div class="ui inline fields">
+        <div class="eight wide field">
+          <label>Name</label>
+          <input type="text" name="alarm[name]" placeholder="name" required>
+        </div>
+        <div class="four wide field">
+          <label>Minute</label>
+          <input type="number" name="alarm[minute]" placeholder="minute" min="0" max="59" required>
+        </div>
+        <div class="four wide field">
+          <label>Hour</label>
+          <input type="number" name="alarm[hour]" placeholder="hour" min="0" max="24" required>
+        </div>
+      </div>
+        <p>Days of the week:</p>
+        <% days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %>
+          <% nDays = [0,1,2,3,4,5,6,] %>
+            <% nDays.forEach(function(i) {%>
+              <div class="inline field">
+                <div class="ui toggle checkbox">
+                  <input type="checkbox" name="dow[i]" value="<%= i %>">
+                  <label><%= days[i] %></label>
+                </div>
+              </div>
+              <% }) %>
+        <p>Hosts:</p>
+        <% house.hosts.forEach(function(host) {%>
+          <div class="inline field">
+            <div class="ui toggle checkbox">
+          <input type="checkbox" name="alarm[hosts]" value="<%= host.id %>">
+          <label><%= host.name %></label>
+          </div>
+        </div>
+        <% }) %>
+      <button class="ui submit button" type="submit">Submit</button>
+    </form>
+  </div>
+  <script>
+    $('.ui.checkbox')
+      .checkbox();
+  </script>
+  <% include ../partials/footer %>

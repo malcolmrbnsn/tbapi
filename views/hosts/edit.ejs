@@ -1,10 +1,18 @@
-<h1>Edit Alarm</h1>
-<form action="/houses/<%= house._id %>/hosts/<%= host._id %>?_method=PUT" method="POST">
-  <input type="text" name="host[name]" value="<%= host.name %>">
-  <input type="text" name="host[hostname]" value="<%= host.hostname %>">
-  <button>Submit</button>
-</form>
-
-<%= house %>
-<hr>
-<%= host %>
+<% include ../partials/header %>
+<div class="ui container space">
+  <h1 class="ui center aligned header">Edit <%= host.name %></h1>
+  <form class="ui form" action="/houses/<%= house._id %>/hosts/<%= host._id %>?_method=PUT" method="POST">
+    <div class="ui inline fields">
+      <div class="eight wide field">
+        <label>Name</label>
+        <input type="text" name="host[name]" value="<%= host.name %>" required>
+      </div>
+      <div class="eight wide field">
+        <label>Hostname</label>
+        <input type="text" name="host[hostname]" value="<%= host.hostname %>" required>
+      </div>
+    </div>
+    <button class="ui green button" tabindex="0">Submit</button>
+  </form>
+</div>
+<% include ../partials/footer %>

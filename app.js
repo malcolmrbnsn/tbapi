@@ -1,8 +1,12 @@
 // SETUP
 const express = require('express'),
   bodyParser = require('body-parser'),
+  formidible = require('formidable'),
+  path = require('path'),
+  fs = require('fs-extra'),
   mongoose = require('mongoose'),
   methodOverride = require("method-override"),
+  Rollbar = require("rollbar"),
   app = express()
 
 // Models and seeds
@@ -33,6 +37,10 @@ app.use(methodOverride("_method"));
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+
+// Rollbar
+var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
+// rollbar.log("Hello world!");
 
 // Imported routes
 app.use(indexRoutes);

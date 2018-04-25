@@ -1,5 +1,7 @@
+<% include ../partials/header %>
 <h1>Edit <%= house.name %></h1>
 <form action="/houses/<%= house._id %>?_method=PUT" method="POST">
   <input type="text" name="house[name]" placeholder="<%= house.name %>">
   <button>Submit</button>
 </form>
+<% include ../partials/footer %>

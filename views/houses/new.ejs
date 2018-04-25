@@ -1,5 +1,16 @@
-<h1>New House</h1>
-<form action="/houses" method="POST">
-  <input type="text" name="name" placeholder="name">
-  <button>Submit</button>
-</form>
+<% include ../partials/header %>
+  <div class="ui container space">
+    <h1 class="ui center aligned header">New House</h1>
+    <form class="ui form" action="/houses" method="POST" enctype="multipart/form-data">
+      <div class="field">
+        <label>House Name</label>
+        <input type="text" placeholder="Name" name="name">
+      </div>
+      <div class="field">
+      <input type="file" (change)="fileEvent($event)" class="inputfile" id="embedpollfileinput" name="fileUploaded" />
+      <label for="embedpollfileinput" class="ui green floated button"><i class="ui upload icon"></i>Upload image</label>
+      </div>
+      <button>Submit</button>
+    </form>
+  </div>
+  <% include ../partials/footer %>

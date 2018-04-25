@@ -38,15 +38,15 @@ function seedDB() {
           console.log(err);
         }
         console.log("Alarms dropped");
-        data.forEach(function(seed) {
-          House.create(seed, function(err, house) {
-            if (err) {
-              console.log(err)
-            } else {
-              console.log("House added");
-            }
-          });
-        });
+        // data.forEach(function(seed) {
+        //   House.create(seed, function(err, house) {
+        //     if (err) {
+        //       console.log(err)
+        //     } else {
+        //       console.log("House added");
+        //     }
+        //   });
+        // });
       });
     });
   });

@@ -1,7 +1,42 @@
-<h1>TBAPi</h1>
-<a href="/houses/new">New House</a>
+<% include ../partials/header %>
+  <div class="ui grid container space">
+    <div class="ui center aligned icon header">
+      <h2>
+  <i class="circular home icon"></i>
+  Houses
+</h2>
+    </div>
+    <div class="row">
+      <div class="column">
+        <div class="ui message">
+          <div class="text container">
+            <h1 class="ui header">TBAPi</h1>
+            <p>Welcome to the houses page.</p>
+            <a href="/houses/new" class="ui blue button">New House<i class="angle right icon"></i></a>
+          </div>
+        </div>
+      </div>
+    </div>
 
-<% houses.forEach(function(house) {%>
-  <p><%= house.name %></p>
-  <a href="/houses/<%= house._id %>">More Info</a>
- <% }) %>
+    <div class="ui four column doubling stackable grid container">
+      <% houses.forEach(function(house) {%>
+        <div class="column">
+          <div class="card">
+            <div class="ui fluid image">
+              <img src="/img/<%= house.img %>">
+            </div>
+            <div class="content">
+              <div class="header">
+                <%= house.name %>
+              </div>
+            </div>
+            <div class="ui bottom attached button">
+              <a href="/houses/<%= house._id %>" class="btn btn-primary">More info...</a>
+            </div>
+          </div>
+        </div>
+        <% }) %>
+    </div>
+  </div>
+
+  <% include ../partials/footer %>
