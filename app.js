@@ -2,6 +2,8 @@
 const express = require('express'),
   bodyParser = require('body-parser'),
   formidible = require('formidable'),
+  passport = require('passport'),
+  LocalStrategy = require('passport-local'),
   path = require('path'),
   fs = require('fs-extra'),
   mongoose = require('mongoose'),
@@ -12,8 +14,9 @@ const express = require('express'),
 // Models and seeds
 const House = require('./models/house'),
   Host = require('./models/host'),
-  seedDB = require('./seeds'),
+  User = require('./models/user'),
   Alarm = require('./models/alarm');
+seedDB = require('./seeds')
 
 // Routes
 const indexRoutes = require("./routes/index")
@@ -28,7 +31,24 @@ const databaseUri = 'mongodb://localhost/tbapi';
 mongoose.connect(databaseUri)
   .then(() => console.log(`Database connected`))
   .catch(err => console.log(`Database connection error: ${err.message}`));
-seedDB(); // Seed the database
+// seedDB(); // Seed the database
+
+// Passport
+app.use(require("express-session")({
+  secret: "ds;jkfhsda nbsdakf hsdjgseh gv hg gjkbv rlk hvout fl nbpygfsd jk fgpiusg",
+  resave: false,
+  saveUninitialized: false
+}));
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.user;
+  next();
+});
 
 // app config
 app.use(express.static(__dirname + "/public"));

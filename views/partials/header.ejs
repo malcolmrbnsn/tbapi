@@ -7,13 +7,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>TBAPi</title>
 
   <!-- Semantic UI -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" integrity="sha256-oDCP2dNW17Y1QhBwQ+u2kLaKxoauWvIGks3a4as9QKs=" crossorigin="anonymous" />
 
   <!-- Custom CSS -->
   <link rel="stylesheet" href="/stylesheets/app.css">
-  <title>Hello, world!</title>
 </head>
 
 <body>
@@ -22,4 +22,13 @@
       <i class="inverted grey bell icon"></i>TBAPi
     </a>
     <a href="/houses" class="item"><i class="home icon"></i>Home</a>
+    <div class="right menu">
+      <% if(!currentUser){ %>
+        <a class="ui item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a></li>
+        <a class="ui item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a></li>
+        <% } else { %>
+          <a class="ui item" href="#">Signed In As <%= currentUser.username %></a>
+          <a class="ui item" href="/logout">Logout</a>
+          <% } %>
+    </div>
   </div>
