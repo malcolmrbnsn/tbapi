@@ -12,6 +12,7 @@ router.get("/new", function(req, res) {
   exec(function(err, house) {
     if (err) {
       console.log(err)
+      return res.redirect('/houses');
     } else {
       res.render("alarms/new", {
         house: house
@@ -43,6 +44,7 @@ router.post("/", function(req, res) {
       Alarm.create(newAlarm, function(err, alarm) {
         if (err) {
           console.log(err)
+          return res.redirect('/houses');
         } else {
           alarm.house.id = req.params.id;
           // Save host
@@ -64,6 +66,7 @@ router.get("/:alarm_id/edit", function(req, res) {
   exec(function(err, house) {
     if (err) {
       console.log(err)
+      return res.redirect('/houses');
     } else {
       Alarm.findById(req.params.alarm_id, function(err, alarm) {
         if (err) {
@@ -97,6 +100,7 @@ router.put("/:alarm_id", function(req, res) {
   Alarm.findByIdAndUpdate(req.params.alarm_id, newAlarm, function(err, alarm) {
     if (err) {
       console.log(err)
+      return res.redirect('/houses');
     } else {
       res.redirect("/houses/" + req.params.id)
     }

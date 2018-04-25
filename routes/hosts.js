@@ -10,6 +10,7 @@ router.get("/new", function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
       console.log(err)
+      return res.redirect('/houses');
     } else {
       res.render("hosts/new", {
         house: house
@@ -23,7 +24,7 @@ router.post("/", function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
       console.log(err)
-      res.redirect("/houses/" + req.params.id)
+      return res.redirect('/houses');
     } else {
       Host.create(req.body.host, function(err, host) {
         if (err) {
@@ -47,6 +48,7 @@ router.get("/:host_id/edit", function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
       console.log(err)
+      return res.redirect('/houses');
     } else {
       Host.findById(req.params.host_id, function(err, host) {
         if (err) {
@@ -67,6 +69,7 @@ router.put("/:host_id", function(req, res) {
   Host.findByIdAndUpdate(req.params.host_id, req.body.host, function(err, host) {
     if (err) {
       console.log(err)
+      return res.redirect('/houses');
     } else {
       res.redirect("/houses/" + req.params.id)
     }
@@ -78,6 +81,7 @@ router.delete("/:host_id", function(req, res) {
   Host.findByIdAndRemove(req.params.host_id, function(err) {
     if (err) {
       console.log(err);
+      return res.redirect('/houses');
       res.redirect("/houses")
     } else {
       res.redirect("/houses/" + req.params.id)

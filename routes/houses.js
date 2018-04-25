@@ -81,6 +81,7 @@ router.get("/:id/edit", function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
       console.log(err)
+      return res.redirect('/houses');
     } else {
       console.log(house);
       res.render("houses/edit", {
@@ -91,12 +92,16 @@ router.get("/:id/edit", function(req, res) {
 })
 // Update
 router.put("/:id", function(req, res) {
-  House.findByIdAndUpdate(req.params.id, req.body.house, function(err, house) {
-    if (err) {
-      console.log(err)
-    } else {
-      res.redirect("/houses/" + req.params.id)
-    }
+  var form = new formidable.IncomingForm();
+  form.parse(req, function(err, fields, files) {
+    House.findByIdAndUpdate(req.params.id, fields.house, function(err, house) {
+      if (err) {
+        console.log(err)
+        return res.redirect('/houses');
+      } else {
+        res.redirect("/houses/" + req.params.id)
+      }
+    })
   })
 })
 

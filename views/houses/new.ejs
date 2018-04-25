@@ -7,10 +7,10 @@
         <input type="text" placeholder="Name" name="name">
       </div>
       <div class="field">
-      <input type="file" (change)="fileEvent($event)" class="inputfile" id="embedpollfileinput" name="fileUploaded" />
+      <input type="file" (change)="fileEvent($event)" class="inputfile" id="embedpollfileinput" name="fileUploaded">
       <label for="embedpollfileinput" class="ui green floated button"><i class="ui upload icon"></i>Upload image</label>
       </div>
-      <button>Submit</button>
+      <button class="ui green button">Submit</button>
     </form>
   </div>
   <% include ../partials/footer %>

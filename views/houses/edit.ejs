@@ -1,7 +1,16 @@
 <% include ../partials/header %>
-<h1>Edit <%= house.name %></h1>
-<form action="/houses/<%= house._id %>?_method=PUT" method="POST">
-  <input type="text" name="house[name]" placeholder="<%= house.name %>">
-  <button>Submit</button>
-</form>
-<% include ../partials/footer %>
+  <div class="ui container space">
+    <h1 class="ui center aligned header">Edit <%= house.name %></h1>
+    <form class="ui form" action="/houses/<%= house._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
+      <div class="field">
+        <label>House Name</label>
+        <input type="text" placeholder="<%= house.name %>" name="house[name]">
+      </div>
+      <div class="field">
+      <input type="file" (change)="fileEvent($event)" class="inputfile" id="embedpollfileinput" name="fileUploaded" />
+      <label for="embedpollfileinput" class="ui floated button"><i class="ui upload icon"></i>Upload image</label>
+      </div>
+      <button class="ui green button">Submit</button>
+    </form>
+  </div>
+  <% include ../partials/footer %>
