@@ -62,3 +62,6 @@ package-lock.json
 
 # uploaded images dir
 public/img
+
+# enviornment variables
+.env
