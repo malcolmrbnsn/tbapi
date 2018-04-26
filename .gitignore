@@ -65,3 +65,10 @@ public/img
 
 # enviornment variables
 .env
+
+# .DS_Store files
+public/.DS_Store
+.DS_Store
+
+# Semantic UI
+public/libs/semantic-ui
