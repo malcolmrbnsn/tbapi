@@ -59,6 +59,7 @@ app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
+  console.log("A " + req.method + " request was made to " + req.url);
   next();
 })
 app.use(bodyParser.urlencoded({

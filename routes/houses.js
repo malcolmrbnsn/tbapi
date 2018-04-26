@@ -11,7 +11,7 @@ var {
 } = middleware;
 
 // Index
-router.get("/", function(req, res) {
+router.get("/", isLoggedIn, function(req, res) {
   House.find({}, function(err, allHouses) {
     if (err) {
       console.log(err)
