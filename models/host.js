@@ -17,10 +17,6 @@ var hostSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Alarm"
   }],
-  active: {
-    type: Boolean,
-    default: true
-  },
   created: {
     type: Date,
     default: Date.now

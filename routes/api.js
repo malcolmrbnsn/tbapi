@@ -7,17 +7,32 @@ var House = require("../models/house");
 var Alarm = require("../models/alarm");
 
 // show json
+var populateQuery = [{
+  path: 'alarms'
+}, {
+  path: 'alarms',
+  populate: {
+    path: 'houses'
+  }
+}];
 router.get("/hosts/:ip", function(req, res) {
   Host.find({
     hostname: req.params.ip
-  }).
-  populate('alarms').
-  exec(function(err, foundHost) {
+  }).exec(function(err, foundHost) {
     if (err) {
       console.log(err)
       res.json(err)
     } else {
-      res.json(foundHost)
+      Alarm.find({
+        "host._id": foundHost._id
+      }).exec(function(err, foundAlarms) {
+        if (err) {
+          console.log(err)
+          res.json(err)
+        } else {
+          res.json(foundAlarms)
+        }
+      })
     }
   })
 });

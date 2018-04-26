@@ -4,6 +4,7 @@ const router = express.Router({
 });
 var Alarm = require("../models/alarm");
 var House = require("../models/house");
+var Host = require("../models/host");
 var middleware = require("../middleware");
 var {
   isLoggedIn
