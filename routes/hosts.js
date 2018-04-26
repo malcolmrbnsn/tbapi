@@ -33,6 +33,8 @@ router.post("/", isLoggedIn, function(req, res) {
       Host.create(req.body.host, function(err, host) {
         if (err) {
           console.log(err)
+          req.flash("error", "Hostname must be unique")
+          return res.redirect('back');
         } else {
           host.house.id = req.params.id;
           // Save host
@@ -52,7 +54,8 @@ router.get("/:host_id/edit", isLoggedIn, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
       console.log(err)
-      return res.redirect('/houses');
+      req.flash("error", "An error occured")
+      return res.redirect('back');
     } else {
       Host.findById(req.params.host_id, function(err, host) {
         if (err) {
@@ -73,7 +76,8 @@ router.put("/:host_id", isLoggedIn, function(req, res) {
   Host.findByIdAndUpdate(req.params.host_id, req.body.host, function(err, host) {
     if (err) {
       console.log(err)
-      return res.redirect('/houses');
+      req.flash("error", "Hostname must be unique")
+      return res.redirect('back');
     } else {
       res.redirect("/houses/" + req.params.id)
     }

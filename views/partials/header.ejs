@@ -24,8 +24,8 @@
     <a href="/houses" class="item"><i class="home icon"></i>Home</a>
     <div class="right menu">
       <% if(!currentUser){ %>
-        <a class="ui item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a></li>
-        <a class="ui item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a></li>
+        <a class="ui item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a>
+        <a class="ui item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a>
         <% } else { %>
           <a class="ui item" href="#">Signed in as <%= currentUser.username %></a>
           <a class="ui item" href="/logout">Logout</a>

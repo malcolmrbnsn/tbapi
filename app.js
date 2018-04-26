@@ -27,6 +27,7 @@ const indexRoutes = require("./routes/index")
 const houseRoutes = require("./routes/houses")
 const hostRoutes = require("./routes/hosts")
 const alarmRoutes = require("./routes/alarms")
+const apiRoutes = require("./routes/api")
 
 // Mongoose
 mongoose.Promise = global.Promise;
@@ -71,6 +72,7 @@ app.use(bodyParser.urlencoded({
 // Imported routes
 app.use(indexRoutes);
 app.use("/houses", houseRoutes);
+app.use("/api", apiRoutes);
 app.use("/houses/:id/hosts", hostRoutes);
 app.use("/houses/:id/alarms", alarmRoutes);
 // Server //

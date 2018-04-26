@@ -1,7 +1,10 @@
 var mongoose = require("mongoose");
 
 var houseSchema = new mongoose.Schema({
-  name: String,
+  name: {
+    type: String,
+    unique: true
+  },
   img: String,
   hosts: [{
     type: mongoose.Schema.Types.ObjectId,
