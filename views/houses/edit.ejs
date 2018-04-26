@@ -10,6 +10,7 @@
             <%= success %>
           </div>
           <% } %>
+          <div class="ui padded segment">
     <h1 class="ui center aligned header">Edit <%= house.name %></h1>
     <form class="ui form" action="/houses/<%= house._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
       <div class="field">
@@ -22,5 +23,6 @@
       </div>
       <button class="ui submit button" type="submit">Submit</button>
     </form>
+  </div>
   </div>
   <% include ../partials/footer %>

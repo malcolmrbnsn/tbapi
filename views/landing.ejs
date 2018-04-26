@@ -17,17 +17,36 @@
 </head>
 
 <body>
-  <% if(error && error.length > 0){ %>
-    <div class="ui error message">
-      <%= error %>
+  <div class="ui top fixed inverted menu">
+    <a href="/" class="<%= typeof page !== 'undefined' && page === 'landing' ? 'active' : '' %> header item">
+      <i class="inverted grey bell icon"></i>TBAPi
+      </a>
+    <a href="/houses" class="<%= typeof page !== 'undefined' && page === 'index' ? 'active' : '' %> item"><i class="home icon"></i>Home</a>
+    <div class="right menu">
+      <% if(!currentUser){ %>
+        <a class="ui item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a>
+        <a class="ui item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a>
+        <% } else { %>
+          <a class="ui item" href="#">
+            <%= currentUser.username %>
+          </a>
+          <a class="ui item" href="/logout">Logout</a>
+          <% } %>
     </div>
-    <% } %>
-      <% if(success && success.length > 0){ %>
-        <div class="ui success message">
-          <%= success %>
-        </div>
-        <% } %>
-          <h1>INDEX PAGE</h1>
+  </div>
+  <div class="ui container space">
+    <% if(error && error.length > 0){ %>
+      <div class="ui error message">
+        <%= error %>
+      </div>
+      <% } %>
+        <% if(success && success.length > 0){ %>
+          <div class="ui success message">
+            <%= success %>
+          </div>
+          <% } %>
+            <h1>INDEX PAGE</h1>
 
-          <a href="/houses" class="ui huge green button">Go to TBAPi</a>
-          <% include partials/footer %>
+            <a href="/houses" class="ui massive green button">Go to TBAPi</a>
+  </div>
+  <% include partials/footer %>

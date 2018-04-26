@@ -1,7 +1,7 @@
 // SETUP
 const express = require('express'),
   bodyParser = require('body-parser'),
-  formidible = require('formidable'),
+  formidable = require('formidable'),
   passport = require('passport'),
   LocalStrategy = require('passport-local'),
   path = require('path'),

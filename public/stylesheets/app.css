@@ -18,3 +18,21 @@ div.container.space {
   position: absolute;
   z-index: -1;
 }
+
+@media (min-width:992px) {
+  .desktop-only {
+    display: block !important;
+  }
+  .mobile-only {
+    display: none !important;
+  }
+}
+
+@media (max-width: 991px) {
+  .mobile-only {
+    display: block !important;
+  }
+  .desktop-only {
+    display: none !important;
+  }
+}

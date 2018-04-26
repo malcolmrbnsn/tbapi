@@ -7,14 +7,6 @@ var House = require("../models/house");
 var Alarm = require("../models/alarm");
 
 // show json
-var populateQuery = [{
-  path: 'alarms'
-}, {
-  path: 'alarms',
-  populate: {
-    path: 'houses'
-  }
-}];
 router.get("/hosts/:ip", function(req, res) {
   Host.find({
     hostname: req.params.ip

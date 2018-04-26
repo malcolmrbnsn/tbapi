@@ -9,7 +9,6 @@ var middleware = require("../middleware");
 var {
   isLoggedIn
 } = middleware;
-
 // New
 router.get("/new", isLoggedIn, function(req, res) {
   House.findById(req.params.id).

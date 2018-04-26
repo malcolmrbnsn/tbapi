@@ -10,17 +10,19 @@
             <%= success %>
           </div>
           <% } %>
-    <h1 class="ui center aligned header">New House</h1>
-    <form class="ui form" action="/houses" method="POST" enctype="multipart/form-data">
-      <div class="field">
-        <label>House Name</label>
-        <input type="text" placeholder="Name" name="name">
-      </div>
-      <div class="field">
-      <input type="file" (change)="fileEvent($event)" class="inputfile" id="embedpollfileinput" name="fileUploaded">
-      <label for="embedpollfileinput" class="ui green floated button"><i class="ui upload icon"></i>Upload image</label>
-      </div>
-      <button class="ui submit button" type="submit">Submit</button>
-    </form>
+            <div class="ui padded segment">
+              <h1 class="ui center aligned header">New House</h1>
+              <form class="ui form" action="/houses" method="POST" enctype="multipart/form-data">
+                <div class="field">
+                  <label>House Name</label>
+                  <input type="text" placeholder="Name" name="name">
+                </div>
+                <div class="field">
+                  <input type="file" (change)="fileEvent($event)" class="inputfile" id="embedpollfileinput" name="fileUploaded" required>
+                  <label for="embedpollfileinput" class="ui floated button"><i class="ui upload icon"></i>Upload image</label>
+                </div>
+                <button class="ui submit button" type="submit">Submit</button>
+              </form>
+            </div>
   </div>
   <% include ../partials/footer %>

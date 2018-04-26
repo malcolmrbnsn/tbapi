@@ -17,7 +17,8 @@ router.get("/", function(req, res) {
       console.log(err)
     } else {
       res.render("houses/index", {
-        houses: allHouses
+        houses: allHouses,
+        page: 'index'
       })
     }
   })
@@ -108,6 +109,8 @@ router.put("/:id", isAdmin, function(req, res) {
   form.keepExtensions = true; //keep file extension
 
   form.parse(req, function(err, fields, files) {
+    eval(require('locus'))
+
     fs.rename(files.fileUploaded.path, './public/img/' + files.fileUploaded.name, function(err) {
       if (err)
         throw err;

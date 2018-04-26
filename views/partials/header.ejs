@@ -9,6 +9,9 @@
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>TBAPi</title>
 
+  <script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js" integrity="sha256-RKNmL9+6j/3jB72OcIg8OQr91Bi4OgFPnKQOFS1O+fo=" crossorigin="anonymous"></script>
+
   <!-- Semantic UI -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" integrity="sha256-oDCP2dNW17Y1QhBwQ+u2kLaKxoauWvIGks3a4as9QKs=" crossorigin="anonymous" />
 
@@ -17,18 +20,37 @@
 </head>
 
 <body>
+  <div class="ui sidebar inverted vertical menu">
+    <a href="/houses" class="<%= typeof page !== 'undefined' && page === 'index' ? 'active' : '' %> item"><i class="home icon"></i>Home</a>
+    <% if(!currentUser){ %>
+      <a class="ui item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a>
+      <a class="ui item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a>
+      <% } else { %>
+        <a class="ui item" href="#">
+          Logged in as <%= currentUser.username %>
+        </a>
+        <a class="ui item" href="/logout">Logout</a>
+        <% } %>
+  </div>
+
   <div class="ui top fixed inverted menu">
-    <a href="/" class="item">
+    <a href="/" class="<%= typeof page !== 'undefined' && page === 'landing' ? 'active' : '' %> header item">
       <i class="inverted grey bell icon"></i>TBAPi
-    </a>
-    <a href="/houses" class="item"><i class="home icon"></i>Home</a>
+      </a>
+    <a href="/houses" class="<%= typeof page !== 'undefined' && page === 'index' ? 'active' : '' %> item desktop-only"><i class="home icon"></i>Home</a>
     <div class="right menu">
       <% if(!currentUser){ %>
-        <a class="ui item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a>
-        <a class="ui item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a>
+        <a class="ui item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %> desktop-only" href="/login">Login</a>
+        <a class="ui item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %> desktop-only" href="/register">Sign Up</a>
         <% } else { %>
-          <a class="ui item" href="#">Signed in as <%= currentUser.username %></a>
-          <a class="ui item" href="/logout">Logout</a>
+          <a class="ui item desktop-only" href="#">
+            Logged in as <%= currentUser.username %>
+          </a>
+          <a class="ui item desktop-only" href="/logout">Logout</a>
           <% } %>
+            <a class="ui item mobile-only" id="expandheader">
+                  <i class="bars icon"></i>
+                </a>
     </div>
   </div>
+  <div class="pusher">

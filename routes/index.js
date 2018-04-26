@@ -6,12 +6,16 @@ var middleware = require('../middleware')
 
 //root route
 router.get("/", function(req, res) {
-  res.render("landing");
+  res.render("landing", {
+    page: 'landing'
+  });
 });
 
 // show register form
 router.get("/register", function(req, res) {
-  res.render("register");
+  res.render("register", {
+    page: 'register'
+  })
 });
 
 //handle sign up logic

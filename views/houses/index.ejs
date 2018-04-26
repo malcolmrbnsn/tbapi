@@ -1,38 +1,38 @@
 <% include ../partials/header %>
   <div class="ui grid container space">
-            <div class="ui center aligned icon header">
-              <h2>
-  <i class="circular home icon"></i>
+    <div class="ui center aligned icon header">
+      <h2>
+  <i class="inverted circular home icon"></i>
   Houses
 </h2>
+    </div>
+    <% if(error && error.length > 0){ %>
+      <div class="row">
+        <div class="column">
+          <div class="ui error message">
+            <div class="text container">
+              <%= error %>
             </div>
-            <% if(error && error.length > 0){ %>
-              <div class="row">
-                <div class="column">
-                  <div class="ui error message">
-                    <div class="text container">
-                    <%= error %>
-                    </div>
-                  </div>
+          </div>
+        </div>
+      </div>
+      <% } %>
+        <% if(success && success.length > 0){ %>
+          <div class="row">
+            <div class="column">
+              <div class="ui success message">
+                <div class="text container">
+                  <%= success %>
                 </div>
               </div>
-              <% } %>
-                <% if(success && success.length > 0){ %>
-                  <div class="row">
-                    <div class="column">
-                      <div class="ui success message">
-                        <div class="text container">
-                        <%= success %>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <% } %>
+            </div>
+          </div>
+          <% } %>
             <div class="row">
               <div class="column">
-                <div class="ui message">
+                <div class="ui inverted message">
                   <div class="text container">
-                    <h1 class="ui header">TBAPi</h1>
+                    <h1 class="ui inverted header">TBAPi</h1>
                     <p>Welcome to the houses page.</p>
                     <% if(currentUser && currentUser.isAdmin){ %>
                       <a href="/houses/new" class="ui blue button">New House<i class="angle right icon"></i></a>
@@ -42,12 +42,12 @@
               </div>
             </div>
 
-            <div class="ui four column doubling stackable grid container">
+            <div class="ui grid container">
               <% houses.forEach(function(house) {%>
-                <div class="column">
+                <div class="sixteen wide mobile eight wide tablet four wide computer column">
                   <div class="card">
-                    <div class="ui fluid image">
-                      <img src="/img/<%= house.img %>">
+                    <div class="ui image">
+                      <img src="/img/<%= house.img %>" class="card_image">
                     </div>
                     <div class="content">
                       <div class="header">
@@ -62,5 +62,4 @@
                 <% }) %>
             </div>
   </div>
-
   <% include ../partials/footer %>

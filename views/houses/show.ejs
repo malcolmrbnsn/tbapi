@@ -18,7 +18,9 @@
 </form>
 <% } %>
 <div class="positive ui buttons">
+  <% if(currentUser && currentUser.isAdmin){ %>
 <a class="ui button" href="/houses/<%= house._id %>/hosts/new">New Host</a>
+<% } %>
 <a class="ui button" href="/houses/<%= house._id %>/alarms/new">New Alarm</a>
 </div>
 <div class="ui segments">
@@ -63,9 +65,7 @@
     <th>Days</th>
     <th>Hosts</th>
     <th>Active</th>
-    <% if(currentUser && currentUser.isAdmin){ %>
     <th>Options</th>
-    <% }%>
   </thead>
   <tbody>
   <% house.alarms.forEach(function(alarm) {%>
@@ -99,12 +99,10 @@
             <% }%>
       </td>
       <td>
-      <% if(currentUser && currentUser.isAdmin){ %>
       <a class="ui yellow button" href="/houses/<%= house._id %>/alarms/<%= alarm._id %>/edit">Edit</a>
         <form class="delete" action="/houses/<%= house._id %>/alarms/<%= alarm._id %>?_method=DELETE" method="post">
           <button class="ui red button">Delete</button>
         </form>
-        <% } %>
       </td>
     </tr>
     <% }) %>
