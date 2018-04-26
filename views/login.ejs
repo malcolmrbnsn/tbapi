@@ -1,6 +1,16 @@
 <% include ./partials/header %>
   <div class="ui container space">
-    <h1 class="ui center aligned header">Register</h1>
+    <% if(error && error.length > 0){ %>
+      <div class="ui error message">
+        <%= error %>
+      </div>
+      <% } %>
+        <% if(success && success.length > 0){ %>
+          <div class="ui success message">
+            <%= success %>
+          </div>
+          <% } %>
+    <h1 class="ui center aligned header">Login</h1>
     <form class="ui form" action="/login" method="POST">
       <div class="required field">
         <label>Username</label>
@@ -12,4 +22,5 @@
     </div>
       <button class="ui submit button" type="submit">Submit</button>
     </form>
+  </div>
     <% include ./partials/footer %>

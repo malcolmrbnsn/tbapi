@@ -4,9 +4,13 @@ const router = express.Router({
 });
 var Alarm = require("../models/alarm");
 var House = require("../models/house");
+var middleware = require("../middleware");
+var {
+  isLoggedIn
+} = middleware;
 
 // New
-router.get("/new", function(req, res) {
+router.get("/new", isLoggedIn, function(req, res) {
   House.findById(req.params.id).
   populate("hosts").
   exec(function(err, house) {
@@ -22,7 +26,7 @@ router.get("/new", function(req, res) {
 })
 
 // Create
-router.post("/", function(req, res) {
+router.post("/", isLoggedIn, function(req, res) {
   console.log(req.body);
   House.findById(req.params.id, function(err, house) {
     if (err) {
@@ -60,7 +64,7 @@ router.post("/", function(req, res) {
 })
 
 //Edit
-router.get("/:alarm_id/edit", function(req, res) {
+router.get("/:alarm_id/edit", isLoggedIn, function(req, res) {
   House.findById(req.params.id).
   populate("hosts").
   exec(function(err, house) {
@@ -83,7 +87,7 @@ router.get("/:alarm_id/edit", function(req, res) {
 })
 
 // Update
-router.put("/:alarm_id", function(req, res) {
+router.put("/:alarm_id", isLoggedIn, function(req, res) {
   console.log(req.body)
   if (req.body.dow.i) {
     dow = req.body.dow.i
@@ -108,7 +112,7 @@ router.put("/:alarm_id", function(req, res) {
 })
 
 // Delete
-router.delete("/:alarm_id", function(req, res) {
+router.delete("/:alarm_id", isLoggedIn, function(req, res) {
   Alarm.findByIdAndRemove(req.params.alarm_id, function(err) {
     if (err) {
       console.log(err);

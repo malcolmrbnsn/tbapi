@@ -1,19 +1,37 @@
 <% include ../partials/header %>
 <div class="ui container space">
+  <% if(error && error.length > 0){ %>
+    <div class="ui error message">
+      <%= error %>
+    </div>
+    <% } %>
+      <% if(success && success.length > 0){ %>
+        <div class="ui success message">
+          <%= success %>
+        </div>
+        <% } %>
 <h1 class="ui left aligned header"><%= house.name %></h1>
+<% if(currentUser && currentUser.isAdmin){ %>
 <a class="ui yellow button" href="/houses/<%= house._id %>/edit">Edit House</a>
 <form class="delete" action="/houses/<%= house._id %>?_method=DELETE" method="post">
-  <button class="ui red button">Delete House</button>
+  <button class="ui negative button">Delete House</button>
 </form>
-<a class="ui right floated green button" href="/houses/<%= house._id %>/hosts/new">New Host</a>
-<a class="ui right floated green button" href="/houses/<%= house._id %>/alarms/new">New Alarm</a>
-
-<table class="ui padded celled table">
+<% } %>
+<div class="positive ui buttons">
+<a class="ui button" href="/houses/<%= house._id %>/hosts/new">New Host</a>
+<a class="ui button" href="/houses/<%= house._id %>/alarms/new">New Alarm</a>
+</div>
+<div class="ui segments">
+<div class="ui segment">
+<h2>Hosts:</h2>
+<table class="ui celled table">
   <thead>
     <tr>
       <th>Name</th>
       <th>Hostname</th>
+        <% if(currentUser && currentUser.isAdmin){ %>
       <th>Options</th>
+      <% }%>
     </tr>
   </thead>
   <tbody>
@@ -25,16 +43,18 @@
         <td>
           <%= host.hostname %>
         </td>
+        <% if(currentUser && currentUser.isAdmin){ %>
         <td><a class="ui yellow button" href="/houses/<%= house._id %>/hosts/<%= host._id %>/edit">Edit</a>
           <form class="delete" action="/houses/<%= house._id %>/hosts/<%= host._id %>?_method=DELETE" method="post">
           <button class="ui red button">Delete</button>
         </form>
       </tr>
+      <% }%>
       <% }) %>
   </tbody>
 </table>
-
-
+</div>
+<div class="ui segment">
 <h2>Alarms: </h2>
 <table class="ui padded celled table">
   <thead>
@@ -43,7 +63,9 @@
     <th>Days</th>
     <th>Hosts</th>
     <th>Active</th>
+    <% if(currentUser && currentUser.isAdmin){ %>
     <th>Options</th>
+    <% }%>
   </thead>
   <tbody>
   <% house.alarms.forEach(function(alarm) {%>
@@ -57,15 +79,14 @@
       <td>
       <% days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %>
       <% nDays = [0,1,2,3,4,5,6,] %>
-        <% alarm.dow.forEach(function(i) {%>
-          <%= days[i] %>
+        <% alarm.dow.forEach(function(day,i, arr) {%>
+          <%= days[day] %><%= ( arr.length > 0 && i < arr.length-1 ? ( i == arr.length-2 ? ', ' : ', ' ) : '' ) %>
             <% }) %>
       </td>
       <td>
         <% alarm.hosts.forEach(function(host, i, arr){ %>
           <%= host.name %><%= ( arr.length > 0 && i < arr.length-1 ? ( i == arr.length-2 ? ', ' : ', ' ) : '' ) %>
               <% }) %>
-              <%= alarm.hosts %>
       </td>
       <td>
         <% if (alarm.active === true) { %>
@@ -74,14 +95,19 @@
             No
             <% }%>
       </td>
-      <td><a class="ui yellow button" href="/houses/<%= house._id %>/alarms/<%= alarm._id %>/edit">Edit</a>
+      <td>
+      <% if(currentUser && currentUser.isAdmin){ %>
+      <a class="ui yellow button" href="/houses/<%= house._id %>/alarms/<%= alarm._id %>/edit">Edit</a>
         <form class="delete" action="/houses/<%= house._id %>/alarms/<%= alarm._id %>?_method=DELETE" method="post">
           <button class="ui red button">Delete</button>
         </form>
+        <% } %>
       </td>
     </tr>
     <% }) %>
     </tbody>
 </table>
+</div>
+</div>
 </div>
 <% include ../partials/footer %>

@@ -27,7 +27,7 @@
         <a class="ui item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a></li>
         <a class="ui item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a></li>
         <% } else { %>
-          <a class="ui item" href="#">Signed In As <%= currentUser.username %></a>
+          <a class="ui item" href="#">Signed in as <%= currentUser.username %></a>
           <a class="ui item" href="/logout">Logout</a>
           <% } %>
     </div>

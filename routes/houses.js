@@ -4,6 +4,11 @@ var router = express.Router(),
   path = require('path'),
   fs = require('fs-extra')
 var House = require("../models/house");
+var middleware = require("../middleware");
+var {
+  isLoggedIn,
+  isAdmin
+} = middleware;
 
 // Index
 router.get("/", function(req, res) {
@@ -19,11 +24,11 @@ router.get("/", function(req, res) {
 })
 
 // New
-router.get("/new", function(req, res) {
+router.get("/new", isAdmin, function(req, res) {
   res.render("houses/new");
 })
 // Create
-router.post("/", function(req, res) {
+router.post("/", isAdmin, function(req, res) {
   var form = new formidable.IncomingForm();
   //Formidable uploads to operating systems tmp dir by default
   form.uploadDir = "./public/img"; //set upload directory
@@ -59,9 +64,12 @@ router.post("/", function(req, res) {
 var populateQuery = [{
   path: 'hosts'
 }, {
-  path: 'alarms'
+  path: 'alarms',
+  populate: {
+    path: 'hosts'
+  }
 }];
-router.get("/:id", function(req, res) {
+router.get("/:id", isLoggedIn, function(req, res) {
   House.findById(req.params.id).
   populate(populateQuery).
   exec(function(err, foundHouse) {
@@ -77,10 +85,11 @@ router.get("/:id", function(req, res) {
 });
 
 //Edit
-router.get("/:id/edit", function(req, res) {
+router.get("/:id/edit", isAdmin, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
       console.log(err)
+      res.flash("error", "An error occured")
       return res.redirect('/houses');
     } else {
       console.log(house);
@@ -90,10 +99,23 @@ router.get("/:id/edit", function(req, res) {
     }
   })
 })
+
 // Update
-router.put("/:id", function(req, res) {
+router.put("/:id", isAdmin, function(req, res) {
   var form = new formidable.IncomingForm();
+  //Formidable uploads to operating systems tmp dir by default
+  form.uploadDir = "./public/img"; //set upload directory
+  form.keepExtensions = true; //keep file extension
+
   form.parse(req, function(err, fields, files) {
+    fs.rename(files.fileUploaded.path, './public/img/' + files.fileUploaded.name, function(err) {
+      if (err)
+        throw err;
+    });
+    var house = {
+      name: fields.name,
+      img: files.fileUploaded.name
+    }
     House.findByIdAndUpdate(req.params.id, fields.house, function(err, house) {
       if (err) {
         console.log(err)
@@ -106,7 +128,7 @@ router.put("/:id", function(req, res) {
 })
 
 // Delete
-router.delete("/:id", function(req, res) {
+router.delete("/:id", isAdmin, function(req, res) {
   House.findByIdAndRemove(req.params.id, function(err) {
     if (err) {
       console.log(err);

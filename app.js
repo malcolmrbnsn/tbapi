@@ -9,7 +9,11 @@ const express = require('express'),
   mongoose = require('mongoose'),
   methodOverride = require("method-override"),
   Rollbar = require("rollbar"),
+  flash = require('connect-flash'),
   app = express()
+require('dotenv').config()
+
+const port = process.env.PORT || 3000;
 
 // Models and seeds
 const House = require('./models/house'),
@@ -26,7 +30,7 @@ const alarmRoutes = require("./routes/alarms")
 
 // Mongoose
 mongoose.Promise = global.Promise;
-const databaseUri = 'mongodb://localhost/tbapi';
+const databaseUri = process.env.DB_URI || "mongodb://localhost/tbapi";
 
 mongoose.connect(databaseUri)
   .then(() => console.log(`Database connected`))
@@ -35,7 +39,7 @@ mongoose.connect(databaseUri)
 
 // Passport
 app.use(require("express-session")({
-  secret: "ds;jkfhsda nbsdakf hsdjgseh gv hg gjkbv rlk hvout fl nbpygfsd jk fgpiusg",
+  secret: "dsj kfhsda nbsdakf hsdjgseh gv hg gjkbv rlk hvout fl nbpygfsd jk fgpiusg",
   resave: false,
   saveUninitialized: false
 }));
@@ -45,21 +49,23 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
-app.use(function(req, res, next) {
-  res.locals.currentUser = req.user;
-  next();
-});
-
 // app config
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
+app.use(flash());
+app.use(function(req, res, next) {
+  res.locals.currentUser = req.user;
+  res.locals.error = req.flash("error");
+  res.locals.success = req.flash("success");
+  next();
+})
 app.use(bodyParser.urlencoded({
   extended: true
 }));
 
 // Rollbar
-var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
+// var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 // rollbar.log("Hello world!");
 
 // Imported routes
@@ -68,4 +74,4 @@ app.use("/houses", houseRoutes);
 app.use("/houses/:id/hosts", hostRoutes);
 app.use("/houses/:id/alarms", alarmRoutes);
 // Server //
-app.listen(3000, () => console.log("Server is running at port 3000"));
+app.listen(process.env.PORT, process.env.IP, () => console.log("Server is running on port " + process.env.PORT));

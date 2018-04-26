@@ -4,9 +4,13 @@ const router = express.Router({
 });
 var Host = require("../models/host");
 var House = require("../models/house");
+var middleware = require("../middleware");
+var {
+  isLoggedIn
+} = middleware;
 
 // New
-router.get("/new", function(req, res) {
+router.get("/new", isLoggedIn, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
       console.log(err)
@@ -20,7 +24,7 @@ router.get("/new", function(req, res) {
 })
 
 // Create
-router.post("/", function(req, res) {
+router.post("/", isLoggedIn, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
       console.log(err)
@@ -44,7 +48,7 @@ router.post("/", function(req, res) {
 })
 
 //Edit
-router.get("/:host_id/edit", function(req, res) {
+router.get("/:host_id/edit", isLoggedIn, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
       console.log(err)
@@ -65,7 +69,7 @@ router.get("/:host_id/edit", function(req, res) {
 })
 
 // Update
-router.put("/:host_id", function(req, res) {
+router.put("/:host_id", isLoggedIn, function(req, res) {
   Host.findByIdAndUpdate(req.params.host_id, req.body.host, function(err, host) {
     if (err) {
       console.log(err)
@@ -77,7 +81,7 @@ router.put("/:host_id", function(req, res) {
 })
 
 // Delete
-router.delete("/:host_id", function(req, res) {
+router.delete("/:host_id", isLoggedIn, function(req, res) {
   Host.findByIdAndRemove(req.params.host_id, function(err) {
     if (err) {
       console.log(err);

@@ -2,6 +2,7 @@ var express = require("express");
 var router = express.Router();
 var passport = require("passport");
 var User = require("../models/user");
+var middleware = require('../middleware')
 
 //root route
 router.get("/", function(req, res) {
@@ -10,9 +11,7 @@ router.get("/", function(req, res) {
 
 // show register form
 router.get("/register", function(req, res) {
-  res.render("register", {
-    page: 'register'
-  });
+  res.render("register");
 });
 
 //handle sign up logic
@@ -20,8 +19,13 @@ router.post("/register", function(req, res) {
   var newUser = new User({
     username: req.body.username
   });
-  if (req.body.adminCode === process.env.ADMIN_CODE) {
+  if (req.body.signupCode === process.env.ADMINKEY) {
     newUser.isAdmin = true;
+  } else if (req.body.signupCode === process.env.USERKEY) {
+    newUser.isAdmin = false;
+  } else {
+    req.flash("error", "Signup Code is incorrect");
+    return res.redirect("back")
   }
   User.register(newUser, req.body.password, function(err, user) {
     if (err) {
@@ -31,7 +35,7 @@ router.post("/register", function(req, res) {
       });
     }
     passport.authenticate("local")(req, res, function() {
-      // req.flash("success", "Successfully Signed Up! Nice to meet you " + req.body.username);
+      req.flash("success", "Successfully Signed Up!");
       res.redirect("/houses");
     });
   });
@@ -48,14 +52,14 @@ router.get("/login", function(req, res) {
 router.post("/login", passport.authenticate("local", {
   successRedirect: "/houses",
   failureRedirect: "/login",
-  // failureFlash: true,
-  // successFlash: 'Welcome to YelpCamp!'
+  failureFlash: true,
+  successFlash: "Welcome back!"
 }), function(req, res) {});
 
 // logout route
 router.get("/logout", function(req, res) {
   req.logout();
-  // req.flash("success", "See you later!");
+  req.flash("success", "Logged Out!");
   res.redirect("/houses");
 });
 

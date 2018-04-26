@@ -1,5 +1,14 @@
 <% include ../partials/header %>
-  <div class="ui container space">
+  <div class="ui container space">    <% if(error && error.length > 0){ %>
+        <div class="ui error message">
+          <%= error %>
+        </div>
+        <% } %>
+          <% if(success && success.length > 0){ %>
+            <div class="ui success message">
+              <%= success %>
+            </div>
+            <% } %>
     <h1 class="ui center aligned header">New Host in <%= house.name %></h1>
     <form class="ui form" action="/houses/<%= house._id %>/hosts" method="POST">
       <div class="ui inline fields">

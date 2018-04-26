@@ -57,3 +57,8 @@ typings/
 # dotenv environment variables file
 .env
 
+# npm package-lock (Generated on npm init)
+package-lock.json
+
+# uploaded images dir
+public/img
