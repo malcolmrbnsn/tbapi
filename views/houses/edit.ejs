@@ -15,7 +15,7 @@
     <form class="ui form" action="/houses/<%= house._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
       <div class="field">
         <label>House Name</label>
-        <input type="text" placeholder="<%= house.name %>" name="house[name]">
+        <input type="text" placeholder="<%= house.name %>" name="name">
       </div>
       <div class="field">
       <input type="file" (change)="fileEvent($event)" class="inputfile" id="embedpollfileinput" name="fileUploaded" />

@@ -109,17 +109,23 @@ router.put("/:id", isAdmin, function(req, res) {
   form.keepExtensions = true; //keep file extension
 
   form.parse(req, function(err, fields, files) {
-    eval(require('locus'))
+    console.log(files.size)
+    if (files.size > 0) {
 
-    fs.rename(files.fileUploaded.path, './public/img/' + files.fileUploaded.name, function(err) {
-      if (err)
-        throw err;
-    });
-    var house = {
-      name: fields.name,
-      img: files.fileUploaded.name
+      fs.rename(files.fileUploaded.path, './public/img/' + files.fileUploaded.name, function(err) {
+        if (err)
+          throw err;
+      });
+      var house = {
+        name: fields.name,
+        img: files.fileUploaded.name
+      }
+    } else {
+      var house = {
+        name: fields.name
+      }
     }
-    House.findByIdAndUpdate(req.params.id, fields.house, function(err, house) {
+    House.findByIdAndUpdate(req.params.id, house, function(err, house) {
       if (err) {
         console.log(err)
         return res.redirect('/houses');

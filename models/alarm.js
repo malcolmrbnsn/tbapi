@@ -5,6 +5,10 @@ var alarmSchema = new mongoose.Schema({
   file: String,
   minute: Number,
   hour: Number,
+  sound: {
+    type: String,
+    required: true
+  },
   dow: [],
   house: {
     id: {
