@@ -30,57 +30,34 @@ router.get("/new", isLoggedIn, function(req, res) {
 
 // Create
 router.post("/", isLoggedIn, function(req, res) {
-  var form = new formidable.IncomingForm();
-  //Formidable uploads to operating systems tmp dir by default
-  form.uploadDir = "./public/sounds"; //set upload directory
-  form.keepExtensions = true; //keep file extension
-
-  form.parse(req, function(err, fields, files) {
-    console.log("form.bytesReceived");
-    //TESTING
-    console.log("file size: " + JSON.stringify(files.fileUploaded.size));
-    console.log("file path: " + JSON.stringify(files.fileUploaded.path));
-    console.log("file name: " + JSON.stringify(files.fileUploaded.name));
-    console.log("file type: " + JSON.stringify(files.fileUploaded.type));
-    console.log("lastModifiedDate: " + JSON.stringify(files.fileUploaded.lastModifiedDate));
-    fs.rename(files.fileUploaded.path, './public/sounds/' + files.fileUploaded.name, function(err) {
-      if (err)
-        throw err;
-      console.log('renamed complete');
-    });
-    House.findById(req.params.id, function(err, house) {
+  House.findById(req.params.id, function(err, house) {
+    if (!req.body.alarm.dow) {
+      req.flash("error", "You must select at least one day!")
+      return res.redirect("back")
+    }
+    if (!req.body.alarm.hosts) {
+      req.flash("error", "You need to select at least one host!")
+      return res.redirect("back")
+    }
+    newAlarm = {
+      name: req.body.alarm.name,
+      hour: req.body.alarm.hour,
+      minute: req.body.alarm.minute,
+      dow: req.body.alarm.dow,
+      hosts: req.body.alarm.hosts
+    };
+    Alarm.create(newAlarm, function(err, alarm) {
       if (err) {
         console.log(err)
-        res.redirect("/houses/")
+        return res.redirect('/houses');
       } else {
-        if (fields.dow) {
-          dow = fields.dow.i
-        } else {
-          req.flash("Please include at least one day of the week.")
-          res.redirect("back")
-        }
-        newAlarm = {
-          name: fields.alarm.name,
-          hour: fields.alarm.hour,
-          minute: fields.alarm.minute,
-          sound: files.fileUploaded.name,
-          dow: dow,
-          hosts: fields.alarm.hosts
-        };
-        Alarm.create(newAlarm, function(err, alarm) {
-          if (err) {
-            console.log(err)
-            return res.redirect('/houses');
-          } else {
-            alarm.house.id = req.params.id;
-            // Save host
-            alarm.save();
-            // Link to house and save
-            house.alarms.push(alarm);
-            house.save();
-            res.redirect("/houses/" + req.params.id)
-          }
-        })
+        alarm.house.id = req.params.id;
+        // Save host
+        alarm.save();
+        // Link to house and save
+        house.alarms.push(alarm);
+        house.save();
+        res.redirect("/houses/" + req.params.id)
       }
     })
   })
@@ -99,6 +76,12 @@ router.get("/:alarm_id/edit", isLoggedIn, function(req, res) {
         if (err) {
           console.log(err)
         } else {
+          console.log(house.hosts);
+          house.hosts.forEach(function(host) {
+            console.log(host._id);
+            console.log(alarm.hosts.includes(host._id, alarm.hosts));
+
+          })
           res.render("alarms/edit", {
             house: house,
             alarm: alarm
@@ -111,61 +94,29 @@ router.get("/:alarm_id/edit", isLoggedIn, function(req, res) {
 
 // Update
 router.put("/:alarm_id", isLoggedIn, function(req, res) {
-  var form = new formidable.IncomingForm();
-  //Formidable uploads to operating systems tmp dir by default
-  form.uploadDir = "./public/sounds"; //set upload directory
-  form.keepExtensions = true; //keep file extension
-
-  form.parse(req, function(err, fields, files) {
-    if (files.size > 0) {
-      console.log("form.bytesReceived");
-      //TESTING
-      console.log("file size: " + JSON.stringify(files.fileUploaded.size));
-      console.log("file path: " + JSON.stringify(files.fileUploaded.path));
-      console.log("file name: " + JSON.stringify(files.fileUploaded.name));
-      console.log("file type: " + JSON.stringify(files.fileUploaded.type));
-      console.log("lastModifiedDate: " + JSON.stringify(files.fileUploaded.lastModifiedDate));
-      fs.rename(files.fileUploaded.path, './public/sounds/' + files.fileUploaded.name, function(err) {
-        if (err)
-          throw err;
-        console.log('renamed complete');
-      });
-      newAlarm = {
-        name: fields.alarm.name,
-        hour: fields.alarm.hour,
-        minute: fields.alarm.minute,
-        dow: dow,
-        hosts: fields.alarm.hosts,
-        sound: fields.alarm.sound
-      };
+  if (!req.body.alarm.dow) {
+    req.flash("error", "You must select at least one day!")
+    return res.redirect("back")
+  }
+  if (!req.body.alarm.hosts) {
+    req.flash("error", "You need to select at least one host!")
+    return res.redirect("back")
+  }
+  newAlarm = {
+    name: req.body.alarm.name,
+    hour: req.body.alarm.hour,
+    minute: req.body.alarm.minute,
+    dow: req.body.alarm.dow,
+    hosts: req.body.alarm.hosts,
+    active: JSON.parse(req.body.alarm.active)
+  };
+  Alarm.findByIdAndUpdate(req.params.alarm_id, newAlarm, function(err, alarm) {
+    if (err) {
+      console.log(err)
+      return res.redirect('/houses');
     } else {
-      newAlarm = {
-        name: fields.alarm.name,
-        hour: fields.alarm.hour,
-        minute: fields.alarm.minute,
-        dow: dow,
-        hosts: fields.alarm.hosts
-      };
+      res.redirect("/houses/" + req.params.id)
     }
-    if (form.dow.i) {
-      dow = form.dow.i
-    } else {
-      dow = []
-    }
-    if (form.alarm.active === 'true') {
-      newAlarm.active = true
-    } else {
-      newAlarm.active = false
-    }
-    // eval(require('locus'))
-    Alarm.findByIdAndUpdate(req.params.alarm_id, newAlarm, function(err, alarm) {
-      if (err) {
-        console.log(err)
-        return res.redirect('/houses');
-      } else {
-        res.redirect("/houses/" + req.params.id)
-      }
-    })
   })
 })
 

@@ -27,10 +27,6 @@
                     <input type="number" name="alarm[hour]" placeholder="hour" min="0" max="24" required value="<%= alarm.hour %>">
                   </div>
                 </div>
-                <div class="field">
-                  <input type="file" (change)="fileEvent($event)" class="inputfile" id="embedpollfileinput" name="fileUploaded">
-                  <label for="embedpollfileinput" class="ui floated button"><i class="ui upload icon"></i>Upload Sound</label>
-                </div>
                 <div class="inline field">
                   <div class="ui toggle checkbox">
                     <input type="checkbox" name="alarm[active]" value="<%= alarm.active %>" <%= alarm.active ? "checked" : "" %>>
@@ -43,7 +39,7 @@
                     <% nDays.forEach(function(i) {%>
                       <div class="inline field">
                         <div class="ui toggle checkbox">
-                          <input type="checkbox" name="dow[i]" value="<%= i %>" <%= alarm.dow[i] ? "checked" : "" %>>
+                          <input type="checkbox" name="alarm[dow]" value="<%= i %>" <%= alarm.dow[i] ? "checked" : "" %>>
                           <label><%= days[i] %></label>
                         </div>
                       </div>
@@ -52,7 +48,7 @@
                         <% house.hosts.forEach(function(host) { %>
                           <div class="inline field">
                             <div class="ui toggle checkbox">
-                              <input type="checkbox" name="alarm[hosts]" value="<%= host.id %>">
+                              <input type="checkbox" name="alarm[hosts]" value="<%= host.id %>" <%= alarm.hosts.includes(host._id) ? "checked" : "" %>>
                               <label><%= host.name %></label>
                             </div>
                           </div>

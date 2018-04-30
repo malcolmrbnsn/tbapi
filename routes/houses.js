@@ -1,14 +1,31 @@
 var express = require("express");
 var router = express.Router(),
-  formidable = require('formidable'),
-  path = require('path'),
-  fs = require('fs-extra')
-var House = require("../models/house");
-var middleware = require("../middleware");
+  fs = require("fs-extra"),
+  multer = require('multer'),
+  House = require("../models/house"),
+  middleware = require("../middleware");
 var {
   isLoggedIn,
   isAdmin
 } = middleware;
+
+// Multer
+var storage = multer.diskStorage({
+  filename: function(req, file, callback) {
+    callback(null, Date.now() + file.originalname);
+  }
+});
+var imageFilter = function(req, file, cb) {
+  // accept image files only
+  if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
+    return cb(new Error('Only image files are allowed!'), false);
+  }
+  cb(null, true);
+};
+var upload = multer({
+  storage: storage,
+  fileFilter: imageFilter
+})
 
 // Index
 router.get("/", isLoggedIn, function(req, res) {
@@ -28,38 +45,53 @@ router.get("/", isLoggedIn, function(req, res) {
 router.get("/new", isAdmin, function(req, res) {
   res.render("houses/new");
 })
+// // Create
+// router.post("/", isAdmin, function(req, res) {
+//   var form = new formidable.IncomingForm();
+//   //Formidable uploads to operating systems tmp dir by default
+//   form.uploadDir = "./public/img"; //set upload directory
+//   form.keepExtensions = true; //keep file extension
+//
+//   form.parse(req, function(err, fields, files) {
+//     console.log("form.bytesReceived");
+//     //TESTING
+//     console.log("file size: " + JSON.stringify(files.fileUploaded.size));
+//     console.log("file path: " + JSON.stringify(files.fileUploaded.path));
+//     console.log("file name: " + JSON.stringify(files.fileUploaded.name));
+//     console.log("file type: " + JSON.stringify(files.fileUploaded.type));
+//     console.log("lastModifiedDate: " + JSON.stringify(files.fileUploaded.lastModifiedDate));
+//     fs.rename(files.fileUploaded.path, './public/img/' + files.fileUploaded.name, function(err) {
+//       if (err)
+//         throw err;
+//       console.log('renamed complete');
+//     });
+//     var house = {
+//       name: fields.name,
+//       img: files.fileUploaded.name
+//     }
+//     House.create(house, function(err, newlyCreated) {
+//       if (err) {
+//         console.log(err)
+//       } else {
+//         res.redirect("/houses")
+//       }
+//     })
+//   })
+// })
 // Create
-router.post("/", isAdmin, function(req, res) {
-  var form = new formidable.IncomingForm();
-  //Formidable uploads to operating systems tmp dir by default
-  form.uploadDir = "./public/img"; //set upload directory
-  form.keepExtensions = true; //keep file extension
-
-  form.parse(req, function(err, fields, files) {
-    console.log("form.bytesReceived");
-    //TESTING
-    console.log("file size: " + JSON.stringify(files.fileUploaded.size));
-    console.log("file path: " + JSON.stringify(files.fileUploaded.path));
-    console.log("file name: " + JSON.stringify(files.fileUploaded.name));
-    console.log("file type: " + JSON.stringify(files.fileUploaded.type));
-    console.log("lastModifiedDate: " + JSON.stringify(files.fileUploaded.lastModifiedDate));
-    fs.rename(files.fileUploaded.path, './public/img/' + files.fileUploaded.name, function(err) {
-      if (err)
-        throw err;
-      console.log('renamed complete');
-    });
-    var house = {
-      name: fields.name,
-      img: files.fileUploaded.name
-    }
-    House.create(house, function(err, newlyCreated) {
-      if (err) {
-        console.log(err)
-      } else {
-        res.redirect("/houses")
-      }
-    })
-  })
+router.post("/", isAdmin, upload.single('image'), function(req, res) {
+  eval(require("locus"))
+  // var house = {
+  //   name: fields.name,
+  //   img: files.fileUploaded.name
+  // }
+  // House.create(house, function(err, newlyCreated) {
+  //   if (err) {
+  //     console.log(err)
+  //   } else {
+  //     res.redirect("/houses")
+  //   }
+  // })
 })
 // Show
 var populateQuery = [{

@@ -1,13 +1,14 @@
 const mongoose = require('mongoose');
 
 var alarmSchema = new mongoose.Schema({
-  name: String,
-  file: String,
+  name: {
+    type: String,
+    required: true
+  },
   minute: Number,
   hour: Number,
   sound: {
-    type: String,
-    required: true
+    type: String
   },
   dow: [],
   house: {
