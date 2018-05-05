@@ -18,8 +18,7 @@
                   <input type="text" placeholder="Name" name="name">
                 </div>
                 <div class="field">
-                  <input type="file" (change)="fileEvent($event)" class="inputfile" id="embedpollfileinput" name="fileUploaded" required>
-                  <label for="embedpollfileinput" class="ui floated button"><i class="ui upload icon"></i>Upload image</label>
+                  <input type="file" id="image" name="image" accept="image/*" required>
                 </div>
                 <button class="ui submit button" type="submit">Submit</button>
               </form>

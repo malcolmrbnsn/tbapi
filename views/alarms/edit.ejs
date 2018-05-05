@@ -48,7 +48,7 @@
                         <% house.hosts.forEach(function(host) { %>
                           <div class="inline field">
                             <div class="ui toggle checkbox">
-                              <input type="checkbox" name="alarm[hosts]" value="<%= host.id %>" <%= alarm.hosts.includes(host._id) ? "checked" : "" %>>
+                              <input type="checkbox" name="alarm[hosts]" value="<%= host.id %>" <%= selectedHosts.includes(host.id) ? "checked" : "" %> >
                               <label><%= host.name %></label>
                             </div>
                           </div>

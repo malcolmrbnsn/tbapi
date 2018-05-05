@@ -1,11 +1,13 @@
 var express = require("express");
 var router = express.Router();
+Rollbar = require("rollbar")
 var passport = require("passport");
 var User = require("../models/user");
 var middleware = require('../middleware')
 var async = require("async");
 var nodemailer = require("nodemailer");
 var crypto = require("crypto");
+var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 
 //root route
 router.get("/", function(req, res) {

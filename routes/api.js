@@ -5,6 +5,7 @@ const router = express.Router({
 var Host = require("../models/host");
 var House = require("../models/house");
 var Alarm = require("../models/alarm");
+var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 
 // show json
 router.get("/hosts/:ip", function(req, res) {
@@ -12,7 +13,7 @@ router.get("/hosts/:ip", function(req, res) {
     hostname: req.params.ip,
   }).exec(function(err, foundHost) {
     if (err) {
-      console.log(err)
+      rollbar.error(err)
       res.json(err)
     } else {
       Alarm.find({
@@ -20,7 +21,7 @@ router.get("/hosts/:ip", function(req, res) {
         active: true
       }).exec(function(err, foundAlarms) {
         if (err) {
-          console.log(err)
+          rollbar.error(err)
           res.json(err)
         } else {
           res.json(foundAlarms)

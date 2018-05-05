@@ -66,9 +66,8 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-// Rollbar
-// var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
-// rollbar.log("Hello world!");
+Rollbar
+var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 
 // Imported routes
 app.use(indexRoutes);

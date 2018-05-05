@@ -4,11 +4,13 @@ const router = express.Router({
   }),
   formidable = require('formidable'),
   path = require('path'),
+  Rollbar = require("rollbar"),
   fs = require('fs-extra')
 var Alarm = require("../models/alarm");
 var House = require("../models/house");
 var Host = require("../models/host");
 var middleware = require("../middleware");
+var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 var {
   isLoggedIn
 } = middleware;
@@ -72,19 +74,29 @@ router.get("/:alarm_id/edit", isLoggedIn, function(req, res) {
       console.log(err)
       return res.redirect('/houses');
     } else {
-      Alarm.findById(req.params.alarm_id, function(err, alarm) {
+      Alarm.findById(req.params.alarm_id).
+      populate("hosts").
+      exec(function(err, alarm) {
         if (err) {
           console.log(err)
         } else {
-          console.log(house.hosts);
+          var selectedHosts = []
           house.hosts.forEach(function(host) {
-            console.log(host._id);
-            console.log(alarm.hosts.includes(host._id, alarm.hosts));
-
+            alarm.hosts.forEach(function(aHost) {
+              if (aHost._id.equals(host._id)) {
+                console.log("yes");
+                selectedHosts.push(aHost._id.toString())
+              } else {
+                console.log("no");
+              }
+            })
           })
+          console.log(house);
+          console.log(alarm);
           res.render("alarms/edit", {
             house: house,
-            alarm: alarm
+            alarm: alarm,
+            selectedHosts: selectedHosts
           })
         }
       })

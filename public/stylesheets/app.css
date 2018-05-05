@@ -1,23 +1,21 @@
+/* Container spacing for navbar */
+
 div.container.space {
   margin-top: 10em;
+  margin-bottom: 3em;
 }
+
+/* Delete form button */
 
 .delete {
   display: inline;
 }
 
 .optionscell {
-  width: 220.66px;
+  max-width: 220.66px;
 }
 
-.inputfile {
-  width: 0.1px;
-  height: 0.1px;
-  opacity: 0;
-  overflow: hidden;
-  position: absolute;
-  z-index: -1;
-}
+/* Hide and show elements on mobile, desktop */
 
 @media (min-width:992px) {
   .desktop-only {

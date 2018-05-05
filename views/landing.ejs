@@ -1,52 +1,25 @@
-<!doctype html>
-
-<html lang="en">
-
-<head>
-  <!-- Required meta tags -->
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>TBAPi</title>
-
-  <!-- Semantic UI -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" integrity="sha256-oDCP2dNW17Y1QhBwQ+u2kLaKxoauWvIGks3a4as9QKs=" crossorigin="anonymous" />
-
-  <!-- Custom CSS -->
-  <link rel="stylesheet" href="/stylesheets/app.css">
-</head>
-
-<body>
-  <div class="ui top fixed inverted menu">
-    <a href="/" class="<%= typeof page !== 'undefined' && page === 'landing' ? 'active' : '' %> header item">
-      <i class="inverted grey bell icon"></i>TBAPi
-      </a>
-    <a href="/houses" class="<%= typeof page !== 'undefined' && page === 'index' ? 'active' : '' %> item"><i class="home icon"></i>Home</a>
-    <div class="right menu">
-      <% if(!currentUser){ %>
-        <a class="ui item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a>
-        <a class="ui item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a>
-        <% } else { %>
-          <a class="ui item" href="#">
-            <%= currentUser.username %>
-          </a>
-          <a class="ui item" href="/logout">Logout</a>
-          <% } %>
-    </div>
-  </div>
-  <div class="ui container space">
+<% include ./partials/header %>
     <% if(error && error.length > 0){ %>
+      <div class="ui container space">
       <div class="ui error message">
         <%= error %>
       </div>
+      </div>
       <% } %>
         <% if(success && success.length > 0){ %>
+          <div class="ui container space">
           <div class="ui success message">
             <%= success %>
           </div>
+          </div>
           <% } %>
-            <h1>INDEX PAGE</h1>
+            </div>
+            <div class="ui container space">
+              <div class="ui text container">
+                <h1 class="ui inverted header">TBAPi</h1>
+                <h2>The always-on-time alarm system.</h2>
+              </div>
+              </div>
 
             <a href="/houses" class="ui massive green button">Go to TBAPi</a>
-  </div>
   <% include partials/footer %>
