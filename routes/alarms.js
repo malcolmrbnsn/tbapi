@@ -17,7 +17,7 @@ router.get("/new", isLoggedIn, function(req, res) {
   populate("hosts").
   exec(function(err, house) {
     if (err) {
-      console.log(err)
+      rollbar.error(err)
       return res.redirect('/houses');
     } else {
       res.render("alarms/new", {
@@ -47,7 +47,7 @@ router.post("/", isLoggedIn, function(req, res) {
     };
     Alarm.create(newAlarm, function(err, alarm) {
       if (err) {
-        console.log(err)
+        rollbar.error(err)
         return res.redirect('/houses');
       } else {
         alarm.house.id = req.params.id;
@@ -68,28 +68,23 @@ router.get("/:alarm_id/edit", isLoggedIn, function(req, res) {
   populate("hosts").
   exec(function(err, house) {
     if (err) {
-      console.log(err)
+      rollbar.error(err)
       return res.redirect('/houses');
     } else {
       Alarm.findById(req.params.alarm_id).
       populate("hosts").
       exec(function(err, alarm) {
         if (err) {
-          console.log(err)
+          rollbar.error(err)
         } else {
           var selectedHosts = []
           house.hosts.forEach(function(host) {
             alarm.hosts.forEach(function(aHost) {
               if (aHost._id.equals(host._id)) {
-                console.log("yes");
                 selectedHosts.push(aHost._id.toString())
-              } else {
-                console.log("no");
-              }
+              } else {}
             })
           })
-          console.log(house);
-          console.log(alarm);
           res.render("alarms/edit", {
             house: house,
             alarm: alarm,
@@ -121,7 +116,7 @@ router.put("/:alarm_id", isLoggedIn, function(req, res) {
   };
   Alarm.findByIdAndUpdate(req.params.alarm_id, newAlarm, function(err, alarm) {
     if (err) {
-      console.log(err)
+      rollbar.error(err)
       return res.redirect('/houses');
     } else {
       res.redirect("/houses/" + req.params.id)
@@ -133,7 +128,7 @@ router.put("/:alarm_id", isLoggedIn, function(req, res) {
 router.delete("/:alarm_id", isLoggedIn, function(req, res) {
   Alarm.findByIdAndRemove(req.params.alarm_id, function(err) {
     if (err) {
-      console.log(err);
+      rollbar.error(err);
       res.redirect("/houses")
     } else {
       res.redirect("/houses/" + req.params.id)

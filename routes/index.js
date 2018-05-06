@@ -1,13 +1,13 @@
 var express = require("express"),
   router = express.Router(),
-  // Rollbar = require("rollbar"),
+  Rollbar = require("rollbar"),
   passport = require("passport"),
   User = require("../models/user"),
   middleware = require('../middleware'),
   async = require("async"),
   nodemailer = require("nodemailer"),
   crypto = require("crypto")
-// rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
+rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 
 //root route
 router.get("/", function(req, res) {
@@ -39,7 +39,7 @@ router.post("/register", function(req, res) {
   }
   User.register(newUser, req.body.password, function(err, user) {
     if (err) {
-      console.log(err);
+      rollbar.error(err);
       return res.render("register", {
         error: err.message
       });
@@ -121,7 +121,7 @@ router.post('/forgot', function(req, res, next) {
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
       smtpTransport.sendMail(mailOptions, function(err) {
-        console.log('mail sent');
+        rollbar.log('mail sent');
         req.flash('success', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
         done(err, 'done');
       });

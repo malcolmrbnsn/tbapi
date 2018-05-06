@@ -26,13 +26,16 @@ const hostRoutes = require("./routes/hosts")
 const alarmRoutes = require("./routes/alarms")
 const apiRoutes = require("./routes/api")
 
+// Rollbar
+var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
+
 // Mongoose
 mongoose.Promise = global.Promise;
 const databaseUri = process.env.DB_URI || "mongodb://localhost/tbapi";
 
 mongoose.connect(databaseUri)
-  .then(() => console.log(`Database connected`))
-  .catch(err => console.log(`Database connection error: ${err.message}`));
+  .then(() => rollbar.log(`Database connected`))
+  .catch(err => rollbar.error(`Database connection error: ${err.message}`));
 // seedDB(); // Seed the database
 
 // Passport
@@ -56,15 +59,12 @@ app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
-  console.log("A " + req.method + " request was made to " + req.url);
+  rollbar.log("A " + req.method + " request was made to " + req.url);
   next();
 })
 app.use(bodyParser.urlencoded({
   extended: true
 }));
-
-// Rollbar
-var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 
 // Imported routes
 app.use(indexRoutes);
@@ -73,4 +73,4 @@ app.use("/api", apiRoutes);
 app.use("/houses/:id/hosts", hostRoutes);
 app.use("/houses/:id/alarms", alarmRoutes);
 // Server //
-app.listen(process.env.PORT, process.env.IP, () => console.log("Server is running on port " + process.env.PORT));
+app.listen(process.env.PORT, process.env.IP, () => rollbar.log("Server is running on port " + process.env.PORT));

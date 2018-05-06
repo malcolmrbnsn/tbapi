@@ -37,7 +37,7 @@ cloudinary.config({
 router.get("/", isLoggedIn, function(req, res) {
   House.find({}, function(err, allHouses) {
     if (err) {
-      console.log(err)
+      rollbar.error(err)
     } else {
       res.render("houses/index", {
         houses: allHouses,
@@ -88,10 +88,9 @@ router.get("/:id", isLoggedIn, function(req, res) {
   populate(populateQuery).
   exec(function(err, foundHouse) {
     if (err || !foundHouse) {
-      console.log(err);
+      rollbar.error(err);
       return res.redirect('/houses');
     }
-    console.log(foundHouse)
     res.render("houses/show", {
       house: foundHouse
     });
@@ -102,11 +101,10 @@ router.get("/:id", isLoggedIn, function(req, res) {
 router.get("/:id/edit", isAdmin, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
-      console.log(err)
+      rollbar.error(err)
       res.flash("error", "An error occured")
       return res.redirect('/houses');
     } else {
-      console.log(house);
       res.render("houses/edit", {
         house: house
       })
@@ -148,7 +146,7 @@ router.put("/:id", upload.single('image'), function(req, res) {
 router.delete("/:id", isAdmin, function(req, res) {
   House.findByIdAndRemove(req.params.id, function(err) {
     if (err) {
-      console.log(err);
+      rollbar.error(err);
       res.redirect("/houses")
     } else {
       res.redirect("/houses")
