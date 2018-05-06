@@ -1,11 +1,8 @@
 // SETUP
 const express = require('express'),
   bodyParser = require('body-parser'),
-  formidable = require('formidable'),
   passport = require('passport'),
   LocalStrategy = require('passport-local'),
-  path = require('path'),
-  fs = require('fs-extra'),
   mongoose = require('mongoose'),
   methodOverride = require("method-override"),
   Rollbar = require("rollbar"),
@@ -66,7 +63,7 @@ app.use(bodyParser.urlencoded({
   extended: true
 }));
 
-Rollbar
+// Rollbar
 var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 
 // Imported routes

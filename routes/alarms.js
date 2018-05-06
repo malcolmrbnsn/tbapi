@@ -2,10 +2,7 @@ var express = require("express");
 const router = express.Router({
     mergeParams: true
   }),
-  formidable = require('formidable'),
-  path = require('path'),
-  Rollbar = require("rollbar"),
-  fs = require('fs-extra')
+  Rollbar = require("rollbar")
 var Alarm = require("../models/alarm");
 var House = require("../models/house");
 var Host = require("../models/host");

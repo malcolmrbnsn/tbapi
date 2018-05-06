@@ -1,9 +1,6 @@
 var express = require("express");
 var router = express.Router(),
-  // formidable = require('formidable'),
-  path = require('path'),
   Rollbar = require("rollbar"),
-  fs = require('fs-extra'),
   House = require("../models/house"),
   middleware = require("../middleware");
 var {
@@ -56,22 +53,27 @@ router.get("/new", isAdmin, function(req, res) {
 })
 
 // Create
-router.post("/", upload.single('image'), function(req, res) {
-  var house = {
-    name: req.body.name,
-  }
-  cloudinary.uploader.upload(req.file.path, function(result) {
+router.post("/", isLoggedIn, upload.single('image'), function(req, res) {
+  cloudinary.v2.uploader.upload(req.file.path, function(err, result) {
+    if (err) {
+      req.flash('error', err.message);
+      return res.redirect('back');
+    }
     // add cloudinary url for the image to the house object under image property
-    house.img = result.secure_url;
-    House.create(house, function(err, newlyCreated) {
+    req.body.house.image = result.secure_url;
+    // add image's public_id to house object
+    req.body.house.imageId = result.public_id;
+    // add author to house
+    req.body.house.author = req.user._id
+    House.create(req.body.house, function(err, house) {
       if (err) {
-        console.log(err)
-      } else {
-        res.redirect("/houses")
+        req.flash('error', err.message);
+        return res.redirect('back');
       }
-    })
+      res.redirect('/houses');
+    });
   });
-})
+});
 // Show
 var populateQuery = [{
   path: 'hosts'
@@ -113,37 +115,32 @@ router.get("/:id/edit", isAdmin, function(req, res) {
 })
 
 // Update
-router.put("/:id", isAdmin, function(req, res) {
-  var form = new formidable.IncomingForm();
-  //Formidable uploads to operating systems tmp dir by default
-  form.uploadDir = "./public/img"; //set upload directory
-  form.keepExtensions = true; //keep file extension
-
-  form.parse(req, function(err, fields, files) {
-    console.log(files.size)
-    if (files.size > 0) {
-
-      fs.rename(files.fileUploaded.path, './public/img/' + files.fileUploaded.name, function(err) {
-        if (err)
-          throw err;
-      });
-      var house = {
-        name: fields.name,
-        img: files.fileUploaded.name
-      }
+router.put("/:id", upload.single('image'), function(req, res) {
+  House.findById(req.params.id, async function(err, house) {
+    if (err) {
+      req.flash("error", err.message);
+      res.redirect("back");
     } else {
-      var house = {
-        name: fields.name
+      if (req.file) {
+        try {
+          await cloudinary.v2.uploader.destroy(house.imageId);
+          var result = await cloudinary.v2.uploader.upload(req.file.path, {
+            height: 500,
+            width: 500,
+            crop: "pad"
+          })
+          house.imageId = result.public_id;
+          house.image = result.secure_url;
+        } catch (err) {
+          req.flash("error", err.message);
+          return res.redirect("back");
+        }
       }
+      house.name = req.body.name;
+      house.save();
+      req.flash("success", "Successfully Updated!");
+      res.redirect("/houses/" + house._id);
     }
-    House.findByIdAndUpdate(req.params.id, house, function(err, house) {
-      if (err) {
-        console.log(err)
-        return res.redirect('/houses');
-      } else {
-        res.redirect("/houses/" + req.params.id)
-      }
-    })
   })
 })
 

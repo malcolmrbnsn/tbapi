@@ -15,11 +15,10 @@
     <form class="ui form" action="/houses/<%= house._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
       <div class="field">
         <label>House Name</label>
-        <input type="text" placeholder="<%= house.name %>" name="name">
+        <input type="text" placeholder="<%= house.name %>" name="house[name]">
       </div>
       <div class="field">
-      <input type="file" (change)="fileEvent($event)" class="inputfile" id="embedpollfileinput" name="fileUploaded" />
-      <label for="embedpollfileinput" class="ui floated button"><i class="ui upload icon"></i>Upload image</label>
+      <input type="file" id="image" name="house[image]" accept="image/*" required>
       </div>
       <button class="ui submit button" type="submit">Submit</button>
     </form>

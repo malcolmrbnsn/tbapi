@@ -5,7 +5,7 @@ const router = express.Router({
 var Host = require("../models/host");
 var House = require("../models/house");
 var middleware = require("../middleware");
-var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
+// var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 var {
   isLoggedIn,
   isAdmin

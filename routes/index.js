@@ -1,13 +1,13 @@
-var express = require("express");
-var router = express.Router();
-Rollbar = require("rollbar")
-var passport = require("passport");
-var User = require("../models/user");
-var middleware = require('../middleware')
-var async = require("async");
-var nodemailer = require("nodemailer");
-var crypto = require("crypto");
-var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
+var express = require("express"),
+  router = express.Router(),
+  // Rollbar = require("rollbar"),
+  passport = require("passport"),
+  User = require("../models/user"),
+  middleware = require('../middleware'),
+  async = require("async"),
+  nodemailer = require("nodemailer"),
+  crypto = require("crypto")
+// rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 
 //root route
 router.get("/", function(req, res) {
@@ -190,7 +190,7 @@ router.post('/reset/:token', function(req, res) {
       var mailOptions = {
         to: user.email,
         from: 'calumrobinson9@gmail.com',
-        subject: 'Your password has been changed',
+        subject: 'Your password for TBAPi has been changed',
         text: 'Hello,\n\n' +
           'This is a confirmation that the password for your account ' + user.email + ' has just been changed.\n'
       };

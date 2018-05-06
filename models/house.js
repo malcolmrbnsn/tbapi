@@ -5,7 +5,12 @@ var houseSchema = new mongoose.Schema({
     type: String,
     unique: true
   },
-  img: String,
+  image: String,
+  imageId: String,
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
   hosts: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Host"
