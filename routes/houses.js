@@ -33,6 +33,14 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
+var eager_options = {
+  gravity: "center",
+  height: 1000,
+  quality: "auto",
+  width: 600,
+  crop: "thumb"
+}
+
 // Index
 router.get("/", isLoggedIn, function(req, res) {
   House.find({}, function(err, allHouses) {
@@ -54,13 +62,15 @@ router.get("/new", isAdmin, function(req, res) {
 
 // Create
 router.post("/", isLoggedIn, upload.single('image'), function(req, res) {
-  cloudinary.v2.uploader.upload(req.file.path, function(err, result) {
+  cloudinary.v2.uploader.upload(req.file.path, {
+    eager: eager_options
+  }, function(err, result) {
     if (err) {
       req.flash('error', err.message);
       return res.redirect('back');
     }
     // add cloudinary url for the image to the house object under image property
-    req.body.house.image = result.secure_url;
+    req.body.house.image = result.eager[0].secure_url;
     // add image's public_id to house object
     req.body.house.imageId = result.public_id;
     // add author to house
@@ -123,12 +133,10 @@ router.put("/:id", upload.single('image'), function(req, res) {
         try {
           await cloudinary.v2.uploader.destroy(house.imageId);
           var result = await cloudinary.v2.uploader.upload(req.file.path, {
-            height: 500,
-            width: 500,
-            crop: "pad"
+            eager: eager_options
           })
           house.imageId = result.public_id;
-          house.image = result.secure_url;
+          house.image = result.eager[0].secure_url;
         } catch (err) {
           req.flash("error", err.message);
           return res.redirect("back");
@@ -142,16 +150,24 @@ router.put("/:id", upload.single('image'), function(req, res) {
   })
 })
 
-// Delete
-router.delete("/:id", isAdmin, function(req, res) {
-  House.findByIdAndRemove(req.params.id, function(err) {
+router.delete('/:id', function(req, res) {
+  House.findById(req.params.id, async function(err, house) {
     if (err) {
-      rollbar.error(err);
-      res.redirect("/houses")
-    } else {
-      res.redirect("/houses")
+      req.flash("error", err.message);
+      return res.redirect("back");
     }
-  })
-})
+    try {
+      await cloudinary.v2.uploader.destroy(house.imageId);
+      house.remove();
+      req.flash('success', 'House deleted successfully!');
+      res.redirect('/houses');
+    } catch (err) {
+      if (err) {
+        req.flash("error", err.message);
+        return res.redirect("back");
+      }
+    }
+  });
+});
 
 module.exports = router;

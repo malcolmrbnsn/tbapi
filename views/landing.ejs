@@ -1,25 +1,52 @@
-<% include ./partials/header %>
-    <% if(error && error.length > 0){ %>
-      <div class="ui container space">
-      <div class="ui error message">
-        <%= error %>
-      </div>
-      </div>
-      <% } %>
-        <% if(success && success.length > 0){ %>
-          <div class="ui container space">
-          <div class="ui success message">
-            <%= success %>
-          </div>
-          </div>
-          <% } %>
-            </div>
-            <div class="ui container space">
-              <div class="ui text container">
-                <h1 class="ui inverted header">TBAPi</h1>
-                <h2>The always-on-time alarm system.</h2>
-              </div>
-              </div>
+<!doctype html>
 
-            <a href="/houses" class="ui massive green button">Go to TBAPi</a>
-  <% include partials/footer %>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0 shrink-to-fit=no">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>TBAPi</title>
+
+  <script src="/libs/jquery-3.3.1.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.js" integrity="sha256-RKNmL9+6j/3jB72OcIg8OQr91Bi4OgFPnKQOFS1O+fo=" crossorigin="anonymous"></script>
+
+  <!-- Semantic UI -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" integrity="sha256-oDCP2dNW17Y1QhBwQ+u2kLaKxoauWvIGks3a4as9QKs=" crossorigin="anonymous" />
+
+<link rel="stylesheet" href="/stylesheets/landing.css">
+</head>
+
+<body>
+  <div class="ui inverted vertical center aligned segment">
+    <div class="ui container">
+      <div class="ui massive borderless inverted menu">
+        <h1 class="header item">
+          TBAPi
+        </h1>
+        <div class="right item">
+          <div class="ui massive secondary inverted pointing menu">
+            <a href="/houses" class="item">Home</a>
+            <% if(!currentUser){ %>
+              <a class="item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a>
+              <a class="item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a>
+              <% } else { %>
+                <a class="item" href="/logout">Logout</a>
+                <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="ui text container">
+      <h1 class="ui inverted header">
+        Welcome to TBAPi
+      </h1>
+      <a href="/houses" class="ui massive white button">
+        Houses
+      </a>
+    </div>
+  </div>
+</body>
+
+</html>
