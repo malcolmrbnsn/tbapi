@@ -1,7 +1,8 @@
 var express = require("express");
 const router = express.Router({
-  mergeParams: true
-});
+    mergeParams: true
+  }),
+  Rollbar = require("rollbar");
 var Host = require("../models/host");
 var House = require("../models/house");
 var Alarm = require("../models/alarm");
