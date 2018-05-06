@@ -60,11 +60,13 @@ typings/
 # npm package-lock (Generated on npm init)
 package-lock.json
 
-# uploaded images dir
+# uploaded images and sounds
 public/img
+public/sounds
 
 # enviornment variables
 .env
+
 # .DS_Store files
 public/.DS_Store
 .DS_Store
