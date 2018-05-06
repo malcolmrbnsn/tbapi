@@ -35,12 +35,11 @@
                 </div>
                 <p>Days of the week:</p>
                 <% days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %>
-                  <% nDays = [0,1,2,3,4,5,6,] %>
-                    <% nDays.forEach(function(i) {%>
+                    <% days.forEach(function(day, i, arr) {%>
                       <div class="inline field">
                         <div class="ui toggle checkbox">
-                          <input type="checkbox" name="alarm[dow]" value="<%= i %>" <%= alarm.dow[i] ? "checked" : "" %>>
-                          <label><%= days[i] %></label>
+                          <input type="checkbox" name="alarm[dow]" value="<%= i %>" <%= alarm.dow.includes(i.toString()) ? "checked" : "" %> >
+                          <label><%= day %></label>
                         </div>
                       </div>
                       <% }) %>
