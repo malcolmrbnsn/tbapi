@@ -1,19 +1,26 @@
 var express = require("express");
 var router = express.Router(),
-  Rollbar = require("rollbar"),
   House = require("../models/house"),
   middleware = require("../middleware");
 var {
   isLoggedIn,
   isAdmin
 } = middleware;
-var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 var multer = require('multer');
 var storage = multer.diskStorage({
   filename: function(req, file, callback) {
     callback(null, Date.now() + file.originalname);
   }
 });
+
+// Rollbar
+var Rollbar = require("rollbar")
+var rollbar = new Rollbar({
+  accessToken: '3186dddb91ea4c0db986150bd3a37afa',
+  captureUncaught: true,
+  captureUnhandledRejections: true
+});
+
 var imageFilter = function(req, file, cb) {
   // accept image files only
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {

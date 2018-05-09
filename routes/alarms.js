@@ -1,16 +1,23 @@
 var express = require("express");
 const router = express.Router({
-    mergeParams: true
-  }),
-  Rollbar = require("rollbar")
+  mergeParams: true
+})
 var Alarm = require("../models/alarm");
 var House = require("../models/house");
 var Host = require("../models/host");
 var middleware = require("../middleware");
-var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
 var {
   isLoggedIn
 } = middleware;
+
+// Rollbar
+var Rollbar = require("rollbar")
+var rollbar = new Rollbar({
+  accessToken: '3186dddb91ea4c0db986150bd3a37afa',
+  captureUncaught: true,
+  captureUnhandledRejections: true
+});
+
 // New
 router.get("/new", isLoggedIn, function(req, res) {
   House.findById(req.params.id).

@@ -1,13 +1,19 @@
 var express = require("express"),
   router = express.Router(),
-  Rollbar = require("rollbar"),
   passport = require("passport"),
   User = require("../models/user"),
   middleware = require('../middleware'),
   async = require("async"),
   nodemailer = require("nodemailer"),
   crypto = require("crypto")
-rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
+
+// Rollbar
+var Rollbar = require("rollbar")
+var rollbar = new Rollbar({
+  accessToken: '3186dddb91ea4c0db986150bd3a37afa',
+  captureUncaught: true,
+  captureUnhandledRejections: true
+});
 
 //root route
 router.get("/", function(req, res) {

@@ -15,17 +15,26 @@
   <!-- Semantic UI -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" integrity="sha256-oDCP2dNW17Y1QhBwQ+u2kLaKxoauWvIGks3a4as9QKs=" crossorigin="anonymous" />
 
-<link rel="stylesheet" href="/stylesheets/landing.css">
+  <link rel="stylesheet" href="/stylesheets/landing.css">
 </head>
 
-<body>
+<body class="pushable">
+  <div class="ui sidebar inverted vertical menu">
+    <a href="/houses" class="ui item"><i class="home icon"></i>Home</a>
+    <% if(!currentUser){ %>
+      <a class="ui item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a>
+      <a class="ui item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a>
+      <% } else { %>
+        <a class="item" href="/logout">Logout</a>
+        <% } %>
+  </div>
   <div class="ui inverted vertical center aligned segment">
     <div class="ui container">
       <div class="ui massive borderless inverted menu">
         <h1 class="header item">
           TBAPi
         </h1>
-        <div class="right item">
+        <div class="right item desktop-only">
           <div class="ui massive secondary inverted pointing menu">
             <a href="/houses" class="item">Home</a>
             <% if(!currentUser){ %>
@@ -35,6 +44,11 @@
                 <a class="item" href="/logout">Logout</a>
                 <% } %>
           </div>
+        </div>
+        <div class="right item mobile-only">
+          <a class="ui item" id="expandheader">
+                <i class="bars icon"></i>
+              </a>
         </div>
       </div>
     </div>
@@ -47,6 +61,12 @@
       </a>
     </div>
   </div>
+  <script>
+    $("#expandheader").click(function() {
+      $('.ui.sidebar')
+        .sidebar('toggle');
+    });
+  </script>
 </body>
 
 </html>

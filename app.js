@@ -27,7 +27,12 @@ const alarmRoutes = require("./routes/alarms")
 const apiRoutes = require("./routes/api")
 
 // Rollbar
-var rollbar = new Rollbar("3186dddb91ea4c0db986150bd3a37afa");
+var rollbar = new Rollbar({
+  accessToken: '3186dddb91ea4c0db986150bd3a37afa',
+  captureUncaught: true,
+  captureUnhandledRejections: true
+});
+app.use(rollbar.errorHandler());
 
 // Mongoose
 mongoose.Promise = global.Promise;
