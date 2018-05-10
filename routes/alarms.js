@@ -6,7 +6,7 @@ const express = require("express"),
   House = require("../models/house"),
   Host = require("../models/host"),
   middleware = require("../middleware"),
-  isLoggedIn = middleware;
+  isLoggedIn = middleware.isLoggedIn;
 
 // Rollbar
 var Rollbar = require("rollbar");
