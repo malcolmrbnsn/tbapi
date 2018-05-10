@@ -1,37 +1,38 @@
-var express = require("express");
-var router = express.Router(),
+const express = require("express"),
+  router = express.Router(),
   House = require("../models/house"),
-  middleware = require("../middleware");
-var {
-  isLoggedIn,
-  isAdmin
-} = middleware;
-var multer = require('multer');
-var storage = multer.diskStorage({
-  filename: function(req, file, callback) {
-    callback(null, Date.now() + file.originalname);
-  }
-});
+  middleware = require("../middleware"),
+  {
+    isLoggedIn,
+    isAdmin
+  } = middleware;
 
 // Rollbar
-var Rollbar = require("rollbar")
+var Rollbar = require("rollbar");
 var rollbar = new Rollbar({
   accessToken: '3186dddb91ea4c0db986150bd3a37afa',
   captureUncaught: true,
   captureUnhandledRejections: true
 });
 
+// MULTER
+var multer = require('multer');
+var storage = multer.diskStorage({
+  filename: function(req, file, callback) {
+    callback(null, Date.now() + file.originalname);
+  }
+});
 var imageFilter = function(req, file, cb) {
   // accept image files only
   if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/i)) {
     return cb(new Error('Only image files are allowed!'), false);
   }
   cb(null, true);
-};
+}
 var upload = multer({
   storage: storage,
   fileFilter: imageFilter
-})
+});
 
 var cloudinary = require('cloudinary');
 cloudinary.config({
@@ -52,20 +53,20 @@ var eager_options = {
 router.get("/", isLoggedIn, function(req, res) {
   House.find({}, function(err, allHouses) {
     if (err) {
-      rollbar.error(err)
+      rollbar.error(err);
     } else {
       res.render("houses/index", {
         houses: allHouses,
         page: 'index'
-      })
+      });
     }
-  })
-})
+  });
+});
 
 // New
 router.get("/new", isAdmin, function(req, res) {
   res.render("houses/new");
-})
+});
 
 // Create
 router.post("/", isLoggedIn, upload.single('image'), function(req, res) {
@@ -81,7 +82,7 @@ router.post("/", isLoggedIn, upload.single('image'), function(req, res) {
     // add image's public_id to house object
     req.body.house.imageId = result.public_id;
     // add author to house
-    req.body.house.author = req.user._id
+    req.body.house.author = req.user._id;
     House.create(req.body.house, function(err, house) {
       if (err) {
         req.flash('error', err.message);
@@ -118,16 +119,16 @@ router.get("/:id", isLoggedIn, function(req, res) {
 router.get("/:id/edit", isAdmin, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
-      rollbar.error(err)
-      res.flash("error", "An error occured")
+      rollbar.error(err);
+      res.flash("error", "An error occured");
       return res.redirect('/houses');
     } else {
       res.render("houses/edit", {
         house: house
-      })
+      });
     }
-  })
-})
+  });
+});
 
 // Update
 router.put("/:id", upload.single('image'), function(req, res) {
@@ -141,7 +142,7 @@ router.put("/:id", upload.single('image'), function(req, res) {
           await cloudinary.v2.uploader.destroy(house.imageId);
           var result = await cloudinary.v2.uploader.upload(req.file.path, {
             eager: eager_options
-          })
+          });
           house.imageId = result.public_id;
           house.image = result.eager[0].secure_url;
         } catch (err) {
@@ -154,8 +155,8 @@ router.put("/:id", upload.single('image'), function(req, res) {
       req.flash("success", "Successfully Updated!");
       res.redirect("/houses/" + house._id);
     }
-  })
-})
+  });
+});
 
 router.delete('/:id', function(req, res) {
   House.findById(req.params.id, async function(err, house) {
@@ -164,6 +165,14 @@ router.delete('/:id', function(req, res) {
       return res.redirect("back");
     }
     try {
+      house.hosts.forEach(function(host) {
+        host.findByIdAndRemove(host, function(hostErr) {
+          if (hostErr) {
+            req.flash("error", err.message);
+            return res.redirect("back");
+          }
+        });
+      });
       await cloudinary.v2.uploader.destroy(house.imageId);
       house.remove();
       req.flash('success', 'House deleted successfully!');

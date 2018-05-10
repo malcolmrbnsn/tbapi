@@ -7,8 +7,8 @@ const express = require('express'),
   methodOverride = require("method-override"),
   Rollbar = require("rollbar"),
   flash = require('connect-flash'),
-  app = express()
-require('dotenv').config()
+  app = express();
+require('dotenv').config();
 
 const port = process.env.PORT || 3000;
 
@@ -17,14 +17,13 @@ const House = require('./models/house'),
   Host = require('./models/host'),
   User = require('./models/user'),
   Alarm = require('./models/alarm');
-seedDB = require('./seeds')
 
 // Routes
-const indexRoutes = require("./routes/index")
-const houseRoutes = require("./routes/houses")
-const hostRoutes = require("./routes/hosts")
-const alarmRoutes = require("./routes/alarms")
-const apiRoutes = require("./routes/api")
+const indexRoutes = require("./routes/index"),
+  houseRoutes = require("./routes/houses"),
+  hostRoutes = require("./routes/hosts"),
+  alarmRoutes = require("./routes/alarms"),
+  apiRoutes = require("./routes/api");
 
 // Rollbar
 var rollbar = new Rollbar({
@@ -41,7 +40,6 @@ const databaseUri = process.env.DB_URI || "mongodb://localhost/tbapi";
 mongoose.connect(databaseUri)
   .then(() => rollbar.log(`Database connected`))
   .catch(err => rollbar.error(`Database connection error: ${err.message}`));
-// seedDB(); // Seed the database
 
 // Passport
 app.use(require("express-session")({
@@ -66,7 +64,7 @@ app.use(function(req, res, next) {
   res.locals.success = req.flash("success");
   rollbar.log("A " + req.method + " request was made to " + req.url);
   next();
-})
+});
 app.use(bodyParser.urlencoded({
   extended: true
 }));

@@ -1,14 +1,14 @@
-var express = require("express"),
+const express = require("express"),
   router = express.Router(),
   passport = require("passport"),
   User = require("../models/user"),
   middleware = require('../middleware'),
   async = require("async"),
   nodemailer = require("nodemailer"),
-  crypto = require("crypto")
+  crypto = require("crypto");
 
 // Rollbar
-var Rollbar = require("rollbar")
+var Rollbar = require("rollbar");
 var rollbar = new Rollbar({
   accessToken: '3186dddb91ea4c0db986150bd3a37afa',
   captureUncaught: true,
@@ -26,7 +26,7 @@ router.get("/", function(req, res) {
 router.get("/register", function(req, res) {
   res.render("register", {
     page: 'register'
-  })
+  });
 });
 
 //handle sign up logic
