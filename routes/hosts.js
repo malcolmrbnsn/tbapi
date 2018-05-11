@@ -26,7 +26,8 @@ router.get("/new", isAdmin, function(req, res) {
       return res.redirect('/houses');
     } else {
       res.render("hosts/new", {
-        house: house
+        house: house,
+        pageName: "New Host"
       });
     }
   });
@@ -49,7 +50,7 @@ router.post("/", isAdmin, function(req, res) {
           var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
           if (!req.body.host.hostname.match(ipformat)) {
             req.flash("error", "You must enter a valid IP Address!")
-            res.redirect("back")
+            return res.redirect("back")
           }
           // Link to house
           host.house.id = req.params.id;
@@ -79,7 +80,8 @@ router.get("/:host_id/edit", isAdmin, function(req, res) {
         } else {
           res.render("hosts/edit", {
             house: house,
-            host: host
+            host: host,
+            pageName: "Edit Host"
           });
         }
       });

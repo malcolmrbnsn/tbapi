@@ -2,7 +2,6 @@ const express = require("express"),
   router = express.Router(),
   passport = require("passport"),
   User = require("../models/user"),
-  middleware = require('../middleware'),
   async = require("async"),
   nodemailer = require("nodemailer"),
   crypto = require("crypto");
@@ -25,7 +24,8 @@ router.get("/", function(req, res) {
 // show register form
 router.get("/register", function(req, res) {
   res.render("register", {
-    page: 'register'
+    page: 'register',
+    pageName: "Register"
   });
 });
 
@@ -60,7 +60,8 @@ router.post("/register", function(req, res) {
 //show login form
 router.get("/login", function(req, res) {
   res.render("login", {
-    page: 'login'
+    page: 'login',
+    pageName: "Login"
   });
 });
 
@@ -81,7 +82,9 @@ router.get("/logout", function(req, res) {
 
 // forgot password
 router.get('/forgot', function(req, res) {
-  res.render('forgot');
+  res.render('forgot', {
+    pageName: "Forgot Password"
+  });
 });
 
 router.post('/forgot', function(req, res, next) {
@@ -150,7 +153,8 @@ router.get('/reset/:token', function(req, res) {
       return res.redirect('/forgot');
     }
     res.render('reset', {
-      token: req.params.token
+      token: req.params.token,
+      pageName: "Password Reset"
     });
   });
 });

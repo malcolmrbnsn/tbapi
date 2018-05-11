@@ -26,7 +26,8 @@ router.get("/new", isLoggedIn, function(req, res) {
       return res.redirect('/houses');
     } else {
       res.render("alarms/new", {
-        house: house
+        house: house,
+        pageName: "New Alarm"
       });
     }
   });
@@ -93,7 +94,8 @@ router.get("/:alarm_id/edit", isLoggedIn, function(req, res) {
           res.render("alarms/edit", {
             house: house,
             alarm: alarm,
-            selectedHosts: selectedHosts
+            selectedHosts: selectedHosts,
+            pageName: "Edit Alarm"
           });
         }
       });
@@ -106,11 +108,11 @@ router.put("/:alarm_id", isLoggedIn, function(req, res) {
   if (!req.body.alarm.dow) {
     req.flash("error", "You must select at least one day!");
     return res.redirect("back");
-  };
+  }
   if (!req.body.alarm.hosts) {
     req.flash("error", "You need to select at least one host!");
     return res.redirect("back");
-  };
+  }
   newAlarm = {
     name: req.body.alarm.name,
     hour: req.body.alarm.hour,

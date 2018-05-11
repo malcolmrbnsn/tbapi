@@ -57,7 +57,8 @@ router.get("/", isLoggedIn, function(req, res) {
     } else {
       res.render("houses/index", {
         houses: allHouses,
-        page: 'index'
+        page: 'index',
+        pageName: "Houses"
       });
     }
   });
@@ -65,7 +66,9 @@ router.get("/", isLoggedIn, function(req, res) {
 
 // New
 router.get("/new", isAdmin, function(req, res) {
-  res.render("houses/new");
+  res.render("houses/new", {
+    pageName: "New House"
+  });
 });
 
 // Create
@@ -110,7 +113,8 @@ router.get("/:id", isLoggedIn, function(req, res) {
       return res.redirect('/houses');
     }
     res.render("houses/show", {
-      house: foundHouse
+      house: foundHouse,
+      pageName: foundHouse.name
     });
   });
 });
@@ -124,7 +128,8 @@ router.get("/:id/edit", isAdmin, function(req, res) {
       return res.redirect('/houses');
     } else {
       res.render("houses/edit", {
-        house: house
+        house: house,
+        pageName: "Edit House"
       });
     }
   });
