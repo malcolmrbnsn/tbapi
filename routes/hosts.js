@@ -42,9 +42,16 @@ router.post("/", isAdmin, function(req, res) {
       Host.create(req.body.host, function(err, host) {
         if (err) {
           rollbar.error(err);
+          // HACK: Should check what the error is
           req.flash("error", "Hostname must be unique")
           return res.redirect('back');
         } else {
+          var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+          if (!req.body.host.hostname.match(ipformat)) {
+            req.flash("error", "You must enter a valid IP Address!")
+            res.redirect("back")
+          }
+          // Link to house
           host.house.id = req.params.id;
           // Save host
           host.save();
