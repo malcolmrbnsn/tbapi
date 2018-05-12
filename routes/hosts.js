@@ -108,7 +108,6 @@ router.delete("/:host_id", isAdmin, function(req, res) {
     if (err) {
       rollbar.error(err);
       return res.redirect('/houses');
-      res.redirect("/houses");
     } else {
       res.redirect("/houses/" + req.params.id);
     }

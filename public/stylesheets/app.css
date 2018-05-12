@@ -1,6 +1,6 @@
 /* Container spacing for navbar */
 
-div.container.space {
+.container.space {
   margin-top: 10em;
   margin-bottom: 3em;
 }
@@ -13,24 +13,4 @@ div.container.space {
 
 .optionscell {
   max-width: 220.66px;
-}
-
-/* Hide and show elements on mobile, desktop */
-
-@media (min-width:992px) {
-  .desktop-only {
-    display: block !important;
-  }
-  .mobile-only {
-    display: none !important;
-  }
-}
-
-@media (max-width: 991px) {
-  .mobile-only {
-    display: block !important;
-  }
-  .desktop-only {
-    display: none !important;
-  }
 }

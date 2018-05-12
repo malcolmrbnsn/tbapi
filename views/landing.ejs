@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/semantic-ui/2.3.1/semantic.min.css" integrity="sha256-oDCP2dNW17Y1QhBwQ+u2kLaKxoauWvIGks3a4as9QKs=" crossorigin="anonymous" />
 
   <link rel="stylesheet" href="/stylesheets/landing.css">
+  <link rel="stylesheet" href="/stylesheets/responsive_elements.css">
 </head>
 
 <body class="pushable">
@@ -28,37 +29,39 @@
         <a class="item" href="/logout">Logout</a>
         <% } %>
   </div>
-  <div class="ui inverted vertical center aligned segment">
-    <div class="ui container">
-      <div class="ui massive borderless inverted menu">
-        <h1 class="header item">
+  <div class="pusher">
+    <div class="ui inverted vertical center aligned segment">
+      <div class="ui container">
+        <div class="ui massive borderless inverted menu">
+          <h1 class="header item">
           TBAPi
         </h1>
-        <div class="right item desktop-only">
-          <div class="ui massive secondary inverted pointing menu">
-            <a href="/houses" class="item">Home</a>
-            <% if(!currentUser){ %>
-              <a class="item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a>
-              <a class="item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a>
-              <% } else { %>
-                <a class="item" href="/logout">Logout</a>
-                <% } %>
+          <div class="right item desktop-only">
+            <div class="ui massive secondary inverted pointing menu">
+              <a href="/houses" class="item">Home</a>
+              <% if(!currentUser){ %>
+                <a class="item <%= typeof page !== 'undefined' && page === 'login' ? 'active' : '' %>" href="/login">Login</a>
+                <a class="item <%= typeof page !== 'undefined' && page === 'register' ? 'active' : '' %>" href="/register">Sign Up</a>
+                <% } else { %>
+                  <a class="item" href="/logout">Logout</a>
+                  <% } %>
+            </div>
           </div>
-        </div>
-        <div class="right item mobile-only">
-          <a class="ui item" id="expandheader">
+          <div class="right item mobile-only">
+            <a class="ui item" id="expandheader">
                 <i class="bars icon"></i>
               </a>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="ui text container">
-      <h1 class="ui inverted header">
+      <div class="ui text container">
+        <h1 class="ui inverted header">
         Welcome to TBAPi
       </h1>
-      <a href="/houses" class="ui massive white button">
+        <a href="/houses" class="ui massive white button">
         Houses
       </a>
+      </div>
     </div>
   </div>
   <script>

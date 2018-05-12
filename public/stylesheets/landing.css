@@ -41,23 +41,3 @@
 .ui.inverted.vertical.segment .ui.footer.segment a {
   color: white;
 }
-
-/* Hide and show elements on mobile, desktop */
-
-@media (min-width:992px) {
-  .desktop-only {
-    display: block !important;
-  }
-  .mobile-only {
-    display: none !important;
-  }
-}
-
-@media (max-width: 991px) {
-  .mobile-only {
-    display: block !important;
-  }
-  .desktop-only {
-    display: none !important;
-  }
-}
