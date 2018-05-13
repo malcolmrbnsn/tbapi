@@ -12,7 +12,7 @@
           <% } %>
             <div class="ui padded segment">
               <h1 class="ui center aligned header">Edit <%= alarm.name %></h1>
-              <form class="ui form" action="/houses/<%= house._id %>/alarms/<%= alarm._id %>?_method=PUT" method="POST">
+              <form class="ui form" action="/houses/<%= house._id %>/alarms/<%= alarm._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
                 <div class="field">
                   <label>Name</label>
                   <input type="text" name="alarm[name]" value="<%= alarm.name %>">
@@ -26,6 +26,10 @@
                     <label>Hour</label>
                     <input type="number" name="alarm[hour]" placeholder="hour" min="0" max="24" required value="<%= alarm.hour %>">
                   </div>
+                </div>
+                <div class="field">
+                  <label>Upload a Sound</label>
+                  <input type="file" id="sound" name="sound" accept="audio/*">
                 </div>
                 <div class="inline field">
                   <div class="ui toggle checkbox">

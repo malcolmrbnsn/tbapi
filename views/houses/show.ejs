@@ -64,6 +64,7 @@
     <th>Time</th>
     <th>Days</th>
     <th>Hosts</th>
+    <th>Sound</th>
     <th>Active</th>
     <th>Options</th>
   </thead>
@@ -90,6 +91,9 @@
               <% }) %>
               <% } %>
 
+      </td>
+      <td>
+      <%= alarm.file.name %>
       </td>
       <td>
         <% if (alarm.active === true) { %>

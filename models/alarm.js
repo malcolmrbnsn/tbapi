@@ -7,9 +7,6 @@ var alarmSchema = new mongoose.Schema({
   },
   minute: Number,
   hour: Number,
-  sound: {
-    type: String
-  },
   dow: [],
   house: {
     id: {
@@ -21,6 +18,25 @@ var alarmSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "Host"
   }],
+  file: {
+    url: {
+      type: String
+    },
+    id: {
+      type: String
+    },
+    name: {
+      type: String
+    }
+  },
+  sound: {
+    type: String
+  },
+  soundId: String,
+  author: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User"
+  },
   created: {
     type: Date,
     default: Date.now
