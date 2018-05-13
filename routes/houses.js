@@ -180,6 +180,14 @@ router.delete('/:id', function(req, res) {
           }
         });
       });
+      house.alarms.forEach(function(alarm) {
+        alarm.findByIdAndRemove(alarm, function(alarmErr) {
+          if (alarmErr) {
+            req.flash("error", err.message);
+            return res.redirect("back");
+          }
+        });
+      });
       await cloudinary.v2.uploader.destroy(house.imageId);
       house.remove();
       req.flash('success', 'House deleted successfully!');

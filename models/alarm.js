@@ -7,9 +7,6 @@ var alarmSchema = new mongoose.Schema({
   },
   minute: Number,
   hour: Number,
-  sound: {
-    type: String
-  },
   dow: [],
   house: {
     id: {
@@ -32,7 +29,9 @@ var alarmSchema = new mongoose.Schema({
       type: String
     }
   },
-  sound: String,
+  sound: {
+    type: String
+  },
   soundId: String,
   author: {
     type: mongoose.Schema.Types.ObjectId,

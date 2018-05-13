@@ -145,49 +145,74 @@ router.get("/:alarm_id/edit", isLoggedIn, function(req, res) {
 });
 
 // Update
-router.put("/:alarm_id", isLoggedIn, function(req, res) {
-  if (!req.body.alarm.dow) {
-    req.flash("error", "You must select at least one day!");
-    return res.redirect("back");
-  }
-  if (!req.body.alarm.hosts) {
-    req.flash("error", "You need to select at least one host!");
-    return res.redirect("back");
-  }
-  newAlarm = {
-    name: req.body.alarm.name,
-    hour: req.body.alarm.hour,
-    minute: req.body.alarm.minute,
-    dow: req.body.alarm.dow,
-    hosts: req.body.alarm.hosts
-  };
-  console.log(req.body);
-  if (typeof req.body.active === "undefined") {
-    newAlarm.active = false;
-  } else if (req.body.active === "false") { // HACK: Should be sent as true from form but it works for now
-    newAlarm.active = true;
-  }
-  console.log(typeof req.body.active);
-  Alarm.findByIdAndUpdate(req.params.alarm_id, newAlarm, function(err, alarm) {
-    if (err) {
-      rollbar.error(err)
-      return res.redirect('/houses');
-    } else {
-      res.redirect("/houses/" + req.params.id)
+router.put("/:alarm_id", isLoggedIn, upload.single('sound'), function(req, res) {
+  Alarm.findById(req.params.alarm_id, async function(err, alarm) {
+    if (!req.body.alarm.dow) {
+      req.flash("error", "You must select at least one day!");
+      return res.redirect("back");
     }
-  })
-})
+    if (!req.body.alarm.hosts) {
+      req.flash("error", "You need to select at least one host!");
+      return res.redirect("back");
+    }
+    if (err) {
+      req.flash("error", err.message)
+      return res.redirect("back")
+    }
+    if (req.file) {
+      try {
+        await cloudinary.v2.uploader.destroy(alarm.file.id);
+        var result = await cloudinary.v2.uploader.upload(req.file.path, {
+          resource_type: "video"
+        });
+        alarm.file.id = result.public_id;
+        alarm.file.url = result.secure_url;
+        alarm.file.name = req.file.originalname;
+      } catch (err) {
+        req.flash("error", err.message)
+        return res.redirect("back")
+      }
+    }
+    alarm.name = req.body.alarm.name;
+    alarm.hour = req.body.alarm.hour;
+    alarm.minute = req.body.alarm.minute;
+    alarm.dow = req.body.alarm.dow;
+    alarm.hosts = req.body.alarm.hosts;
+    alarm.author = req.user._id;
+    if (typeof req.body.active === "undefined") {
+      alarm.active = false;
+    } else if (req.body.active === "false") { // HACK: Should be sent as true from form but it works for now
+      alarm.active = true;
+    }
+    alarm.save();
+    req.flash("success", "Successfully Updated!");
+    res.redirect("/houses/" + alarm.house.id);
+  });
+});
 
 // Delete
 router.delete("/:alarm_id", isLoggedIn, function(req, res) {
-  Alarm.findByIdAndRemove(req.params.alarm_id, function(err) {
-    if (err) {
-      rollbar.error(err);
-      res.redirect("/houses")
-    } else {
-      res.redirect("/houses/" + req.params.id)
+  // find campground, remove comment from comments array, delete comment in db
+  House.findByIdAndUpdate(req.params.id, {
+    $pull: {
+      alarms: req.params.alarm_id
     }
-  })
-})
+  }, function(err) {
+    if (err) {
+      req.flash("error", err.message);
+      return res.redirect("back");
+    }
+    Alarm.findById(req.params.alarm_id, function(err, alarm) {
+      if (err) {
+        rollbar.error(err);
+        res.redirect("/houses");
+      }
+      cloudinary.v2.uploader.destroy(alarm.file.id);
+      alarm.remove();
+      req.flash('success', 'Alarm deleted successfully!');
+      res.redirect("/houses/" + req.params.id);
+    });
+  });
+});
 
 module.exports = router;
