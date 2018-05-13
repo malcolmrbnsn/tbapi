@@ -16,6 +16,33 @@ var rollbar = new Rollbar({
   captureUnhandledRejections: true
 });
 
+// MULTER
+var multer = require('multer');
+var storage = multer.diskStorage({
+  filename: function(req, file, callback) {
+    callback(null, Date.now() + file.originalname);
+  }
+});
+var soundFilter = function(req, file, cb) {
+  // accept sound files only
+  if (!file.originalname.match(/\.(wav|mp3|wma)$/i)) {
+    return cb(new Error('Only sound files are allowed!'), false);
+  }
+  cb(null, true);
+}
+var upload = multer({
+  storage: storage,
+  fileFilter: soundFilter
+});
+
+// Cloundinary
+var cloudinary = require('cloudinary');
+cloudinary.config({
+  cloud_name: 'tbapi',
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
 // New
 router.get("/new", isLoggedIn, function(req, res) {
   House.findById(req.params.id).
@@ -34,28 +61,42 @@ router.get("/new", isLoggedIn, function(req, res) {
 });
 
 // Create
-router.post("/", isLoggedIn, function(req, res) {
-  House.findById(req.params.id, function(err, house) {
-    if (!req.body.alarm.dow) {
-      req.flash("error", "You must select at least one day!");
-      return res.redirect("back");
-    }
-    if (!req.body.alarm.hosts) {
-      req.flash("error", "You need to select at least one host!");
-      return res.redirect("back");
+router.post("/", isLoggedIn, upload.single('sound'), function(req, res) {
+  cloudinary.v2.uploader.upload(req.file.path, {
+    resource_type: "video"
+  }, function(err, result) {
+    if (err) {
+      req.flash('error', err.message);
+      return res.redirect('back');
     }
     newAlarm = {
       name: req.body.alarm.name,
       hour: req.body.alarm.hour,
       minute: req.body.alarm.minute,
       dow: req.body.alarm.dow,
-      hosts: req.body.alarm.hosts
+      hosts: req.body.alarm.hosts,
+      author: req.user._id,
+      file: {
+        url: result.secure_url,
+        id: result.public_id,
+        name: req.file.originalname
+      }
     }
-    Alarm.create(newAlarm, function(err, alarm) {
-      if (err) {
-        rollbar.error(err);
-        return res.redirect('/houses');
-      } else {
+    House.findById(req.params.id, function(err, house) {
+      if (!req.body.alarm.dow) {
+        req.flash("error", "You must select at least one day!");
+        return res.redirect("back");
+      }
+      if (!req.body.alarm.hosts) {
+        req.flash("error", "You need to select at least one host!");
+        return res.redirect("back");
+      }
+      Alarm.create(newAlarm, function(err, alarm) {
+        if (err) {
+          rollbar.error(err);
+          req.flash("error", err.message)
+          return res.redirect('/houses');
+        }
         alarm.house.id = req.params.id;
         // Save alarm
         alarm.save();
@@ -63,7 +104,7 @@ router.post("/", isLoggedIn, function(req, res) {
         house.alarms.push(alarm);
         house.save();
         res.redirect("/houses/" + req.params.id);
-      }
+      });
     });
   });
 });

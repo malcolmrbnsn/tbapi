@@ -34,6 +34,7 @@ var upload = multer({
   fileFilter: imageFilter
 });
 
+// Cloundinary
 var cloudinary = require('cloudinary');
 cloudinary.config({
   cloud_name: 'tbapi',
@@ -88,6 +89,7 @@ router.post("/", isLoggedIn, upload.single('image'), function(req, res) {
     req.body.house.author = req.user._id;
     House.create(req.body.house, function(err, house) {
       if (err) {
+        rollbar.error(err)
         req.flash('error', err.message);
         return res.redirect('back');
       }

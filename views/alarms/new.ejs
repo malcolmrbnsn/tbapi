@@ -12,7 +12,7 @@
           <% } %>
             <div class="ui padded segment">
               <h1 class="ui center aligned header">New Alarm in <%= house.name %></h1>
-              <form class="ui form" action="/houses/<%= house._id %>/alarms" method="POST">
+              <form class="ui form" action="/houses/<%= house._id %>/alarms" method="POST"  enctype="multipart/form-data">
                 <div class="field">
                   <label>Name</label>
                   <input type="text" name="alarm[name]" placeholder="name" required>
@@ -27,10 +27,10 @@
                     <input type="number" name="alarm[minute]" placeholder="minute" min="0" max="59" required>
                   </div>
                 </div>
-                <%# <div class="field">
-                  <input type="file" (change)="fileEvent($event)" class="inputfile" id="embedpollfileinput" name="fileUploaded" required>
-                  <label for="embedpollfileinput" class="ui floated button"><i class="ui upload icon"></i>Upload Sound</label>
-                </div> %>
+                <label>Upload a Sound</label>
+                <div class="field">
+                  <input type="file" id="sound" name="sound" accept="audio/*" required>
+                </div>
                 <p>Days of the week:</p>
                 <% days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %>
                   <% nDays = [0,1,2,3,4,5,6,] %>
