@@ -93,7 +93,12 @@
 
       </td>
       <td>
-      <%= alarm.file.name %>
+        <%= alarm.file.name %>
+        <br/>
+        <audio controls>
+          <source src="<%= alarm.file.url %>" type="audio/mpeg">
+        Your browser does not support the audio tag.
+        </audio>
       </td>
       <td>
         <% if (alarm.active === true) { %>
