@@ -8,9 +8,9 @@ var express = require("express"),
   Alarm = require("../models/alarm");
 
 // show json
-router.get("/hosts/:ip", function(req, res) {
+router.post("/hosts/", function(req, res) {
   Host.find({
-    hostname: req.params.ip,
+    hostname: req.body.hostname,
   }).exec(function(err, foundHost) {
     if (err) {
       rollbar.error(err);

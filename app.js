@@ -6,6 +6,7 @@ const express = require('express'),
   mongoose = require('mongoose'),
   methodOverride = require("method-override"),
   Rollbar = require("rollbar"),
+  compression = require("compression"),
   flash = require('connect-flash'),
   rollbar = require("./middleware/rollbar"),
   app = express();
@@ -50,6 +51,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
+app.use(compression())
 app.use(flash());
 app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
