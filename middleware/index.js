@@ -1,3 +1,4 @@
+const rollbar = require('./rollbar');
 var middlewareObj = {};
 
 middlewareObj.isLoggedIn = function(req, res, next) {
@@ -14,6 +15,7 @@ middlewareObj.isAdmin = function(req, res, next) {
       return next();
     } else {
       req.flash('error', 'You must be an administrator to do that!');
+      rollbar.warning("Not Admin error", req)
       return res.redirect('/houses');
     }
   }

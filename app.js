@@ -7,6 +7,7 @@ const express = require('express'),
   methodOverride = require("method-override"),
   Rollbar = require("rollbar"),
   flash = require('connect-flash'),
+  rollbar = require("./middleware/rollbar"),
   app = express();
 require('dotenv').config();
 
@@ -24,14 +25,6 @@ const indexRoutes = require("./routes/index"),
   hostRoutes = require("./routes/hosts"),
   alarmRoutes = require("./routes/alarms"),
   apiRoutes = require("./routes/api");
-
-// Rollbar
-var rollbar = new Rollbar({
-  accessToken: '3186dddb91ea4c0db986150bd3a37afa',
-  captureUncaught: true,
-  captureUnhandledRejections: true
-});
-app.use(rollbar.errorHandler());
 
 // Mongoose
 mongoose.Promise = global.Promise;
@@ -62,9 +55,10 @@ app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
-  rollbar.log("A " + req.method + " request was made to " + req.url);
+  rollbar.debug("A " + req.method + " request was made to " + req.url, req);
   next();
 });
+app.use(rollbar.errorHandler());
 app.use(bodyParser.urlencoded({
   extended: true
 }));

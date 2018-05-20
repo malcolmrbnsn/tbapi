@@ -1,19 +1,12 @@
 const express = require("express"),
   router = express.Router(),
   House = require("../models/house"),
+  rollbar = require("../middleware/rollbar"),
   middleware = require("../middleware"),
   {
     isLoggedIn,
     isAdmin
   } = middleware;
-
-// Rollbar
-var Rollbar = require("rollbar");
-var rollbar = new Rollbar({
-  accessToken: '3186dddb91ea4c0db986150bd3a37afa',
-  captureUncaught: true,
-  captureUnhandledRejections: true
-});
 
 // MULTER
 var multer = require('multer');
@@ -78,6 +71,7 @@ router.post("/", isLoggedIn, upload.single('image'), function(req, res) {
     eager: eager_options
   }, function(err, result) {
     if (err) {
+      rollbar.warning(err.message, req)
       req.flash('error', err.message);
       return res.redirect('back');
     }
@@ -89,7 +83,7 @@ router.post("/", isLoggedIn, upload.single('image'), function(req, res) {
     req.body.house.author = req.user._id;
     House.create(req.body.house, function(err, house) {
       if (err) {
-        rollbar.error(err)
+        rollbar.error(err, req)
         req.flash('error', err.message);
         return res.redirect('back');
       }
@@ -111,7 +105,7 @@ router.get("/:id", isLoggedIn, function(req, res) {
   populate(populateQuery).
   exec(function(err, foundHouse) {
     if (err || !foundHouse) {
-      rollbar.error(err);
+      rollbar.error(err, req);
       return res.redirect('/houses');
     }
     res.render("houses/show", {
@@ -125,8 +119,8 @@ router.get("/:id", isLoggedIn, function(req, res) {
 router.get("/:id/edit", isAdmin, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
-      rollbar.error(err);
       res.flash("error", "An error occured");
+      rollbar.error(err, req)
       return res.redirect('/houses');
     } else {
       res.render("houses/edit", {
@@ -142,6 +136,7 @@ router.put("/:id", upload.single('image'), function(req, res) {
   House.findById(req.params.id, async function(err, house) {
     if (err) {
       req.flash("error", err.message);
+      rollbar.error(err.message, req)
       res.redirect("back");
     } else {
       if (req.file) {
@@ -154,11 +149,13 @@ router.put("/:id", upload.single('image'), function(req, res) {
           house.image = result.eager[0].secure_url;
         } catch (err) {
           req.flash("error", err.message);
+          rollbar.error(err.message, req)
           return res.redirect("back");
         }
       }
       house.name = req.body.name;
       house.save();
+      rollbar.log("House updated", req)
       req.flash("success", "Successfully Updated!");
       res.redirect("/houses/" + house._id);
     }
@@ -169,6 +166,7 @@ router.delete('/:id', function(req, res) {
   House.findById(req.params.id, async function(err, house) {
     if (err) {
       req.flash("error", err.message);
+      rollbar.error(err.message, req)
       return res.redirect("back");
     }
     try {
@@ -176,6 +174,7 @@ router.delete('/:id', function(req, res) {
         host.findByIdAndRemove(host, function(hostErr) {
           if (hostErr) {
             req.flash("error", err.message);
+            rollbar.error(err.message, req)
             return res.redirect("back");
           }
         });
@@ -184,6 +183,7 @@ router.delete('/:id', function(req, res) {
         alarm.findByIdAndRemove(alarm, function(alarmErr) {
           if (alarmErr) {
             req.flash("error", err.message);
+            rollbar.error(err.message, req)
             return res.redirect("back");
           }
         });
@@ -191,10 +191,12 @@ router.delete('/:id', function(req, res) {
       await cloudinary.v2.uploader.destroy(house.imageId);
       house.remove();
       req.flash('success', 'House deleted successfully!');
+      rollbar.log("House deleted", req)
       res.redirect('/houses');
     } catch (err) {
       if (err) {
         req.flash("error", err.message);
+        rollbar.error(err.message, req)
         return res.redirect("back");
       }
     }

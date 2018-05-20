@@ -4,25 +4,19 @@ const express = require("express"),
   }),
   Host = require("../models/host"),
   House = require("../models/house"),
+  rollbar = require("../middleware/rollbar"),
   middleware = require("../middleware"),
   {
     isLoggedIn,
     isAdmin
   } = middleware;
 
-// Rollbar
-var Rollbar = require("rollbar");
-var rollbar = new Rollbar({
-  accessToken: '3186dddb91ea4c0db986150bd3a37afa',
-  captureUncaught: true,
-  captureUnhandledRejections: true
-});
-
 // New
 router.get("/new", isAdmin, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
-      rollbar.error(err);
+      req.flash("error", err.message)
+      rollbar.error(err.message, req)
       return res.redirect('/houses');
     } else {
       res.render("hosts/new", {
@@ -37,14 +31,15 @@ router.get("/new", isAdmin, function(req, res) {
 router.post("/", isAdmin, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
-      rollbar.error(err);
+      rollbar.error(err.message, req)
       return res.redirect('/houses');
     } else {
       Host.create(req.body.host, function(err, host) {
         if (err) {
-          rollbar.error(err);
+          rollbar.error(err, req);
           // HACK: Should check what the error is
           req.flash("error", "Hostname must be unique")
+          rollbar.warning("Not unique hostname", req)
           return res.redirect('back');
         } else {
           var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
@@ -70,13 +65,13 @@ router.post("/", isAdmin, function(req, res) {
 router.get("/:host_id/edit", isAdmin, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
-      rollbar.error(err);
+      rollbar.error(err, req);
       req.flash("error", "An error occured")
       return res.redirect('back');
     } else {
       Host.findById(req.params.host_id, function(err, host) {
         if (err) {
-          rollbar.error(err);
+          rollbar.error(err, req);
         } else {
           res.render("hosts/edit", {
             house: house,
@@ -97,6 +92,7 @@ router.put("/:host_id", isAdmin, function(req, res) {
       req.flash("error", "Hostname must be unique")
       return res.redirect('back');
     } else {
+      rollbar.log("Host updated", req)
       res.redirect("/houses/" + req.params.id);
     }
   });
@@ -106,9 +102,10 @@ router.put("/:host_id", isAdmin, function(req, res) {
 router.delete("/:host_id", isAdmin, function(req, res) {
   Host.findByIdAndRemove(req.params.host_id, function(err) {
     if (err) {
-      rollbar.error(err);
+      rollbar.error(err, req);
       return res.redirect('/houses');
     } else {
+      rollbar.log("Host deleted", req)
       res.redirect("/houses/" + req.params.id);
     }
   });

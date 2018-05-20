@@ -1,18 +1,11 @@
-var express = require("express");
-const router = express.Router({
-  mergeParams: true
-})
-var Host = require("../models/host");
-var House = require("../models/house");
-var Alarm = require("../models/alarm");
-
-// Rollbar
-var Rollbar = require("rollbar");
-var rollbar = new Rollbar({
-  accessToken: '3186dddb91ea4c0db986150bd3a37afa',
-  captureUncaught: true,
-  captureUnhandledRejections: true
-});
+var express = require("express"),
+  router = express.Router({
+    mergeParams: true
+  }),
+  rollbar = require("../middleware/rollbar"),
+  Host = require("../models/host"),
+  House = require("../models/house"),
+  Alarm = require("../models/alarm");
 
 // show json
 router.get("/hosts/:ip", function(req, res) {

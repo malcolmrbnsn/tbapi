@@ -6,15 +6,9 @@ const express = require("express"),
   House = require("../models/house"),
   Host = require("../models/host"),
   middleware = require("../middleware"),
+  rollbar = require("../middleware/rollbar"),
   isLoggedIn = middleware.isLoggedIn;
 
-// Rollbar
-var Rollbar = require("rollbar");
-var rollbar = new Rollbar({
-  accessToken: '3186dddb91ea4c0db986150bd3a37afa',
-  captureUncaught: true,
-  captureUnhandledRejections: true
-});
 
 // MULTER
 var multer = require('multer');
@@ -67,6 +61,7 @@ router.post("/", isLoggedIn, upload.single('sound'), function(req, res) {
   }, function(err, result) {
     if (err) {
       req.flash('error', err.message);
+      rollbar.warning(err.message, req)
       return res.redirect('back');
     }
     newAlarm = {
@@ -93,8 +88,8 @@ router.post("/", isLoggedIn, upload.single('sound'), function(req, res) {
       }
       Alarm.create(newAlarm, function(err, alarm) {
         if (err) {
-          rollbar.error(err);
           req.flash("error", err.message)
+          rollbar.error(err.message, req)
           return res.redirect('/houses');
         }
         alarm.house.id = req.params.id;
@@ -103,6 +98,7 @@ router.post("/", isLoggedIn, upload.single('sound'), function(req, res) {
         // Link to house and save
         house.alarms.push(alarm);
         house.save();
+        rollbar.log("House created", req)
         res.redirect("/houses/" + req.params.id);
       });
     });
@@ -115,14 +111,14 @@ router.get("/:alarm_id/edit", isLoggedIn, function(req, res) {
   populate("hosts").
   exec(function(err, house) {
     if (err) {
-      rollbar.error(err);
+      rollbar.error(err, req);
       return res.redirect('/houses');
     } else {
       Alarm.findById(req.params.alarm_id).
       populate("hosts").
       exec(function(err, alarm) {
         if (err) {
-          rollbar.error(err);
+          rollbar.error(err, req);
         } else {
           var selectedHosts = [];
           house.hosts.forEach(function(host) {
@@ -170,6 +166,7 @@ router.put("/:alarm_id", isLoggedIn, upload.single('sound'), function(req, res) 
         alarm.file.name = req.file.originalname;
       } catch (err) {
         req.flash("error", err.message)
+        rollbar.error(err.message, req)
         return res.redirect("back")
       }
     }
@@ -186,13 +183,13 @@ router.put("/:alarm_id", isLoggedIn, upload.single('sound'), function(req, res) 
     }
     alarm.save();
     req.flash("success", "Successfully Updated!");
+    rollbar.log("alarm updated", req)
     res.redirect("/houses/" + alarm.house.id);
   });
 });
 
 // Delete
 router.delete("/:alarm_id", isLoggedIn, function(req, res) {
-  // find campground, remove comment from comments array, delete comment in db
   House.findByIdAndUpdate(req.params.id, {
     $pull: {
       alarms: req.params.alarm_id
@@ -210,6 +207,7 @@ router.delete("/:alarm_id", isLoggedIn, function(req, res) {
       cloudinary.v2.uploader.destroy(alarm.file.id);
       alarm.remove();
       req.flash('success', 'Alarm deleted successfully!');
+      rollbar.log("alarm deleted", req)
       res.redirect("/houses/" + req.params.id);
     });
   });

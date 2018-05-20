@@ -4,15 +4,8 @@ const express = require("express"),
   User = require("../models/user"),
   async = require("async"),
   nodemailer = require("nodemailer"),
-  crypto = require("crypto");
-
-// Rollbar
-var Rollbar = require("rollbar");
-var rollbar = new Rollbar({
-  accessToken: '3186dddb91ea4c0db986150bd3a37afa',
-  captureUncaught: true,
-  captureUnhandledRejections: true
-});
+  crypto = require("crypto"),
+  rollbar = require("../middleware/rollbar")
 
 //root route
 router.get("/", function(req, res) {
@@ -40,6 +33,7 @@ router.post("/register", function(req, res) {
   } else if (req.body.signupCode === process.env.USERKEY) {
     newUser.isAdmin = false;
   } else {
+    rollbar.warning("Incorrect signup code", req)
     req.flash("error", "Signup Code is incorrect");
     return res.redirect("back")
   }
@@ -52,6 +46,7 @@ router.post("/register", function(req, res) {
     }
     passport.authenticate("local")(req, res, function() {
       req.flash("success", "Successfully Signed Up!");
+      rollbar.log("User successfully signed up", req)
       res.redirect("/houses");
     });
   });
@@ -206,6 +201,7 @@ router.post('/reset/:token', function(req, res) {
       };
       smtpTransport.sendMail(mailOptions, function(err) {
         req.flash('success', 'Success! Your password has been changed.');
+        rollbar.log("User changed password", req)
         done(err);
       });
     }
