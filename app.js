@@ -55,6 +55,7 @@ app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
+  res.locals.env = process.env.NODE_ENV || 'development';
   rollbar.debug("A " + req.method + " request was made to " + req.url, req);
   next();
 });
