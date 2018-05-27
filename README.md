@@ -1,4 +1,4 @@
-# TBAPi
+# TBAPi [![CodeFactor](https://www.codefactor.io/repository/github/robthr/tbapi/badge)](https://www.codefactor.io/repository/github/robthr/tbapi)
 
 TBAPi is a time based alarm scheduler for use in boarding houses. It includes a web interface and a client (see [tbapi-scheduler](https://github.com/robthr/tbapi-client)).
 
