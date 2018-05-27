@@ -4,7 +4,6 @@ var express = require("express"),
   }),
   rollbar = require("../middleware/rollbar"),
   Host = require("../models/host"),
-  House = require("../models/house"),
   Alarm = require("../models/alarm");
 
 // show json
