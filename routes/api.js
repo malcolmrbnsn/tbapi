@@ -8,27 +8,32 @@ var express = require("express"),
   Alarm = require("../models/alarm");
 
 // show json
-router.post("/hosts/", function(req, res) {
-  Host.find({
-    hostname: req.body.hostname,
-  }).exec(function(err, foundHost) {
-    if (err) {
-      rollbar.error(err);
-      res.json(err);
-    } else {
-      Alarm.find({
-        "host._id": foundHost._id,
-        active: true
-      }).exec(function(err, foundAlarms) {
-        if (err) {
-          rollbar.error(err);
-          res.json(err);
-        } else {
-          res.json(foundAlarms);
-        }
-      });
-    }
-  });
+router.get("/hosts/:hostname", function(req, res) {
+  if (req.params.hostname) {
+    Host.findOne({
+      hostname: req.params.hostname,
+    }).exec(function(err, foundHost) {
+      if (err) {
+        rollbar.error(err);
+        res.json(JSON.stringify(err));
+      } else {
+        console.log(foundHost); //Seems to work
+        Alarm.find({
+          "hosts": foundHost._id,
+          active: true
+        }).exec(function(err, foundAlarms) {
+          if (err) {
+            rollbar.error(err);
+            res.json(JSON.stringify(err));
+          } else {
+            res.json(foundAlarms);
+          }
+        });
+      }
+    });
+  } else {
+    res.json("No Hostname Included!")
+  }
 });
 
 module.exports = router;
