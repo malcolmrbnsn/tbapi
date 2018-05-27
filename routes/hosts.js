@@ -7,7 +7,6 @@ const express = require("express"),
   rollbar = require("../middleware/rollbar"),
   middleware = require("../middleware"),
   {
-    isLoggedIn,
     isAdmin
   } = middleware;
 
@@ -86,7 +85,7 @@ router.get("/:host_id/edit", isAdmin, function(req, res) {
 
 // Update
 router.put("/:host_id", isAdmin, function(req, res) {
-  Host.findByIdAndUpdate(req.params.host_id, req.body.host, function(err, host) {
+  Host.findByIdAndUpdate(req.params.host_id, req.body.host, function(err) {
     if (err) {
       rollbar.error(err)
       req.flash("error", "Hostname must be unique")

@@ -37,7 +37,7 @@ router.post("/register", function(req, res) {
     req.flash("error", "Signup Code is incorrect");
     return res.redirect("back")
   }
-  User.register(newUser, req.body.password, function(err, user) {
+  User.register(newUser, req.body.password, function(err) {
     if (err) {
       rollbar.error(err);
       return res.render("register", {
@@ -168,11 +168,11 @@ router.post('/reset/:token', function(req, res) {
           return res.redirect('back');
         }
         if (req.body.password === req.body.confirm) {
-          user.setPassword(req.body.password, function(err) {
+          user.setPassword(req.body.password, () => {
             user.resetPasswordToken = undefined;
             user.resetPasswordExpires = undefined;
 
-            user.save(function(err) {
+            user.save(() => {
               req.logIn(user, function(err) {
                 done(err, user);
               });
@@ -205,7 +205,7 @@ router.post('/reset/:token', function(req, res) {
         done(err);
       });
     }
-  ], function(err) {
+  ], () => {
     res.redirect('/houses');
   });
 });
