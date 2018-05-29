@@ -99,6 +99,9 @@ var populateQuery = [{
   populate: {
     path: 'hosts'
   }
+  // sort: {
+  //   'hour': -1
+  // }
 }];
 router.get("/:id", isLoggedIn, function(req, res) {
   House.findById(req.params.id).

@@ -1,15 +1,6 @@
 <% include ../partials/header %>
 <div class="ui container space">
-  <% if(error && error.length > 0){ %>
-    <div class="ui error message">
-      <%= error %>
-    </div>
-    <% } %>
-      <% if(success && success.length > 0){ %>
-        <div class="ui success message">
-          <%= success %>
-        </div>
-        <% } %>
+<% include ../partials/flash %>
 <h1 class="ui left aligned header"><%= house.name %></h1>
 <% if(currentUser && currentUser.isAdmin){ %>
 <a class="ui yellow button" href="/houses/<%= house._id %>/edit">Edit House</a>
