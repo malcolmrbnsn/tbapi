@@ -1,5 +1,6 @@
 // SETUP
 const express = require('express'),
+  helmet = require('helmet'),
   bodyParser = require('body-parser'),
   passport = require('passport'),
   LocalStrategy = require('passport-local'),
@@ -47,7 +48,8 @@ passport.deserializeUser(User.deserializeUser());
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
-app.use(compression())
+app.use(helmet());
+app.use(compression());
 app.use(flash());
 app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
