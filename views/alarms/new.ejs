@@ -1,6 +1,6 @@
 <% include ../partials/header %>
   <div class="ui container space">
-<% include ./partials/flash %>
+<% include ../partials/flash %>
             <div class="ui padded segment">
               <h1 class="ui center aligned header">New Alarm in <%= house.name %></h1>
               <form class="ui form" action="/houses/<%= house._id %>/alarms" method="POST"  enctype="multipart/form-data">
