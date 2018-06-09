@@ -4,10 +4,11 @@ TBAPi is a time based alarm scheduler for use in boarding houses. It includes a 
 
 ### Index
 
--   [Try It Now](https://)
-    -   [Start from Scratch](https://)
-    -   [Skip installation](https://)
--   [Todo](https://)
+-   [Try It Now](#try-it-now)
+    -   [Start from Scratch](#start-from-scratch)
+    -   [Skip installation](#skip-the-installation)
+    -   [Using Docker](#using-docker)
+-   [Todo](#todo)
 
 ### Try it Now!
 
@@ -57,6 +58,19 @@ Start the server
     nodejs start
 
 This starts the web server on port 3000. The [.env.example](https://github.com/robthr/tbapi/blob/master/.env.example) file needs to be populated for the server to run.
+
+### Using Docker
+
+Needs docker and docker-compose installed
+
+Clone repo
+
+    git clone https://github.com/robthr/tbapi
+    cd tbapi
+
+Build the container
+
+    docker-compose up --build
 
 ### Todo
 

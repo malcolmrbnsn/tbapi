@@ -1,5 +1,6 @@
 <% include ../partials/header %>
-  <div class="ui container space">    <% include ./partials/flash %>
+  <div class="ui container space">
+  <% include ../partials/flash %>
             <div class="ui padded segment">
     <h1 class="ui center aligned header">New Host in <%= house.name %></h1>
     <form class="ui form" action="/houses/<%= house._id %>/hosts" method="POST">

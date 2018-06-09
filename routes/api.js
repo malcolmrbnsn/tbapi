@@ -14,24 +14,31 @@ router.get("/hosts/:hostname", function(req, res) {
     }).exec(function(err, foundHost) {
       if (err) {
         rollbar.error(err);
-        res.json(JSON.stringify(err));
+        res.json({
+          error: JSON.stringify(err)
+        });
       } else {
-        console.log(foundHost); //Seems to work
         Alarm.find({
           "hosts": foundHost._id,
           active: true
         }).exec(function(err, foundAlarms) {
           if (err) {
             rollbar.error(err);
-            res.json(JSON.stringify(err));
+            res.json({
+              error: JSON.stringify(err)
+            });
           } else {
-            res.json(foundAlarms);
+            res.json({
+              result: foundAlarms
+            });
           }
         });
       }
     });
   } else {
-    res.json("No Hostname Included!")
+    res.json({
+      error: "No hostname included"
+    })
   }
 });
 
