@@ -1,16 +1,16 @@
-# TBAPi [![CodeFactor](https://www.codefactor.io/repository/github/robthr/tbapi/badge)](https://www.codefactor.io/repository/github/robthr/tbapi)
+## TBAPi [![CodeFactor](https://www.codefactor.io/repository/github/robthr/tbapi/badge)](https://www.codefactor.io/repository/github/robthr/tbapi)
 
 TBAPi is a time based alarm scheduler for use in boarding houses. It includes a web interface and a client (see [tbapi-client](https://github.com/robthr/tbapi-client)).
 
-### Index
+# Index
 
 -   [Try It Now](#try-it-now)
     -   [Start from Scratch](#start-from-scratch)
     -   [Skip installation](#skip-the-installation)
     -   [Using Docker](#using-docker)
--   [Todo](#todo)
+-   [To-do](#to-do)
 
-### Try it Now!
+# Try it Now!
 
 Requirements:
 
@@ -18,6 +18,20 @@ Requirements:
 -   npm
 -   MongoDB
 
+### Using Docker
+
+####Requires docker and docker-compose
+
+Clone repo
+
+    git clone https://github.com/robthr/tbapi
+    cd tbapi
+(Populate the .env file now)
+
+Build the container
+
+    docker-compose up --build
+    
 ### Start from scratch (Ubuntu 16.04 LTS)
 
 #### Install node.js and npm
@@ -55,23 +69,11 @@ Install npm packages
 
 Start the server
 
-    nodejs start
+    node app.js
 
 This starts the web server on port 3000. The [.env.example](https://github.com/robthr/tbapi/blob/master/.env.example) file needs to be populated for the server to run.
 
-### Using Docker
 
-Needs docker and docker-compose installed
-
-Clone repo
-
-    git clone https://github.com/robthr/tbapi
-    cd tbapi
-
-Build the container
-
-    docker-compose up --build
-
-### Todo
+# To-do
 
 [See Trello board](https://trello.com/b/wJbxTfny)
