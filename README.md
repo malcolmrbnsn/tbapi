@@ -20,7 +20,7 @@ Requirements:
 
 ### Using Docker
 
-####Requires docker and docker-compose
+#### Requires docker and docker-compose
 
 Clone repo
 
