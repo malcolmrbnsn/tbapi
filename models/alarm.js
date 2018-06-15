@@ -22,9 +22,6 @@ var alarmSchema = new mongoose.Schema({
     url: {
       type: String
     },
-    id: {
-      type: String
-    },
     name: {
       type: String
     }
