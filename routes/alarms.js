@@ -2,6 +2,7 @@ const express = require("express"),
   router = express.Router({
     mergeParams: true
   }),
+  fs = require("fs"),
   Alarm = require("../models/alarm"),
   House = require("../models/house"),
   Host = require("../models/host"),
@@ -62,7 +63,8 @@ router.post("/", isLoggedIn, upload.single('sound'), function(req, res) {
     author: req.user._id,
     file: {
       name: req.file.originalname,
-      url: "/sounds/" + req.file.filename
+      url: "/sounds/" + req.file.filename,
+      fullpath: req.file.path
     }
   }
   House.findById(req.params.id, function(err, house) {
@@ -144,13 +146,16 @@ router.put("/:alarm_id", isLoggedIn, upload.single('sound'), function(req, res) 
     }
     if (req.file) {
       try {
-        await cloudinary.v2.uploader.destroy(alarm.file.id);
-        var result = await cloudinary.v2.uploader.upload(req.file.path, {
-          resource_type: "video"
+        // Delete the old file
+        console.log(typeof alarm.file.fullpath);
+        fs.unlink(alarm.file.fullpath, (err) => {
+          if (err) throw err;
+          rollbar.log('successfully deleted sound', req);
         });
-        alarm.file.id = result.public_id;
-        alarm.file.url = result.secure_url;
+        // Save the new file to db
+        alarm.file.url = "/sounds/" + req.file.filename
         alarm.file.name = req.file.originalname;
+        alarm.file.fullpath = req.file.path
       } catch (err) {
         req.flash("error", err.message)
         rollbar.error(err.message, req)
@@ -165,7 +170,7 @@ router.put("/:alarm_id", isLoggedIn, upload.single('sound'), function(req, res) 
     alarm.author = req.user._id;
     if (typeof req.body.active === "undefined") {
       alarm.active = false;
-    } else if (req.body.active === "false") { // HACK: Should be sent as true from form but it works for now
+    } else if (req.body.active === "false") { // HACK: Should be sent as true from form but it works for now ¯\_(ツ)_/¯
       alarm.active = true;
     }
     alarm.save();
@@ -191,7 +196,11 @@ router.delete("/:alarm_id", isLoggedIn, function(req, res) {
         rollbar.error(err);
         res.redirect("/houses");
       }
-      cloudinary.v2.uploader.destroy(alarm.file.id);
+      // Delete the file
+      fs.unlink(alarm.file.fullpath, (err) => {
+        if (err) throw err;
+        rollbar.log('successfully deleted sound', req);
+      });
       alarm.remove();
       req.flash('success', 'Alarm deleted successfully!');
       rollbar.log("alarm deleted", req)

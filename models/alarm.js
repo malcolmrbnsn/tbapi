@@ -24,6 +24,9 @@ var alarmSchema = new mongoose.Schema({
     },
     name: {
       type: String
+    },
+    fullpath: {
+      type: String
     }
   },
   sound: {
