@@ -22,10 +22,10 @@ var alarmSchema = new mongoose.Schema({
     url: {
       type: String
     },
-    id: {
+    name: {
       type: String
     },
-    name: {
+    fullpath: {
       type: String
     }
   },

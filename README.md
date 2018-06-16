@@ -26,12 +26,13 @@ Clone repo
 
     git clone https://github.com/robthr/tbapi
     cd tbapi
+
 (Populate the .env file now)
 
 Build the container
 
     docker-compose up --build
-    
+
 ### Start from scratch (Ubuntu 16.04 LTS)
 
 #### Install node.js and npm
@@ -72,7 +73,6 @@ Start the server
     node app.js
 
 This starts the web server on port 3000. The [.env.example](https://github.com/robthr/tbapi/blob/master/.env.example) file needs to be populated for the server to run.
-
 
 # To-do
 

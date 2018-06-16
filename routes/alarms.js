@@ -2,6 +2,7 @@ const express = require("express"),
   router = express.Router({
     mergeParams: true
   }),
+  fs = require("fs"),
   Alarm = require("../models/alarm"),
   House = require("../models/house"),
   Host = require("../models/host"),
@@ -13,6 +14,10 @@ const express = require("express"),
 // MULTER
 var multer = require('multer');
 var storage = multer.diskStorage({
+  //Setup where the user's file will go
+  destination: function(req, file, callback) {
+    callback(null, './public/sounds');
+  },
   filename: function(req, file, callback) {
     callback(null, Date.now() + file.originalname);
   }
@@ -27,14 +32,6 @@ var soundFilter = function(req, file, cb) {
 var upload = multer({
   storage: storage,
   fileFilter: soundFilter
-});
-
-// Cloundinary
-var cloudinary = require('cloudinary');
-cloudinary.config({
-  cloud_name: 'tbapi',
-  api_key: process.env.CLOUDINARY_API_KEY,
-  api_secret: process.env.CLOUDINARY_API_SECRET
 });
 
 // New
@@ -56,51 +53,43 @@ router.get("/new", isLoggedIn, function(req, res) {
 
 // Create
 router.post("/", isLoggedIn, upload.single('sound'), function(req, res) {
-  cloudinary.v2.uploader.upload(req.file.path, {
-    resource_type: "video"
-  }, function(err, result) {
-    if (err) {
-      req.flash('error', err.message);
-      rollbar.warning(err.message, req)
-      return res.redirect('back');
+  console.log(req.file);
+  newAlarm = {
+    name: req.body.alarm.name,
+    hour: req.body.alarm.hour,
+    minute: req.body.alarm.minute,
+    dow: req.body.alarm.dow,
+    hosts: req.body.alarm.hosts,
+    author: req.user._id,
+    file: {
+      name: req.file.originalname,
+      url: "/sounds/" + req.file.filename,
+      fullpath: req.file.path
     }
-    newAlarm = {
-      name: req.body.alarm.name,
-      hour: req.body.alarm.hour,
-      minute: req.body.alarm.minute,
-      dow: req.body.alarm.dow,
-      hosts: req.body.alarm.hosts,
-      author: req.user._id,
-      file: {
-        url: result.secure_url,
-        id: result.public_id,
-        name: req.file.originalname
-      }
+  }
+  House.findById(req.params.id, function(err, house) {
+    if (!req.body.alarm.dow) {
+      req.flash("error", "You must select at least one day!");
+      return res.redirect("back");
     }
-    House.findById(req.params.id, function(err, house) {
-      if (!req.body.alarm.dow) {
-        req.flash("error", "You must select at least one day!");
-        return res.redirect("back");
+    if (!req.body.alarm.hosts) {
+      req.flash("error", "You need to select at least one host!");
+      return res.redirect("back");
+    }
+    Alarm.create(newAlarm, function(err, alarm) {
+      if (err) {
+        req.flash("error", err.message)
+        rollbar.error(err.message, req)
+        return res.redirect('/houses');
       }
-      if (!req.body.alarm.hosts) {
-        req.flash("error", "You need to select at least one host!");
-        return res.redirect("back");
-      }
-      Alarm.create(newAlarm, function(err, alarm) {
-        if (err) {
-          req.flash("error", err.message)
-          rollbar.error(err.message, req)
-          return res.redirect('/houses');
-        }
-        alarm.house.id = req.params.id;
-        // Save alarm
-        alarm.save();
-        // Link to house and save
-        house.alarms.push(alarm);
-        house.save();
-        rollbar.log("House created", req)
-        res.redirect("/houses/" + req.params.id);
-      });
+      alarm.house.id = req.params.id;
+      // Save alarm
+      alarm.save();
+      // Link to house and save
+      house.alarms.push(alarm);
+      house.save();
+      rollbar.log("House created", req)
+      res.redirect("/houses/" + req.params.id);
     });
   });
 });
@@ -157,13 +146,16 @@ router.put("/:alarm_id", isLoggedIn, upload.single('sound'), function(req, res) 
     }
     if (req.file) {
       try {
-        await cloudinary.v2.uploader.destroy(alarm.file.id);
-        var result = await cloudinary.v2.uploader.upload(req.file.path, {
-          resource_type: "video"
+        // Delete the old file
+        console.log(typeof alarm.file.fullpath);
+        fs.unlink(alarm.file.fullpath, (err) => {
+          if (err) throw err;
+          rollbar.log('successfully deleted sound', req);
         });
-        alarm.file.id = result.public_id;
-        alarm.file.url = result.secure_url;
+        // Save the new file to db
+        alarm.file.url = "/sounds/" + req.file.filename
         alarm.file.name = req.file.originalname;
+        alarm.file.fullpath = req.file.path
       } catch (err) {
         req.flash("error", err.message)
         rollbar.error(err.message, req)
@@ -178,7 +170,7 @@ router.put("/:alarm_id", isLoggedIn, upload.single('sound'), function(req, res) 
     alarm.author = req.user._id;
     if (typeof req.body.active === "undefined") {
       alarm.active = false;
-    } else if (req.body.active === "false") { // HACK: Should be sent as true from form but it works for now
+    } else if (req.body.active === "false") { // HACK: Should be sent as true from form but it works for now ¯\_(ツ)_/¯
       alarm.active = true;
     }
     alarm.save();
@@ -204,7 +196,11 @@ router.delete("/:alarm_id", isLoggedIn, function(req, res) {
         rollbar.error(err);
         res.redirect("/houses");
       }
-      cloudinary.v2.uploader.destroy(alarm.file.id);
+      // Delete the file
+      fs.unlink(alarm.file.fullpath, (err) => {
+        if (err) throw err;
+        rollbar.log('successfully deleted sound', req);
+      });
       alarm.remove();
       req.flash('success', 'Alarm deleted successfully!');
       rollbar.log("alarm deleted", req)
