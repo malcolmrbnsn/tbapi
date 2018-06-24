@@ -12,7 +12,8 @@ const express = require('express'),
   app = express();
 require('dotenv').config();
 
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3000,
+  ip = process.env.IP || "0.0.0.0"
 
 // Models and seeds
 const User = require('./models/user')
@@ -71,4 +72,4 @@ app.use("/api", apiRoutes);
 app.use("/houses/:id/hosts", hostRoutes);
 app.use("/houses/:id/alarms", alarmRoutes);
 // Server //
-app.listen(port, process.env.IP, () => rollbar.log("Server is running on port " + process.env.PORT));
+app.listen(port, () => rollbar.log("Server is running on port " + process.env.PORT));

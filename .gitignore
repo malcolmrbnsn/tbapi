@@ -74,3 +74,6 @@ public/.DS_Store
 # Semantic UI
 public/libs/semantic-ui
 semantic.json
+
+# nodemon config
+nodemon.json

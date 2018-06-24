@@ -8,14 +8,21 @@ var express = require("express"),
 
 // show json
 router.get("/hosts/:hostname", function(req, res) {
+  // sanatise ip address
   if (req.params.hostname) {
+    var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+    if (!req.params.hostname.match(ipformat)) {
+      return res.json({
+        "error": "incorrect hostname format"
+      })
+    }
     Host.findOne({
       hostname: req.params.hostname,
     }).exec(function(err, foundHost) {
       if (err) {
-        rollbar.error(err);
-        res.json({
-          error: JSON.stringify(err)
+        rollbar.error(err, req);
+        return res.json({
+          "error": JSON.stringify(err)
         });
       } else {
         Alarm.find({
@@ -23,20 +30,31 @@ router.get("/hosts/:hostname", function(req, res) {
           active: true
         }).exec(function(err, foundAlarms) {
           if (err) {
-            rollbar.error(err);
-            res.json({
+            rollbar.error(err, req);
+            return res.json({
               error: JSON.stringify(err)
             });
           } else {
+            var toSend = []
+            foundAlarms.forEach((alarm) => {
+              var addToSend = {
+                dow: alarm.dow,
+                hour: alarm.hour,
+                minute: alarm.minute,
+                name: alarm.name,
+                url: alarm.file.url
+              }
+              toSend.push(addToSend)
+            })
             res.json({
-              result: foundAlarms
+              "result": toSend
             });
           }
         });
       }
     });
   } else {
-    res.json({
+    return res.json({
       error: "No hostname included"
     })
   }

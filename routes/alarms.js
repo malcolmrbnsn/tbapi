@@ -53,7 +53,6 @@ router.get("/new", isLoggedIn, function(req, res) {
 
 // Create
 router.post("/", isLoggedIn, upload.single('sound'), function(req, res) {
-  console.log(req.file);
   newAlarm = {
     name: req.body.alarm.name,
     hour: req.body.alarm.hour,
@@ -147,7 +146,6 @@ router.put("/:alarm_id", isLoggedIn, upload.single('sound'), function(req, res) 
     if (req.file) {
       try {
         // Delete the old file
-        console.log(typeof alarm.file.fullpath);
         fs.unlink(alarm.file.fullpath, (err) => {
           if (err) throw err;
           rollbar.log('successfully deleted sound', req);
