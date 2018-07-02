@@ -7,7 +7,6 @@ const express = require("express"),
   House = require("../models/house"),
   Host = require("../models/host"),
   middleware = require("../middleware"),
-  rollbar = require("../middleware/rollbar"),
   isLoggedIn = middleware.isLoggedIn;
 
 
@@ -40,7 +39,7 @@ router.get("/new", isLoggedIn, function(req, res) {
   populate("hosts").
   exec(function(err, house) {
     if (err) {
-      rollbar.error(err);
+      console.log(err);
       return res.redirect('/houses');
     } else {
       res.render("alarms/new", {
@@ -78,7 +77,7 @@ router.post("/", isLoggedIn, upload.single('sound'), function(req, res) {
     Alarm.create(newAlarm, function(err, alarm) {
       if (err) {
         req.flash("error", err.message)
-        rollbar.error(err.message, req)
+        console.log(err.message)
         return res.redirect('/houses');
       }
       alarm.house.id = req.params.id;
@@ -87,7 +86,7 @@ router.post("/", isLoggedIn, upload.single('sound'), function(req, res) {
       // Link to house and save
       house.alarms.push(alarm);
       house.save();
-      rollbar.log("House created", req)
+      console.log("Alarm created")
       res.redirect("/houses/" + req.params.id);
     });
   });
@@ -99,14 +98,14 @@ router.get("/:alarm_id/edit", isLoggedIn, function(req, res) {
   populate("hosts").
   exec(function(err, house) {
     if (err) {
-      rollbar.error(err, req);
+      console.log(err);
       return res.redirect('/houses');
     } else {
       Alarm.findById(req.params.alarm_id).
       populate("hosts").
       exec(function(err, alarm) {
         if (err) {
-          rollbar.error(err, req);
+          console.log(err);
         } else {
           var selectedHosts = [];
           house.hosts.forEach(function(host) {
@@ -148,7 +147,7 @@ router.put("/:alarm_id", isLoggedIn, upload.single('sound'), function(req, res) 
         // Delete the old file
         fs.unlink(alarm.file.fullpath, (err) => {
           if (err) throw err;
-          rollbar.log('successfully deleted sound', req);
+          console.log('successfully deleted sound');
         });
         // Save the new file to db
         alarm.file.url = "/sounds/" + req.file.filename
@@ -156,7 +155,7 @@ router.put("/:alarm_id", isLoggedIn, upload.single('sound'), function(req, res) 
         alarm.file.fullpath = req.file.path
       } catch (err) {
         req.flash("error", err.message)
-        rollbar.error(err.message, req)
+        console.log(err.message)
         return res.redirect("back")
       }
     }
@@ -173,7 +172,7 @@ router.put("/:alarm_id", isLoggedIn, upload.single('sound'), function(req, res) 
     }
     alarm.save();
     req.flash("success", "Successfully Updated!");
-    rollbar.log("alarm updated", req)
+    console.log("alarm updated")
     res.redirect("/houses/" + alarm.house.id);
   });
 });
@@ -191,17 +190,17 @@ router.delete("/:alarm_id", isLoggedIn, function(req, res) {
     }
     Alarm.findById(req.params.alarm_id, function(err, alarm) {
       if (err) {
-        rollbar.error(err);
+        console.log(err);
         res.redirect("/houses");
       }
       // Delete the file
       fs.unlink(alarm.file.fullpath, (err) => {
         if (err) throw err;
-        rollbar.log('successfully deleted sound', req);
+        console.log('successfully deleted sound');
       });
       alarm.remove();
       req.flash('success', 'Alarm deleted successfully!');
-      rollbar.log("alarm deleted", req)
+      console.log("alarm deleted")
       res.redirect("/houses/" + req.params.id);
     });
   });

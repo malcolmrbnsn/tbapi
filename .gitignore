@@ -57,23 +57,12 @@ typings/
 # dotenv environment variables file
 .env
 
-# npm package-lock (Generated on npm init)
-package-lock.json
-
-# uploaded images and sounds
-public/img
-public/sounds
-
 # enviornment variables
 .env
 
 # .DS_Store files
 public/.DS_Store
 .DS_Store
-
-# Semantic UI
-public/libs/semantic-ui
-semantic.json
 
 # nodemon config
 nodemon.json

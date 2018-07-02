@@ -1,7 +1,6 @@
 const express = require("express"),
   router = express.Router(),
   House = require("../models/house"),
-  rollbar = require("../middleware/rollbar"),
   middleware = require("../middleware"),
   {
     isLoggedIn,
@@ -47,7 +46,7 @@ var eager_options = {
 router.get("/", isLoggedIn, function(req, res) {
   House.find({}, function(err, allHouses) {
     if (err) {
-      rollbar.error(err);
+      rollbar.log(err);
     } else {
       res.render("houses/index", {
         houses: allHouses,
@@ -71,7 +70,7 @@ router.post("/", isLoggedIn, upload.single('image'), function(req, res) {
     eager: eager_options
   }, function(err, result) {
     if (err) {
-      rollbar.warning(err.message, req)
+      rollbar.log(err.message, req)
       req.flash('error', err.message);
       return res.redirect('back');
     }
@@ -83,7 +82,7 @@ router.post("/", isLoggedIn, upload.single('image'), function(req, res) {
     req.body.house.author = req.user._id;
     House.create(req.body.house, function(err, house) {
       if (err) {
-        rollbar.error(err, req)
+        rollbar.log(err, req)
         req.flash('error', err.message);
         return res.redirect('back');
       }
@@ -105,7 +104,7 @@ router.get("/:id", isLoggedIn, function(req, res) {
   populate(populateQuery).
   exec(function(err, foundHouse) {
     if (err || !foundHouse) {
-      rollbar.error(err, req);
+      rollbar.log(err, req);
       return res.redirect('/houses');
     }
     res.render("houses/show", {
@@ -120,7 +119,7 @@ router.get("/:id/edit", isAdmin, function(req, res) {
   House.findById(req.params.id, function(err, house) {
     if (err) {
       res.flash("error", "An error occured");
-      rollbar.error(err, req)
+      rollbar.log(err, req)
       return res.redirect('/houses');
     } else {
       res.render("houses/edit", {
@@ -136,7 +135,7 @@ router.put("/:id", upload.single('image'), function(req, res) {
   House.findById(req.params.id, async function(err, house) {
     if (err) {
       req.flash("error", err.message);
-      rollbar.error(err.message, req)
+      rollbar.log(err.message, req)
       res.redirect("back");
     } else {
       if (req.file) {
@@ -149,7 +148,7 @@ router.put("/:id", upload.single('image'), function(req, res) {
           house.image = result.eager[0].secure_url;
         } catch (err) {
           req.flash("error", err.message);
-          rollbar.error(err.message, req)
+          rollbar.log(err.message, req)
           return res.redirect("back");
         }
       }
@@ -166,7 +165,7 @@ router.delete('/:id', function(req, res) {
   House.findById(req.params.id, async function(err, house) {
     if (err) {
       req.flash("error", err.message);
-      rollbar.error(err.message, req)
+      rollbar.log(err.message, req)
       return res.redirect("back");
     }
     try {
@@ -174,7 +173,7 @@ router.delete('/:id', function(req, res) {
         host.findByIdAndRemove(host, function(hostErr) {
           if (hostErr) {
             req.flash("error", err.message);
-            rollbar.error(err.message, req)
+            rollbar.log(err.message, req)
             return res.redirect("back");
           }
         });
@@ -183,7 +182,7 @@ router.delete('/:id', function(req, res) {
         alarm.findByIdAndRemove(alarm, function(alarmErr) {
           if (alarmErr) {
             req.flash("error", err.message);
-            rollbar.error(err.message, req)
+            rollbar.log(err.message, req)
             return res.redirect("back");
           }
         });
@@ -196,7 +195,7 @@ router.delete('/:id', function(req, res) {
     } catch (err) {
       if (err) {
         req.flash("error", err.message);
-        rollbar.error(err.message, req)
+        rollbar.log(err.message, req)
         return res.redirect("back");
       }
     }

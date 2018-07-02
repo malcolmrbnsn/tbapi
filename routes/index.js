@@ -4,8 +4,7 @@ const express = require("express"),
   User = require("../models/user"),
   async = require("async"),
   nodemailer = require("nodemailer"),
-  crypto = require("crypto"),
-  rollbar = require("../middleware/rollbar")
+  crypto = require("crypto")
 
 //root route
 router.get("/", function(req, res) {
@@ -33,20 +32,20 @@ router.post("/register", function(req, res) {
   } else if (req.body.signupCode === process.env.USERKEY) {
     newUser.isAdmin = false;
   } else {
-    rollbar.warning("Incorrect signup code", req)
+    console.log("Incorrect signup code")
     req.flash("error", "Signup Code is incorrect");
     return res.redirect("back")
   }
-  User.register(newUser, req.body.password, function(err) {
+  User.register(newUser.body.password, function(err) {
     if (err) {
-      rollbar.error(err);
+      console.log(err);
       return res.render("register", {
         error: err.message
       });
     }
     passport.authenticate("local")(req, res, function() {
       req.flash("success", "Successfully Signed Up!");
-      rollbar.log("User successfully signed up", req)
+      console.log("User successfully signed up")
       res.redirect("/houses");
     });
   });
@@ -125,7 +124,7 @@ router.post('/forgot', function(req, res, next) {
           'If you did not request this, please ignore this email and your password will remain unchanged.\n'
       };
       smtpTransport.sendMail(mailOptions, function(err) {
-        rollbar.log('mail sent');
+        console.log('mail sent');
         req.flash('success', 'An e-mail has been sent to ' + user.email + ' with further instructions.');
         done(err, 'done');
       });
@@ -201,7 +200,7 @@ router.post('/reset/:token', function(req, res) {
       };
       smtpTransport.sendMail(mailOptions, function(err) {
         req.flash('success', 'Success! Your password has been changed.');
-        rollbar.log("User changed password", req)
+        console.log("User changed password")
         done(err);
       });
     }

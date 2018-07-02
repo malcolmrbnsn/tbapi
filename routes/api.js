@@ -2,7 +2,6 @@ var express = require("express"),
   router = express.Router({
     mergeParams: true
   }),
-  rollbar = require("../middleware/rollbar"),
   Host = require("../models/host"),
   Alarm = require("../models/alarm");
 
@@ -20,7 +19,7 @@ router.get("/hosts/:hostname", function(req, res) {
       hostname: req.params.hostname,
     }).exec(function(err, foundHost) {
       if (err) {
-        rollbar.error(err, req);
+        console.log(err);
         return res.json({
           "error": JSON.stringify(err)
         });
@@ -30,7 +29,7 @@ router.get("/hosts/:hostname", function(req, res) {
           active: true
         }).exec(function(err, foundAlarms) {
           if (err) {
-            rollbar.error(err, req);
+            console.log(err);
             return res.json({
               error: JSON.stringify(err)
             });

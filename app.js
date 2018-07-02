@@ -8,7 +8,10 @@ const express = require('express'),
   methodOverride = require("method-override"),
   compression = require("compression"),
   flash = require('connect-flash'),
-  rollbar = require("./middleware/rollbar"),
+  morgan = require("morgan"),
+  path = require('path'),
+  rfs = require('rotating-file-stream'),
+  fs = require('fs'),
   app = express();
 require('dotenv').config();
 
@@ -25,13 +28,33 @@ const indexRoutes = require("./routes/index"),
   alarmRoutes = require("./routes/alarms"),
   apiRoutes = require("./routes/api");
 
+// Logger
+var logDirectory = path.join(__dirname, 'logs')
+
+// ensure log directory exists
+fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
+
+// create a rotating write stream
+var accessLogStream = rfs('access.log', {
+  interval: '1d', // rotate daily
+  path: logDirectory
+})
+
+// File logger
+app.use(morgan('combined', {
+  stream: accessLogStream
+}))
+
+// Console logger
+app.use(morgan('dev'))
+
 // Mongoose
 mongoose.Promise = global.Promise;
 const databaseUri = process.env.DB_URI || "mongodb://localhost/tbapi";
 
 mongoose.connect(databaseUri)
-  .then(() => rollbar.log(`Database connected`))
-  .catch(err => rollbar.error(`Database connection error: ${err.message}`));
+  .then(() => console.log(`Database connected`))
+  .catch(err => console.log(`Database connection error: ${err.message}`));
 
 // Passport
 app.use(require("express-session")({
@@ -57,13 +80,40 @@ app.use(function(req, res, next) {
   res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
   res.locals.env = process.env.NODE_ENV || 'development';
-  rollbar.debug("A " + req.method + " request was made to " + req.url, req);
   next();
 });
-app.use(rollbar.errorHandler());
 app.use(bodyParser.urlencoded({
   extended: true
 }));
+// error handlers
+// catch 404 and forward to error handler
+app.use(function(req, res, next) {
+  var err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+// development error handler
+// will print stacktrace
+if (app.get('env') === 'development') {
+  app.use(function(err, req, res, next) {
+    res.status(err.status || 500);
+    res.render('error', {
+      message: err.message,
+      error: err
+    });
+  });
+}
+
+// production error handler
+// no stacktraces leaked to user
+app.use(function(err, req, res, next) {
+  res.status(err.status || 500);
+  res.render('error', {
+    message: err.message,
+    error: {}
+  });
+});
+
 
 // Imported routes
 app.use(indexRoutes);
@@ -72,4 +122,4 @@ app.use("/api", apiRoutes);
 app.use("/houses/:id/hosts", hostRoutes);
 app.use("/houses/:id/alarms", alarmRoutes);
 // Server //
-app.listen(port, () => rollbar.log("Server is running on port " + process.env.PORT));
+app.listen(port, () => console.log("Server is running on port " + process.env.PORT));
