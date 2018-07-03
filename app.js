@@ -15,6 +15,11 @@ const express = require('express'),
   app = express();
 require('dotenv').config();
 
+// Set up middleware
+middleware = require("./middleware")
+
+const checkDirectorySync = middleware.checkDirectorySync;
+
 const port = process.env.PORT || 3000,
   ip = process.env.IP || "0.0.0.0"
 
@@ -28,11 +33,11 @@ const indexRoutes = require("./routes/index"),
   alarmRoutes = require("./routes/alarms"),
   apiRoutes = require("./routes/api");
 
+// Check if logging dir exists
+checkDirectorySync("./logs");
+
 // Logger
 var logDirectory = path.join(__dirname, 'logs')
-
-// ensure log directory exists
-fs.existsSync(logDirectory) || fs.mkdirSync(logDirectory)
 
 // create a rotating write stream
 var accessLogStream = rfs('access.log', {
@@ -87,32 +92,32 @@ app.use(bodyParser.urlencoded({
 }));
 // error handlers
 // catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  var err = new Error('Not Found');
-  err.status = 404;
-  next(err);
-});
+// app.use(function(req, res, next) {
+//   var err = new Error('Not Found');
+//   err.status = 404;
+//   next(err);
+// });
 // development error handler
 // will print stacktrace
-if (app.get('env') === 'development') {
-  app.use(function(err, req, res, next) {
-    res.status(err.status || 500);
-    res.render('error', {
-      message: err.message,
-      error: err
-    });
-  });
-}
-
-// production error handler
-// no stacktraces leaked to user
-app.use(function(err, req, res, next) {
-  res.status(err.status || 500);
-  res.render('error', {
-    message: err.message,
-    error: {}
-  });
-});
+// if (app.get('env') === 'development') {
+//   app.use(function(err, req, res, next) {
+//     res.status(err.status || 500);
+//     res.render('error', {
+//       message: err.message,
+//       error: err
+//     });
+//   });
+// }
+//
+// // production error handler
+// // no stacktraces leaked to user
+// app.use(function(err, req, res, next) {
+//   res.status(err.status || 500);
+//   res.render('error', {
+//     message: err.message,
+//     error: {}
+//   });
+// });
 
 
 // Imported routes

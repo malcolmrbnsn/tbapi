@@ -7,9 +7,13 @@ const express = require("express"),
   House = require("../models/house"),
   Host = require("../models/host"),
   middleware = require("../middleware"),
-  isLoggedIn = middleware.isLoggedIn;
+  {
+    isLoggedIn,
+    checkDirectorySync
+  } = middleware;
 
-
+// Check sound directory exists
+checkDirectorySync("./public/sounds");
 // MULTER
 var multer = require('multer');
 var storage = multer.diskStorage({

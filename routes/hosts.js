@@ -84,7 +84,8 @@ router.get("/:host_id/edit", isAdmin, function(req, res) {
 
 // Update
 router.put("/:host_id", isAdmin, function(req, res) {
-  Host.findByIdAndUpdate(req.params.host_id.body.host, function(err) {
+  console.log(req.params);
+  Host.findByIdAndUpdate(req.params.host_id, req.body.host, function(err) {
     if (err) {
       console.log(err)
       req.flash("error", "Hostname must be unique")

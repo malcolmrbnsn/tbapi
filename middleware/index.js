@@ -1,6 +1,8 @@
+const fs = require("fs")
+
 var middlewareObj = {};
 
-middlewareObj.isLoggedIn = function(req, res, next) {
+middlewareObj.isLoggedIn = (req, res, next) => {
   if (req.isAuthenticated()) {
     return next();
   }
@@ -9,7 +11,7 @@ middlewareObj.isLoggedIn = function(req, res, next) {
   res.redirect("/login");
 }
 
-middlewareObj.isAdmin = function(req, res, next) {
+middlewareObj.isAdmin = (req, res, next) => {
   if (req.isAuthenticated()) {
     if (req.user.isAdmin === true) {
       return next();
@@ -22,5 +24,14 @@ middlewareObj.isAdmin = function(req, res, next) {
   req.flash("error", "You must be signed in to do that!");
   res.redirect("/login");
 }
+
+middlewareObj.checkDirectorySync = (directory) => {
+  try {
+    fs.statSync(directory);
+  } catch (e) {
+    fs.mkdirSync(directory);
+  }
+}
+
 
 module.exports = middlewareObj;
