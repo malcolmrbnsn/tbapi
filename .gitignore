@@ -57,12 +57,12 @@ typings/
 # dotenv environment variables file
 .env
 
-# enviornment variables
-.env
-
 # .DS_Store files
 public/.DS_Store
 .DS_Store
 
 # nodemon config
 nodemon.json
+
+# Sounds
+public/sounds

@@ -5,6 +5,7 @@ const express = require('express'),
   passport = require('passport'),
   LocalStrategy = require('passport-local'),
   mongoose = require('mongoose'),
+  session = require("express-session"),
   methodOverride = require("method-override"),
   compression = require("compression"),
   flash = require('connect-flash'),
@@ -61,12 +62,25 @@ mongoose.connect(databaseUri)
   .then(() => console.log(`Database connected`))
   .catch(err => console.log(`Database connection error: ${err.message}`));
 
-// Passport
-app.use(require("express-session")({
-  secret: "dsj kfhsda nbsdakf hsdjgseh gv hg gjkbv rlk hvout fl nbpygfsd jk fgpiusg",
+//Session
+var sess = {
+  secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: false
-}));
+  saveUninitialized: false,
+  secure: true,
+  httponly: false,
+  cookie: {
+    maxAge: 3600000
+  }
+}
+if (app.get('env') === 'production') {
+  app.set('trust proxy', 1) // trust first proxy
+  sess.cookie.secure = true // serve secure cookies
+}
+
+app.use(session(sess))
+app.use(session(sess))
+// Passport
 app.use(passport.initialize());
 app.use(passport.session());
 passport.use(new LocalStrategy(User.authenticate()));
@@ -84,7 +98,6 @@ app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
-  res.locals.env = process.env.NODE_ENV || 'development';
   next();
 });
 app.use(bodyParser.urlencoded({
