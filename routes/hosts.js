@@ -45,6 +45,10 @@ router.post("/", isAdmin, function(req, res) {
             req.flash("error", "You must enter a valid IP Address!")
             return res.redirect("back")
           }
+          if (req.body.host.hostname.length >= 7 && req.body.host.hostname.length <= 15) {
+            req.flash("Hostname not valid");
+            return res.redirect("back");
+          }
           // Link to house
           host.house.id = req.params.id;
           // Save host
@@ -84,16 +88,25 @@ router.get("/:host_id/edit", isAdmin, function(req, res) {
 
 // Update
 router.put("/:host_id", isAdmin, function(req, res) {
-  console.log(req.params);
   Host.findByIdAndUpdate(req.params.host_id, req.body.host, function(err) {
     if (err) {
-      console.log(err)
+      console.log(err);
+      // HACK: Should check what the error is
       req.flash("error", "Hostname must be unique")
+      console.log("Not unique hostname")
       return res.redirect('back');
     } else {
-      console.log("Host updated")
-      res.redirect("/houses/" + req.params.id);
+      var ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
+      if (!req.body.host.hostname.match(ipformat)) {
+        req.flash("error", "You must enter a valid IP Address!")
+        return res.redirect("back")
+      }
+      if (req.body.host.hostname.length >= 7 && req.body.host.hostname.length <= 15) {
+        req.flash("Hostname not valid");
+        return res.redirect("back");
+      }
     }
+    res.redirect("/houses/" + req.params.id)
   });
 });
 
