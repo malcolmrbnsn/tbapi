@@ -1,4 +1,4 @@
-var mongoose = require("mongoose");
+const mongoose = require("mongoose");
 
 var houseSchema = new mongoose.Schema({
   name: {
@@ -11,13 +11,17 @@ var houseSchema = new mongoose.Schema({
     type: mongoose.Schema.Types.ObjectId,
     ref: "User"
   },
-  hosts: [{
+  hosts: [
+{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Host"
-  }],
-  alarms: [{
+  }
+],
+  alarms: [
+{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Alarm"
-  }],
+  }
+]
 });
 module.exports = mongoose.model("House", houseSchema);

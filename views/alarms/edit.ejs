@@ -6,16 +6,16 @@
               <form class="ui form" action="/houses/<%= house._id %>/alarms/<%= alarm._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
                 <div class="field">
                   <label>Name</label>
-                  <input type="text" name="alarm[name]" value="<%= alarm.name %>">
+                  <input type="text" name="alarm[name]" autocomplete="off" value="<%= alarm.name %>">
                 </div>
                 <div class="two fields">
                   <div class="field">
                     <label>Hour</label>
-                    <input type="number" name="alarm[hour]" placeholder="hour" min="0" max="24" required value="<%= alarm.hour %>">
+                    <input type="number" name="alarm[hour]" placeholder="hour" min="0" max="24" required autocomplete="off" value="<%= alarm.hour %>">
                   </div>
                   <div class="field">
                     <label>Minute</label>
-                    <input type="number" name="alarm[minute]" placeholder="minute" min="0" max="59" required value="<%= alarm.minute %>">
+                    <input type="number" name="alarm[minute]" placeholder="minute" min="0" max="59" required autocomplete="off" value="<%= alarm.minute %>">
                   </div>
                 </div>
                 <div class="field">
