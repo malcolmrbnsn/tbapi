@@ -4,7 +4,6 @@ const express = require('express'),
   bodyParser = require('body-parser'),
   passport = require('passport'),
   LocalStrategy = require('passport-local'),
-  mongoose = require('mongoose'),
   session = require("express-session"),
   methodOverride = require("method-override"),
   compression = require("compression"),
@@ -12,7 +11,7 @@ const express = require('express'),
   morgan = require("morgan"),
   path = require('path'),
   rfs = require('rotating-file-stream'),
-  fs = require('fs'),
+ expressSanitizer = require('express-sanitizer'),
   app = express();
 require('dotenv').config();
 
@@ -54,14 +53,6 @@ app.use(morgan('combined', {
 // Console logger
 app.use(morgan('dev'))
 
-// Mongoose
-mongoose.Promise = global.Promise;
-const databaseUri = process.env.DB_URI || "mongodb://localhost/tbapi";
-
-mongoose.connect(databaseUri)
-  .then(() => console.log(`Database connected`))
-  .catch(err => console.log(`Database connection error: ${err.message}`));
-
 //Session
 var sess = {
   secret: process.env.SESSION_SECRET,
@@ -79,7 +70,6 @@ if (app.get('env') === 'production') {
 }
 
 app.use(session(sess))
-app.use(session(sess))
 // Passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -91,6 +81,11 @@ passport.deserializeUser(User.deserializeUser());
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
+app.use(bodyParser.json());
+app.use(expressSanitizer());
 app.use(helmet());
 app.use(compression());
 app.use(flash());
@@ -100,9 +95,6 @@ app.use(function(req, res, next) {
   res.locals.success = req.flash("success");
   next();
 });
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
 
 // Imported routes
 app.use(indexRoutes);
@@ -111,4 +103,4 @@ app.use("/api", apiRoutes);
 app.use("/houses/:id/hosts", hostRoutes);
 app.use("/houses/:id/alarms", alarmRoutes);
 // Server //
-app.listen(port, () => console.log("Server is running on port " + process.env.PORT));
+app.listen(port, ip, () => console.log("Server is running on  " + process.env.IP + " using port " + process.env.PORT));

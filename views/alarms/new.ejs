@@ -6,21 +6,21 @@
               <form class="ui form" action="/houses/<%= house._id %>/alarms" method="POST"  enctype="multipart/form-data">
                 <div class="field">
                   <label>Name</label>
-                  <input type="text" name="alarm[name]" placeholder="name" required>
+                  <input type="text" name="alarm[name]" placeholder="name" autocomplete="off" required>
                 </div>
                 <div class="two fields">
                   <div class="field">
                     <label>Hour</label>
-                    <input type="number" name="alarm[hour]" placeholder="hour" min="0" max="24" required>
+                    <input type="number" name="alarm[hour]" placeholder="hour" min="0" max="24" autocomplete="off" required>
                   </div>
                   <div class="field">
                     <label>Minute</label>
-                    <input type="number" name="alarm[minute]" placeholder="minute" min="0" max="59" required>
+                    <input type="number" name="alarm[minute]" placeholder="minute" min="0" max="59" autocomplete="off" required>
                   </div>
                 </div>
                 <div class="field">
                   <label>Upload a Sound</label>
-                  <input type="file" id="sound" name="sound" accept="audio/*" required>
+                  <input type="file" id="sound" name="sound" accept="audio/*" autocomplete="off" required>
                 </div>
                 <p>Days of the week:</p>
                 <% days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %>

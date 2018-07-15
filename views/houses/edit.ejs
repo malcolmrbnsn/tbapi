@@ -6,10 +6,10 @@
     <form class="ui form" action="/houses/<%= house._id %>?_method=PUT" method="POST" enctype="multipart/form-data">
       <div class="field">
         <label>House Name</label>
-        <input type="text" placeholder="<%= house.name %>" name="house[name]">
+        <input type="text" placeholder="<%= house.name %>" name="house[name]" autocomplete="off">
       </div>
       <div class="field">
-      <input type="file" id="image" name="house[image]" accept="image/*" required>
+      <input type="file" id="image" name="image" accept="image/*">
       </div>
       <button class="ui submit button" type="submit">Submit</button>
     </form>

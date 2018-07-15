@@ -66,3 +66,6 @@ nodemon.json
 
 # Sounds
 public/sounds
+
+# VS Code workspace
+main.code-workspace
