@@ -38,7 +38,6 @@ middlewareObj.validateIPAddr = (hostname) => {
   const ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
   // Some regex i found online
   if (!hostname.match(ipformat)) {
-    req.flash("error", "You must enter a valid IP Address!")
 
 return false;
   }
@@ -46,8 +45,6 @@ return false;
   if (hostname.length >= 7 && hostname.length <= 15) {
 return true
   }
-
-  req.flash("Hostname not valid");
 
 return false;
 }

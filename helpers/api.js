@@ -10,9 +10,11 @@ exports.getHost = (req, res) => {
   // sanatise ip address
   if (!validateIPAddr(req.params.hostname)) {
     console.log("Not valid hostname");
-    req.flash("error", "You must enter a valid IP Address!")
 
-    return res.redirect("back")
+    return res.json({
+      "error": "Invalid hostname format"
+    });
+
   }
   db.Host.findOne({
     hostname: req.params.hostname
@@ -20,7 +22,7 @@ exports.getHost = (req, res) => {
   then((foundHost) => {
     console.log(foundHost);
     if (!foundHost) {
-      console.log("API ERROR: " + error);
+      console.log("API ERROR: NO HOST FOUND");
 
       return res.json({
         "error": "No host found"
