@@ -34,7 +34,6 @@ exports.getHost = (req, res) => {
     }).
     then((foundAlarms) => {
       const toSend = []
-      console.log(foundAlarms)
       foundAlarms.map((alarm) => {
         const addToSend = {
           dow: alarm.dow,
