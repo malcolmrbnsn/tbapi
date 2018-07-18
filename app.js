@@ -11,20 +11,17 @@ const express = require('express'),
   morgan = require("morgan"),
   path = require('path'),
   rfs = require('rotating-file-stream'),
- expressSanitizer = require('express-sanitizer'),
+  expressSanitizer = require('express-sanitizer'),
   app = express();
 require('dotenv').config();
 
-// Set up middleware
-middleware = require("./middleware")
-
-const checkDirectorySync = middleware.checkDirectorySync;
+// Set up middleware, db
+const middleware = require("./middleware"),
+  db = require("./models"),
+  {checkDirectorySync} = middleware;
 
 const port = process.env.PORT || 3000,
   ip = process.env.IP || "0.0.0.0"
-
-// Models and seeds
-const User = require('./models/user')
 
 // Routes
 const indexRoutes = require("./routes/index"),
@@ -73,9 +70,9 @@ app.use(session(sess))
 // Passport
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.use(new LocalStrategy(db.User.authenticate()));
+passport.serializeUser(db.User.serializeUser());
+passport.deserializeUser(db.User.deserializeUser());
 
 // app config
 app.use(express.static(__dirname + "/public"));
@@ -89,7 +86,7 @@ app.use(expressSanitizer());
 app.use(helmet());
 app.use(compression());
 app.use(flash());
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
   res.locals.currentUser = req.user;
   res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
