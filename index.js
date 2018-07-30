@@ -20,8 +20,8 @@ const middleware = require("./middleware"),
   db = require("./models"),
   {checkDirectorySync} = middleware;
 
-const port = process.env.PORT || 3000,
-  ip = process.env.IP || "0.0.0.0"
+const PORT = process.env.PORT || 3000,
+  IP = process.env.IP || "0.0.0.0"
 
 // Routes
 const indexRoutes = require("./routes/index"),
@@ -29,6 +29,7 @@ const indexRoutes = require("./routes/index"),
   hostRoutes = require("./routes/hosts"),
   alarmRoutes = require("./routes/alarms"),
   apiRoutes = require("./routes/api");
+  errorHandler = require("./helpers/error");
 
 // Check if logging dir exists
 checkDirectorySync("./logs");
@@ -99,5 +100,15 @@ app.use("/houses", houseRoutes);
 app.use("/api", apiRoutes);
 app.use("/houses/:id/hosts", hostRoutes);
 app.use("/houses/:id/alarms", alarmRoutes);
+
+// Error listener
+app.use(function (req, res, next) {
+  const err = new Error("Not Found")
+  next(err)
+})
+
+// Error Handler
+app.use(errorHandler)
+
 // Server //
-app.listen(port, ip, () => console.log("Server is running on  " + process.env.IP + " using port " + process.env.PORT));
+app.listen(PORT, IP, () => console.log(`SERVER: Running on ${IP}:${PORT}`));

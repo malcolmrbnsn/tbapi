@@ -4,10 +4,13 @@ const express = require("express"),
   }),
 helpers = require("../helpers/alarms"),
 middleware = require("../middleware"),
+auth = require("../middleware/auth"),
   {
-    isLoggedIn,
     checkDirectorySync
-  } = middleware;
+  } = middleware,
+{
+  isLoggedIn
+} = auth
 
 // Check sound directory exists
 checkDirectorySync("./public/sounds");

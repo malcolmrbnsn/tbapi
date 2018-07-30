@@ -30,7 +30,7 @@ get(helpers.forgotPassword).
 post(helpers.resetPassword)
 
 router.route('/reset/:token').
-get(helpers.showNewPassword).
+get(helpers.setNewPassword).
 post(helpers.newPassword)
 
 module.exports = router;

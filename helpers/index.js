@@ -69,7 +69,7 @@ exports.forgotPassword = (req, res) => {
     });
 }
 
-exports.showNewPassword = (req, res) => {
+exports.setNewPassword = (req, res) => {
     User.findOne({
         resetPasswordToken: req.params.token,
         resetPasswordExpires: {

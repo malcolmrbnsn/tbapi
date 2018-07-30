@@ -1,11 +1,11 @@
 const express = require("express"),
   router = express.Router(),
   helpers = require('../helpers/houses'),
-  middleware = require("../middleware"),
+  auth = require("../middleware/auth"),
   {
     isLoggedIn,
     isAdmin
-  } = middleware;
+  } = auth;
 
 // MULTER
 var multer = require('multer');

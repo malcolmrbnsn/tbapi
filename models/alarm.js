@@ -14,10 +14,12 @@ var alarmSchema = new mongoose.Schema({
       ref: "House"
     }
   },
-  hosts: [{
+  hosts: [
+{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Host"
-  }],
+  }
+],
   file: {
     url: {
       type: String
@@ -46,4 +48,17 @@ var alarmSchema = new mongoose.Schema({
     default: true
   }
 });
+
+alarmSchema.pre("remove", async function(next) {
+  try {
+    const house = await db.House.findById(this.house.id)
+    await house.alarms.remove(this._id)
+    await house.save()
+
+    return next()
+  } catch (err) {
+     return next(err)
+  }
+})
+
 module.exports = mongoose.model("Alarm", alarmSchema);

@@ -1,114 +1,88 @@
 <% include ../partials/header %>
-<div class="ui container space">
-<% include ../partials/flash %>
-<h1 class="ui left aligned header"><%= house.name %></h1>
-<% if(currentUser && currentUser.isAdmin){ %>
-<a class="ui yellow button" href="/houses/<%= house._id %>/edit">Edit House</a>
-<form class="delete" action="/houses/<%= house._id %>?_method=DELETE" method="post">
-  <button class="ui negative button">Delete House</button>
-</form>
-<% } %>
-<div class="positive ui buttons">
-  <% if(currentUser && currentUser.isAdmin){ %>
-<a class="ui button" href="/houses/<%= house._id %>/hosts/new">New Host</a>
-<% } %>
-<a class="ui button" href="/houses/<%= house._id %>/alarms/new">New Alarm</a>
-</div>
-<div class="ui segments">
-<div class="ui segment">
-<h2>Hosts:</h2>
-<table class="ui celled table">
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Hostname</th>
-        <% if(currentUser && currentUser.isAdmin){ %>
-      <th>Options</th>
-      <% }%>
-    </tr>
-  </thead>
-  <tbody>
-    <% house.hosts.forEach(function(host) {%>
-      <tr>
-        <td>
-          <%= host.name %>
-        </td>
-        <td>
-          <%= host.hostname %>
-        </td>
-        <% if(currentUser && currentUser.isAdmin){ %>
-        <td><a class="ui yellow button" href="/houses/<%= house._id %>/hosts/<%= host._id %>/edit">Edit</a>
-          <form class="delete" action="/houses/<%= house._id %>/hosts/<%= host._id %>?_method=DELETE" method="post">
-          <button class="ui red button">Delete</button>
+  <div class="ui container space">
+    <% include ../partials/flash %>
+      <h1 class="ui left aligned header">
+        <%= house.name %>
+      </h1>
+      <% if(currentUser && currentUser.isAdmin){ %>
+        <a class="ui yellow button" href="/houses/<%= house._id %>/edit">Edit House</a>
+        <form class="delete" action="/houses/<%= house._id %>?_method=DELETE" method="post">
+          <button class="ui negative button">Delete House</button>
         </form>
-      </tr>
-      <% }%>
-      <% }) %>
-  </tbody>
-</table>
-</div>
-<div class="ui segment">
-<h2>Alarms: </h2>
-<table class="ui padded celled table">
-  <thead>
-    <th>Name</th>
-    <th>Time</th>
-    <th>Days</th>
-    <th>Hosts</th>
-    <th>Sound</th>
-    <th>Active</th>
-    <th>Options</th>
-  </thead>
-  <tbody>
-  <% house.alarms.forEach(function(alarm) {%>
-    <tr>
-      <td>
-        <%= alarm.name %>
-      </td>
-      <td>
-        <%= alarm.hour %>:<%= alarm.minute %>
-      </td>
-      <td>
-      <% days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %>
-      <% nDays = [0,1,2,3,4,5,6,] %>
-        <% alarm.dow.forEach(function(day,i, arr) {%>
-          <%= days[day] %><%= ( arr.length > 0 && i < arr.length-1 ? ( i == arr.length-2 ? ', ' : ', ' ) : '' ) %>
-            <% }) %>
-      </td>
-      <td>
-      <% if (alarm.hosts) {%>
-        <% alarm.hosts.forEach(function(host, i, arr){ %>
-          <%= host.name %><%= ( arr.length > 0 && i < arr.length-1 ? ( i == arr.length-2 ? ', ' : ', ' ) : '' ) %>
-              <% }) %>
+        <% } %>
+          <div class="positive ui buttons">
+            <% if(currentUser && currentUser.isAdmin){ %>
+              <a class="ui button" href="/houses/<%= house._id %>/hosts/new">New Host</a>
               <% } %>
-
-      </td>
-      <td>
-        <%= alarm.file.name %>
-        <br/>
-        <audio controls>
-          <source src="<%= alarm.file.url %>" type="audio/mpeg">
-        Your browser does not support the audio tag.
-        </audio>
-      </td>
-      <td>
-        <% if (alarm.active === true) { %>
-          Yes
-          <% } else { %>
-            No
-            <% }%>
-      </td>
-      <td>
-      <a class="ui yellow button" href="/houses/<%= house._id %>/alarms/<%= alarm._id %>/edit">Edit</a>
-        <form class="delete" action="/houses/<%= house._id %>/alarms/<%= alarm._id %>?_method=DELETE" method="post">
-          <button class="ui red button">Delete</button>
-        </form>
-      </td>
-    </tr>
-    <% }) %>
-    </tbody>
-</table>
-</div>
-</div>
-</div>
-<% include ../partials/footer %>
+                <a class="ui button" href="/houses/<%= house._id %>/alarms/new">New Alarm</a>
+          </div>
+          <div class="ui hidden divider"></div>
+          <h2>Hosts</h2>
+          <div class="ui three stackable cards">
+            <% house.hosts.forEach(function(host) {%>
+              <div class="ui fluid card">
+                <div class="content">
+                  <div class="header">
+                    <%= host.name %>
+                  </div>
+                  <div class="meta">
+                    <%= host.hostname %>
+                  </div>
+                  <% if(currentUser && currentUser.isAdmin){ %>
+                    <a class="ui yellow button" href="/houses/<%= house._id %>/hosts/<%= host._id %>/edit">Edit</a>
+                    <form class="delete" action="/houses/<%= house._id %>/hosts/<%= host._id %>?_method=DELETE" method="post">
+                      <button class="ui red button">Delete</button>
+                    </form>
+                    <% }%>
+                </div>
+              </div>
+              <% }) %>
+          </div>
+          <div class="ui hidden divider"></div>
+          <h2>Alarms</h2>
+          <div class="ui three stackable cards">
+            <% house.alarms.forEach(function(alarm) {%>
+              <div class="ui fluid card">
+                <div class="content">
+                  <div class="header">
+                    <%= alarm.name %>
+                  </div>
+                  <div>
+                    <%= alarm.hour %>:
+                      <%= alarm.minute %>
+                  </div>
+                  <div>
+                    <% days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %>
+                        <% alarm.dow.forEach(function(day,i, arr) {%>
+                          <%= days[day] %>
+                            <%= ( arr.length > 0 && i < arr.length-1 ? ( i == arr.length-2 ? ', ' : ', ' ) : '' ) %>
+                              <% }) %>
+                  </div>
+                  <div>
+                    <% if (alarm.hosts) {%>
+                      <% alarm.hosts.forEach(function(host, i, arr){ %>
+                        <%= host.name %>
+                          <%= ( arr.length > 0 && i < arr.length-1 ? ( i == arr.length-2 ? ', ' : ', ' ) : '' ) %>
+                            <% }) %>
+                              <% } %>
+                  </div>
+                  <div>
+                    <%= alarm.file.name %>
+                      <br />
+                      <audio controls>
+                        <source src="<%= alarm.file.url %>" type="audio/mpeg"> Your browser does not support the audio tag.
+                      </audio>
+                  </div>
+                  <div>
+                    <a class="ui yellow button" href="/houses/<%= house._id %>/alarms/<%= alarm._id %>/edit">Edit</a>
+                    <form class="delete" action="/houses/<%= house._id %>/alarms/<%= alarm._id %>?_method=DELETE" method="post">
+                      <button class="ui red button">Delete</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+              <% }) %>
+          </div>
+  </div>
+  <div class="ui hidden divider"></div>
+  <% include ../partials/footer %>

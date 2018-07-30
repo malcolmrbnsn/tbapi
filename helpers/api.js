@@ -6,65 +6,47 @@ const db = require("../models"),
 
 exports = {}
 
-exports.getHost = (req, res) => {
-  // sanatise ip address
-  if (!validateIPAddr(req.params.hostname)) {
-    console.log("Not valid hostname");
+exports.getHost = async (req, res) => {
+  try {
+    // sanatise ip address
+    if (!validateIPAddr(req.params.hostname)) {
+      console.log("Not valid hostname");
 
-    return res.json({
-      "error": "Invalid hostname format"
-    });
-
-  }
-  db.Host.findOne({
-    hostname: req.params.hostname
-  }).
-  then((foundHost) => {
-    console.log(foundHost);
+      return res.json({
+        "error": "Invalid hostname format"
+      });
+    }
+    const foundHost = await db.Host.findOne(req.params.hostname)
     if (!foundHost) {
-      console.log("API ERROR: NO HOST FOUND");
-
       return res.json({
         "error": "No host found"
       });
     }
-    db.Alarm.find({
+    const foundAlarms = await db.Alarm.find({
       "hosts": foundHost._id,
       active: true
-    }).
-    then((foundAlarms) => {
-      const toSend = []
-      foundAlarms.map((alarm) => {
-        const addToSend = {
-          dow: alarm.dow,
-          hour: alarm.hour,
-          minute: alarm.minute,
-          name: alarm.name,
-          url: alarm.file.url,
-          filename: alarm.file.name
-        }
-        toSend.push(addToSend);
-      })
-
-      return res.json({
-        "result": toSend
-      });
-    }).
-    catch((err) => {
-      console.log(err)
-
-      return res.json({
-        err
-      })
     })
-  }).
-  catch((err) => {
-    console.log(err)
+    const toSend = []
+    foundAlarms.map(alarm => {
+      const addToSend = {
+        dow: alarm.dow,
+        hour: alarm.hour,
+        minute: alarm.minute,
+        name: alarm.name,
+        url: alarm.file.url,
+        filename: alarm.file.name
+      }
+      toSend.push(addToSend);
+    })
 
+    return res.status(200).json({
+      "result": toSend
+    });
+  } catch (err) {
     return res.json({
       err
     })
-  })
+  }
 }
 
 module.exports = exports;

@@ -32,18 +32,18 @@ const populateQuery = [
 ];
 
 // Index
-exports.getHouses = (req, res) => {
-  db.House.find({}).
-  then((houses) => {
-    res.render("houses/index", {
+exports.getHouses = async (req, res, next) => {
+  try {
+    const houses = await db.House.find({})
+
+    return res.render("houses/index", {
       houses,
-      page: 'index',
+      page: "index",
       pageName: "Houses"
-    });
-  }).
-  catch((err) => {
-    console.log(err);
-  })
+    })
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // New
@@ -54,128 +54,87 @@ exports.newHouse = (req, res) => {
 }
 
 // Create
-exports.createHouse = (req, res) => {
-  cloudinary.v2.uploader.upload(req.file.path, {
-    eager: eagerOptions
-  }).
-  then(result => {
+exports.createHouse = async (req, res, next) => {
+  try {
+    const result = await cloudinary.v2.uploader.upload(req.file.path, {
+      eager: eagerOptions
+    })
     // add cloudinary url for the image to the house object under image property
     req.body.house.image = result.eager[0].secure_url;
     // add image's public_id to house object
     req.body.house.imageId = result.public_id;
     // add author to house
     req.body.house.author = req.user._id;
-    db.House.create(req.body.house).
-    then(() => {
-      res.redirect('/houses');
-    }).
-    catch(err => {
-      console.log(err);
-      req.flash('error', err.message);
+    const house = await db.House.create(req.body.house)
+    req.flash("success", "House created")
 
-return res.redirect('back');
-    })
-  }).
-  catch(err => {
-    console.log(err);
-    req.flash('error', err.message);
-
-return res.redirect('back');
-  })
+    return res.redirect("/houses/" + house._id)
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // Show
-exports.showHouse = (req, res) => {
-  db.House.findById(req.params.id).
-  populate(populateQuery).
-  then(house => {
-    res.render("houses/show", {
+exports.showHouse = async (req, res, next) => {
+  try {
+    const house = await db.House.findById(req.params.id).populate(populateQuery)
+
+    return res.render("houses/show", {
       house,
       pageName: house.name
-    });
-  }).
-  catch((err) => {
-    console.log(err);
-    req.flash("err", err)
-
-    return res.redirect('/houses');
-  })
+    })
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // Edit
-exports.editHouse = (req, res) => {
-  db.House.findById(req.params.id).
-  then(house => {
-    res.render("houses/edit", {
+exports.editHouse = async (req, res, next) => {
+  try {
+    const house = await db.House.findById(req.params.id)
+
+    return res.render("houses/edit", {
       house,
       pageName: "Edit House"
-    });
-  }).
-  catch((err) => {
-    res.flash("error", "An error occured");
-    console.log(err);
-
-    return res.redirect('/houses');
-  })
+    })
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // Update
-exports.updateHouse = (req, res) => {
-  db.House.findById(req.params.id).
-  then(async function (house) {
+exports.updateHouse = async (req, res, next) => {
+  try {
+    const house = await db.House.findById(req.params.id)
     if (req.file) {
-      try {
-        await cloudinary.v2.uploader.destroy(house.imageId);
-        var result = await cloudinary.v2.uploader.upload(req.file.path, {
-          eager: eagerOptions
-        });
-        house.imageId = result.public_id;
-        house.image = result.eager[0].secure_url;
-      } catch (err) {
-        req.flash("error", err.message);
-        console.log(err.message);
-
-        return res.redirect("back");
-      }
+      await cloudinary.v2.uploader.destroy(imageId);
+      const result = await cloudinary.v2.uploader.upload(req.file.path, {
+        eager: eagerOptions
+      });
+      house.imageId = result.public_id
+      house.image = result.eager[0].secure_url;
     }
-    house.name = req.body.house.name;
-    house.save();
-    console.log("House updated");
+    house.name = req.body.house.name
+    house.save()
     req.flash("success", "Successfully Updated!");
-    res.redirect("/houses/" + house._id);
-  }).
-  catch((err) => {
-    req.flash("error", err.message);
-    console.log(err.message);
-    res.redirect("back");
-  })
+
+    return res.redirect("/houses/" + house._id);
+  } catch (err) {
+    return next(err)
+  }
 }
 
 // Delete
-exports.deleteHouse = (req, res) => {
-  db.House.findById(req.params.id).
-  populate(populateQuery).
-  then(async house => {
-    try {
-      house.hosts.forEach(host => {
-        db.Host.findByIdAndRemove(host._id)
-      })
-      house.alarms.forEach(alarm => {
-        alarm.findByIdAndRemove(alarm)
-      });
-      await cloudinary.v2.uploader.destroy(house.imageId);
-    } catch (error) {
-      req.flash("error", err.message);
-      console.log(err.message)
+exports.deleteHouse = async (req, res, next) => {
+  try {
+    const house = db.House.findById(req.params.id)
+    await cloudinary.v2.uploader.destroy(house.imageId);
+    req.flash('success', 'House deleted successfully!');
 
-      return res.redirect("back");
-    }
-    house.remove();
-  })
-
-  req.flash('success', 'House deleted successfully!');
-  console.log("House deleted");
-  res.redirect('/houses');
+    return res.redirect('/houses');
+  } catch (err) {
+    return next(err)
+  }
 }
 
 module.exports = exports;

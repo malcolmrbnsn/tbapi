@@ -69,3 +69,4 @@ public/sounds
 
 # VS Code workspace
 main.code-workspace
+.vscode/launch.json

@@ -2,11 +2,11 @@ const express = require("express"),
   router = express.Router({
     mergeParams: true
   }),
-  middleware = require("../middleware"),
-  helpers = require('../helpers/hosts'),
+helpers = require("../helpers/hosts")
+  auth = require("../middleware/auth"),
   {
     isAdmin
-  } = middleware;
+  } = auth;
 
 // New
 router.get("/new", isAdmin, helpers.newHost);
