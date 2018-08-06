@@ -1,23 +1,25 @@
 <% include ./partials/header %>
   <div class="ui container space">
-<% include ./partials/flash %>
-          <div class="ui padded segment">
-    <h1 class="ui center aligned header">Login</h1>
-       <p class="ui small header">New here? <a href="/signup">Sign Up</a></p>
-    <form class="ui form" action="/login" method="POST">
-      <div class="required field">
-        <label>Username</label>
-        <input type="text" name="username" placeholder="Username" autocomplete="username" autofocus required>
+    <% include ./partials/flash %>
+      <div class="ui padded segment">
+        <h1 class="ui center aligned header">Login</h1>
+        <p class="ui small header">New here?
+          <a href="/register">Sign Up</a>
+        </p>
+        <form class="ui form" action="/login" method="POST">
+          <div class="required field">
+            <label>Username</label>
+            <input type="text" name="username" placeholder="Username" autocomplete="username" autofocus required>
+          </div>
+          <div class="required field">
+            <label>Password</label>
+            <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
+          </div>
+          <div class="field">
+            <a href="/forgot">Forgot Password?</a>
+          </div>
+          <button class="ui submit button" type="submit">Submit</button>
+        </form>
       </div>
-      <div class="required field">
-      <label>Password</label>
-      <input type="password" name="password" placeholder="Password" autocomplete="current-password" required>
-    </div>
-    <div class="field">
-    <a href="/forgot">Forgot Password?</a>
-    </div>
-      <button class="ui submit button" type="submit">Submit</button>
-    </form>
   </div>
-  </div>
-    <% include ./partials/footer %>
+  <% include ./partials/footer %>

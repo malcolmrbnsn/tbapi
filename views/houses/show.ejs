@@ -53,10 +53,10 @@
                   </div>
                   <div>
                     <% days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'] %>
-                        <% alarm.dow.forEach(function(day,i, arr) {%>
-                          <%= days[day] %>
-                            <%= ( arr.length > 0 && i < arr.length-1 ? ( i == arr.length-2 ? ', ' : ', ' ) : '' ) %>
-                              <% }) %>
+                      <% alarm.dow.forEach(function(day,i, arr) {%>
+                        <%= days[day] %>
+                          <%= ( arr.length > 0 && i < arr.length-1 ? ( i == arr.length-2 ? ', ' : ', ' ) : '' ) %>
+                            <% }) %>
                   </div>
                   <div>
                     <% if (alarm.hosts) {%>
