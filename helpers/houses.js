@@ -27,6 +27,12 @@ const populateQuery = [
     path: 'alarms',
     populate: {
       path: 'hosts'
+    },
+    options: {
+      sort: {
+        'hour': +1,
+        'minute': +1
+      }
     }
   }
 ];
