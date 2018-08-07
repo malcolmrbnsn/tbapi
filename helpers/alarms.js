@@ -112,7 +112,10 @@ exports.updateAlarm = async (req, res, next) => {
 exports.deleteAlarm = async (req, res, next) => {
     try {
         const alarm = await db.Alarm.findById(req.params.alarm_id)
-        fs.unlink(alarm.file.fullpath);
+        fs.unlink(alarm.file.fullpath, (err) => {
+            console.log(err)
+            // TODO: throw an error here
+        });
         alarm.remove();
         req.flash('success', 'Alarm deleted successfully!');
 
