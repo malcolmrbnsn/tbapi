@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const env = process.env.NODE_ENV || "development"
 
 if (env !== 'production') {
-  mongoose.set('debug', true);
+  // mongoose.set('debug', true);
 }
 // Mongoose
 mongoose.Promise = global.Promise;

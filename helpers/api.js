@@ -8,15 +8,20 @@ exports = {}
 
 exports.getHost = async (req, res) => {
   try {
+    const {
+      hostname
+    } = req.params;
     // sanatise ip address
-    if (!validateIPAddr(req.params.hostname)) {
+    if (!validateIPAddr(hostname)) {
       console.log("Not valid hostname");
 
       return res.json({
         "error": "Invalid hostname format"
       });
     }
-    const foundHost = await db.Host.findOne(req.params.hostname)
+    const foundHost = await db.Host.findOne({
+      hostname
+    })
     if (!foundHost) {
       return res.json({
         "error": "No host found"
@@ -43,7 +48,7 @@ exports.getHost = async (req, res) => {
       "result": toSend
     });
   } catch (err) {
-    return res.json({
+    return res.status(500).json({
       err
     })
   }
