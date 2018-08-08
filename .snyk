@@ -6,4 +6,30 @@ ignore:
     - npm > npm-registry-fetch > make-fetch-happen > cacache > chownr:
         reason: None given
         expires: '2018-09-05T02:38:03.226Z'
-patch: {}
+# patches apply the minimum changes required to fix a vulnerability
+patch:
+  'npm:hoek:20180212':
+    - npm > npm-lifecycle > node-gyp > request > hawk > sntp > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
+    - npm > node-gyp > request > hawk > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
+    - npm > node-gyp > request > hawk > sntp > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
+    - npm > npm-lifecycle > node-gyp > request > hawk > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
+    - npm > node-gyp > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
+    - npm > npm-lifecycle > node-gyp > request > hawk > boom > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
+    - npm > node-gyp > request > hawk > boom > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
+    - npm > libcipm > npm-lifecycle > node-gyp > request > hawk > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
+    - npm > libcipm > npm-lifecycle > node-gyp > request > hawk > boom > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
+    - npm > npm-lifecycle > node-gyp > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
+    - npm > libcipm > npm-lifecycle > node-gyp > request > hawk > sntp > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
+    - npm > libcipm > npm-lifecycle > node-gyp > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-08-08T09:59:27.867Z'
