@@ -1,6 +1,6 @@
 const mongoose = require("mongoose"),
-Host = require('./host'),
-Alarm = require('./alarm')
+  Host = require("./host"),
+  Alarm = require("./alarm");
 
 var houseSchema = new mongoose.Schema({
   name: {
@@ -14,32 +14,32 @@ var houseSchema = new mongoose.Schema({
     ref: "User"
   },
   hosts: [
-{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Host"
-  }
-],
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Host"
+    }
+  ],
   alarms: [
-{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Alarm"
-  }
-]
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Alarm"
+    }
+  ]
 });
 
 houseSchema.pre("remove", function(next) {
   try {
     house.hosts.forEach(host => {
-      Host.findByIdAndRemove(host._id)
-    })
+      Host.findByIdAndRemove(host._id);
+    });
     house.alarms.forEach(alarm => {
-      Alarm.findByIdAndRemove(alarm)
+      Alarm.findByIdAndRemove(alarm);
     });
 
-    return next()
+    return next();
   } catch (err) {
-     return next(err)
+    return next(err);
   }
-})
+});
 
 module.exports = mongoose.model("House", houseSchema);

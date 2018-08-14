@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 var hostSchema = new mongoose.Schema({
   hostname: {
@@ -13,11 +13,11 @@ var hostSchema = new mongoose.Schema({
     }
   },
   alarms: [
-{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Alarm"
-  }
-],
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Alarm"
+    }
+  ],
   created: {
     type: Date,
     default: Date.now
@@ -26,13 +26,13 @@ var hostSchema = new mongoose.Schema({
 
 hostSchema.pre("remove", async function(next) {
   try {
-    const house = await db.House.findById(this.house.id)
-    await house.hosts.remove(this._id)
-    await house.save()
+    const house = await db.House.findById(this.house.id);
+    await house.hosts.remove(this._id);
+    await house.save();
 
-    return next()
+    return next();
   } catch (err) {
-     return next(err)
+    return next(err);
   }
-})
+});
 module.exports = mongoose.model("Host", hostSchema);

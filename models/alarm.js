@@ -1,5 +1,5 @@
-const mongoose = require('mongoose'),
-db = require("./index")
+const mongoose = require("mongoose"),
+  db = require("./index");
 
 var alarmSchema = new mongoose.Schema({
   name: {
@@ -16,11 +16,11 @@ var alarmSchema = new mongoose.Schema({
     }
   },
   hosts: [
-{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: "Host"
-  }
-],
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Host"
+    }
+  ],
   file: {
     url: {
       type: String
@@ -52,14 +52,14 @@ var alarmSchema = new mongoose.Schema({
 
 alarmSchema.pre("remove", async function(next) {
   try {
-    const house = await db.House.findById(this.house.id)
-    await house.alarms.remove(this._id)
-    await house.save()
+    const house = await db.House.findById(this.house.id);
+    await house.alarms.remove(this._id);
+    await house.save();
 
-    return next()
+    return next();
   } catch (err) {
-     return next(err)
+    return next(err);
   }
-})
+});
 
 module.exports = mongoose.model("Alarm", alarmSchema);

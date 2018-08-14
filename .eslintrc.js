@@ -1,4 +1,6 @@
 module.exports = {
+    "plugins": ["prettier"],
+    "extends": ["plugin:prettier/recommended"],
     "env": {
         "browser": true,
         "es6": true
@@ -8,6 +10,7 @@ module.exports = {
         "ecmaVersion": 2017
     },
     "rules": {
+        "prettier/prettier": "error",
         "accessor-pairs": "error",
         "array-bracket-newline": "error",
         "array-bracket-spacing": "error",
@@ -47,7 +50,6 @@ module.exports = {
         "consistent-this": "error",
         "curly": "error",
         "default-case": "error",
-        "dot-location": "error",
         "dot-notation": [
             "error",
             {
@@ -63,7 +65,6 @@ module.exports = {
             "never"
         ],
         "func-style": "off",
-        "function-paren-newline": "error",
         "generator-star-spacing": "error",
         "global-require": "error",
         "guard-for-in": "error",
@@ -204,7 +205,6 @@ module.exports = {
         "no-with": "error",
         "nonblock-statement-body-position": "error",
         "object-curly-newline": "error",
-        "object-curly-spacing": "error",
         "object-property-newline": "error",
         "object-shorthand": "error",
         "one-var": "off",

@@ -1,31 +1,30 @@
-const fs = require("fs")
+const fs = require("fs");
 
 var middlewareObj = {};
 
-middlewareObj.checkDirectorySync = (directory) => {
+middlewareObj.checkDirectorySync = directory => {
   try {
     fs.statSync(directory);
   } catch (e) {
     fs.mkdirSync(directory);
   }
-}
+};
 
-middlewareObj.validateIPAddr = (hostname) => {
+middlewareObj.validateIPAddr = hostname => {
   const ipformat = /^(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$/;
   // Some regex i found online
   if (!hostname.match(ipformat)) {
-
-return false;
+    return false;
   }
   // Check length is in normal ipv4 length range
   if (hostname.length >= 7 && hostname.length <= 15) {
-return true
+    return true;
   }
 
-return false;
-}
+  return false;
+};
 
-middlewareObj.validateAlarm = (alarm) => {
+middlewareObj.validateAlarm = alarm => {
   if (!alarm.dow) {
     req.flash("error", "You must select at least one day!");
 
@@ -36,7 +35,6 @@ middlewareObj.validateAlarm = (alarm) => {
 
     return res.redirect("back");
   }
-}
-
+};
 
 module.exports = middlewareObj;

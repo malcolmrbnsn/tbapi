@@ -1,27 +1,27 @@
 // SETUP
-const express = require('express'),
-  helmet = require('helmet'),
-  bodyParser = require('body-parser'),
-  passport = require('passport'),
-  LocalStrategy = require('passport-local'),
+const express = require("express"),
+  helmet = require("helmet"),
+  bodyParser = require("body-parser"),
+  passport = require("passport"),
+  LocalStrategy = require("passport-local"),
   session = require("express-session"),
   methodOverride = require("method-override"),
   compression = require("compression"),
-  flash = require('connect-flash'),
+  flash = require("connect-flash"),
   morgan = require("morgan"),
-  path = require('path'),
-  rfs = require('rotating-file-stream'),
-  expressSanitizer = require('express-sanitizer'),
+  path = require("path"),
+  rfs = require("rotating-file-stream"),
+  expressSanitizer = require("express-sanitizer"),
   app = express();
-require('dotenv').config();
+require("dotenv").config();
 
 // Set up middleware, db
 const middleware = require("./middleware"),
   db = require("./models"),
-  {checkDirectorySync} = middleware;
+  { checkDirectorySync } = middleware;
 
 const PORT = process.env.PORT || 3000,
-  IP = process.env.IP || "0.0.0.0"
+  IP = process.env.IP || "0.0.0.0";
 
 // Routes
 const indexRoutes = require("./routes/index"),
@@ -29,27 +29,29 @@ const indexRoutes = require("./routes/index"),
   hostRoutes = require("./routes/hosts"),
   alarmRoutes = require("./routes/alarms"),
   apiRoutes = require("./routes/api");
-  errorHandler = require("./helpers/error");
+errorHandler = require("./helpers/error");
 
 // Check if logging dir exists
 checkDirectorySync("./logs");
 
 // Logger
-var logDirectory = path.join(__dirname, 'logs')
+var logDirectory = path.join(__dirname, "logs");
 
 // create a rotating write stream
-var accessLogStream = rfs('access.log', {
-  interval: '1d', // rotate daily
+var accessLogStream = rfs("access.log", {
+  interval: "1d", // rotate daily
   path: logDirectory
-})
+});
 
 // File logger
-app.use(morgan('combined', {
-  stream: accessLogStream
-}))
+app.use(
+  morgan("combined", {
+    stream: accessLogStream
+  })
+);
 
 // Console logger
-app.use(morgan('dev'))
+app.use(morgan("dev"));
 
 //Session
 var sess = {
@@ -61,13 +63,13 @@ var sess = {
   cookie: {
     maxAge: 3600000
   }
-}
-if (app.get('env') === 'production') {
-  app.set('trust proxy', 1) // trust first proxy
-  sess.cookie.secure = true // serve secure cookies
+};
+if (app.get("env") === "production") {
+  app.set("trust proxy", 1); // trust first proxy
+  sess.cookie.secure = true; // serve secure cookies
 }
 
-app.use(session(sess))
+app.use(session(sess));
 // Passport
 app.use(passport.initialize());
 app.use(passport.session());
@@ -79,15 +81,17 @@ passport.deserializeUser(db.User.deserializeUser());
 app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
-app.use(bodyParser.urlencoded({
-  extended: true
-}));
+app.use(
+  bodyParser.urlencoded({
+    extended: true
+  })
+);
 app.use(bodyParser.json());
 app.use(expressSanitizer());
 app.use(helmet());
 app.use(compression());
 app.use(flash());
-app.use(function (req, res, next) {
+app.use(function(req, res, next) {
   res.locals.currentUser = req.user;
   res.locals.error = req.flash("error");
   res.locals.success = req.flash("success");
@@ -102,13 +106,13 @@ app.use("/houses/:id/hosts", hostRoutes);
 app.use("/houses/:id/alarms", alarmRoutes);
 
 // Error listener
-app.use(function (req, res, next) {
-  const err = new Error("Not Found")
-  next(err)
-})
+app.use(function(req, res, next) {
+  const err = new Error("Not Found");
+  next(err);
+});
 
 // Error Handler
-app.use(errorHandler)
+app.use(errorHandler);
 
 // Server //
 app.listen(PORT, IP, () => console.log(`SERVER: Running on ${IP}:${PORT}`));

@@ -2,24 +2,20 @@ const express = require("express"),
   router = express.Router({
     mergeParams: true
   }),
-helpers = require("../helpers/alarms"),
-middleware = require("../middleware"),
-auth = require("../middleware/auth"),
-  {
-    checkDirectorySync
-  } = middleware,
-{
-  isLoggedIn
-} = auth
+  helpers = require("../helpers/alarms"),
+  middleware = require("../middleware"),
+  auth = require("../middleware/auth"),
+  { checkDirectorySync } = middleware,
+  { isLoggedIn } = auth;
 
 // Check sound directory exists
 checkDirectorySync("./public/sounds");
 // MULTER
-var multer = require('multer');
+var multer = require("multer");
 var storage = multer.diskStorage({
   //Setup where the user's file will go
   destination(req, file, callback) {
-    callback(null, './public/sounds');
+    callback(null, "./public/sounds");
   },
   filename(req, file, callback) {
     callback(null, Date.now() + file.originalname);
@@ -28,10 +24,10 @@ var storage = multer.diskStorage({
 var soundFilter = function(req, file, cb) {
   // accept sound files only
   if (!file.originalname.match(/\.(wav|mp3|wma)$/i)) {
-    return cb(new Error('Only sound files are allowed!'), false);
+    return cb(new Error("Only sound files are allowed!"), false);
   }
   cb(null, true);
-}
+};
 var upload = multer({
   storage,
   fileFilter: soundFilter
@@ -41,11 +37,12 @@ var upload = multer({
 router.get("/new", isLoggedIn, helpers.newAlarm);
 
 // Create
-router.post("/", isLoggedIn, upload.single('sound'), helpers.createAlarm);
+router.post("/", isLoggedIn, upload.single("sound"), helpers.createAlarm);
 
-router.route("/:alarm_id").
-put(isLoggedIn, upload.single('sound'), helpers.updateAlarm).
-delete(isLoggedIn, helpers.deleteAlarm)
+router
+  .route("/:alarm_id")
+  .put(isLoggedIn, upload.single("sound"), helpers.updateAlarm)
+  .delete(isLoggedIn, helpers.deleteAlarm);
 
 //Edit
 router.get("/:alarm_id/edit", isLoggedIn, helpers.editAlarm);
