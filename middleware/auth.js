@@ -23,4 +23,17 @@ exports.isAdmin = (req, res, next) => {
   return res.redirect("/login");
 };
 
+exports.clientAuth = (req, res, next) => {
+  if (
+    req.headers.authorization &&
+    req.headers.authorization === process.env.API_KEY
+  ) {
+    return next();
+  }
+
+  return res.status(401).json({
+    error: "API Token incorrect"
+  });
+};
+
 module.exports = exports;

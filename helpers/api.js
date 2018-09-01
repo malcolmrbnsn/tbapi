@@ -1,6 +1,5 @@
 const db = require("../models"),
-  middleware = require("../middleware"),
-  { validateIPAddr } = middleware;
+  { validateIPAddr } = require("../middleware");
 
 exports = {};
 
