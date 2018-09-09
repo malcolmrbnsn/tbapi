@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "snyk test",
-    "pretest":"prettier --write **/*.js",
+    "pretest": "prettier --write **/*.js",
     "snyk-protect": "snyk protect",
     "prepare": "npm run snyk-protect"
   },
@@ -29,6 +29,7 @@
     "cloudinary": "^1.11.0",
     "compression": "^1.7.2",
     "connect-flash": "^0.1.1",
+    "connect-mongo": "^2.0.1",
     "dotenv": "^6.0.0",
     "ejs": "^2.6.1",
     "ejs-lint": "^0.3.0",

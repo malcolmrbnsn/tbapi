@@ -5,12 +5,12 @@ const express = require("express"),
   passport = require("passport"),
   LocalStrategy = require("passport-local"),
   session = require("express-session"),
+  mongoStore = require("connect-mongo")(session),
   methodOverride = require("method-override"),
   compression = require("compression"),
   flash = require("connect-flash"),
   morgan = require("morgan"),
   path = require("path"),
-  rfs = require("rotating-file-stream"),
   expressSanitizer = require("express-sanitizer"),
   app = express();
 require("dotenv").config();
@@ -35,24 +35,12 @@ errorHandler = require("./helpers/error");
 checkDirectorySync("./logs");
 
 // Logger
-var logDirectory = path.join(__dirname, "logs");
-
-// create a rotating write stream
-var accessLogStream = rfs("access.log", {
-  interval: "1d", // rotate daily
-  path: logDirectory
-});
-
-// File logger
-app.use(
-  morgan("combined", {
-    stream: accessLogStream
-  })
-);
+app.use(morgan("dev"));
 
 //Session
 var sess = {
   secret: process.env.SESSION_SECRET,
+  store: new mongoStore({ url: process.env.DB_URI + "session" }),
   resave: false,
   saveUninitialized: false,
   secure: true,
