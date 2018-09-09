@@ -50,9 +50,6 @@ app.use(
   })
 );
 
-// Console logger
-app.use(morgan("dev"));
-
 //Session
 var sess = {
   secret: process.env.SESSION_SECRET,
@@ -106,7 +103,11 @@ app.use("/houses/:id/hosts", hostRoutes);
 app.use("/houses/:id/alarms", alarmRoutes);
 
 // Error listener
-app.use(function(req, res, next) {
+app.use(function(error, req, res, next) {
+  if (typeof error !== undefined) {
+    return next(error);
+  }
+
   const err = new Error("Not Found");
   next(err);
 });
