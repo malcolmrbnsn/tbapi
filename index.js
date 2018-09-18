@@ -1,3 +1,4 @@
+#!/usr/bin/node
 // SETUP
 const express = require("express"),
   helmet = require("helmet"),
@@ -10,7 +11,6 @@ const express = require("express"),
   compression = require("compression"),
   flash = require("connect-flash"),
   morgan = require("morgan"),
-  path = require("path"),
   expressSanitizer = require("express-sanitizer"),
   app = express();
 require("dotenv").config();
@@ -40,7 +40,9 @@ app.use(morgan("dev"));
 //Session
 var sess = {
   secret: process.env.SESSION_SECRET,
-  store: new mongoStore({ url: process.env.DB_URI + "session" }),
+  store: new mongoStore({
+    url: process.env.DB_URI
+  }),
   resave: false,
   saveUninitialized: false,
   secure: true,

@@ -1,4 +1,4 @@
-// eslint-disable-line
+// eslint-disable-next-line
 function errorHandler(error, req, res, next) {
   req.flash("error", error.message);
   console.log(error);

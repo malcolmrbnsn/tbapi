@@ -6,10 +6,13 @@ if (env !== "production") {
 }
 // Mongoose
 mongoose.Promise = global.Promise;
-const databaseUri = process.env.DB_URI + "tbapi" || "mongodb://localhost/tbapi";
+const databaseUri = process.env.DB_URI || "mongodb://localhost/tbapi";
 
 mongoose
-  .connect(databaseUri, { useNewUrlParser: true })
+  .connect(
+    databaseUri,
+    { useNewUrlParser: true }
+  )
   .then(() => console.log(`Database connected`))
   .catch(err => console.log(`Database connection error: ${err.message}`));
 
