@@ -1,31 +1,68 @@
 # Snyk (https://snyk.io) policy file, patches or ignores known vulnerabilities.
 version: v1.12.0
-# ignores vulnerabilities until expiry date; change duration by modifying expiry date
-
 # patches apply the minimum changes required to fix a vulnerability
 patch:
   'npm:hoek:20180212':
     - npm > npm-lifecycle > node-gyp > request > hawk > sntp > hoek:
         patched: '2018-08-08T09:59:27.867Z'
+      npm > request > hawk > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
     - npm > node-gyp > request > hawk > hoek:
-        patched: '2018-08-08T09:59:27.867Z'
+        patched: '2018-09-19T23:43:04.836Z'
     - npm > node-gyp > request > hawk > sntp > hoek:
         patched: '2018-08-08T09:59:27.867Z'
+      npm > request > hawk > sntp > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
     - npm > npm-lifecycle > node-gyp > request > hawk > hoek:
         patched: '2018-08-08T09:59:27.867Z'
+      npm > request > hawk > boom > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
     - npm > node-gyp > request > hawk > cryptiles > boom > hoek:
         patched: '2018-08-08T09:59:27.867Z'
+      npm > npm-registry-client > request > hawk > sntp > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
     - npm > npm-lifecycle > node-gyp > request > hawk > boom > hoek:
         patched: '2018-08-08T09:59:27.867Z'
+      npm > node-gyp > request > hawk > boom > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
     - npm > node-gyp > request > hawk > boom > hoek:
         patched: '2018-08-08T09:59:27.867Z'
+      npm > npm-lifecycle > node-gyp > request > hawk > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
     - npm > libcipm > npm-lifecycle > node-gyp > request > hawk > hoek:
         patched: '2018-08-08T09:59:27.867Z'
+      npm > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
     - npm > libcipm > npm-lifecycle > node-gyp > request > hawk > boom > hoek:
         patched: '2018-08-08T09:59:27.867Z'
+      npm > node-gyp > request > hawk > sntp > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
     - npm > npm-lifecycle > node-gyp > request > hawk > cryptiles > boom > hoek:
         patched: '2018-08-08T09:59:27.867Z'
+      npm > npm-registry-client > request > hawk > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
     - npm > libcipm > npm-lifecycle > node-gyp > request > hawk > sntp > hoek:
         patched: '2018-08-08T09:59:27.867Z'
+      npm > node-gyp > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
     - npm > libcipm > npm-lifecycle > node-gyp > request > hawk > cryptiles > boom > hoek:
         patched: '2018-08-08T09:59:27.867Z'
+      npm > libcipm > npm-lifecycle > node-gyp > request > hawk > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
+    - npm > npm-lifecycle > node-gyp > request > hawk > boom > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
+    - npm > npm-registry-client > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
+    - npm > npm-lifecycle > node-gyp > request > hawk > sntp > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
+    - npm > npm-lifecycle > node-gyp > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
+    - npm > libcipm > npm-lifecycle > node-gyp > request > hawk > sntp > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
+    - npm > libcipm > npm-lifecycle > node-gyp > request > hawk > boom > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
+    - npm > libcipm > npm-lifecycle > node-gyp > request > hawk > cryptiles > boom > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
+    - npm > npm-registry-client > request > hawk > boom > hoek:
+        patched: '2018-09-19T23:43:04.836Z'
+ignore: {}
