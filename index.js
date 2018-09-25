@@ -16,7 +16,7 @@ const express = require("express"),
 require("dotenv").config();
 
 // Set up middleware, db
-  const db = require("./models");
+const db = require("./models");
 
 const PORT = process.env.PORT || 3000,
   IP = process.env.IP || "0.0.0.0";
