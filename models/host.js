@@ -1,4 +1,5 @@
-const mongoose = require("mongoose");
+const mongoose = require("mongoose"),
+  db = require("./index");
 
 var hostSchema = new mongoose.Schema({
   hostname: {
