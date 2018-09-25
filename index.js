@@ -16,9 +16,7 @@ const express = require("express"),
 require("dotenv").config();
 
 // Set up middleware, db
-const middleware = require("./middleware"),
-  db = require("./models"),
-  { checkDirectorySync } = middleware;
+  const db = require("./models");
 
 const PORT = process.env.PORT || 3000,
   IP = process.env.IP || "0.0.0.0";
@@ -30,9 +28,6 @@ const indexRoutes = require("./routes/index"),
   alarmRoutes = require("./routes/alarms"),
   apiRoutes = require("./routes/api");
 errorHandler = require("./helpers/error");
-
-// Check if logging dir exists
-checkDirectorySync("./logs");
 
 // Logger
 app.use(morgan("dev"));
@@ -52,7 +47,6 @@ var sess = {
   }
 };
 if (app.get("env") === "production") {
-  app.set("trust proxy", 1); // trust first proxy
   sess.cookie.secure = true; // serve secure cookies
 }
 

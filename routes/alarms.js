@@ -9,13 +9,13 @@ const express = require("express"),
   { isLoggedIn } = auth;
 
 // Check sound directory exists
-checkDirectorySync("./public/sounds");
+checkDirectorySync(process.env.SOUND_DIR);
 // MULTER
 var multer = require("multer");
 var storage = multer.diskStorage({
   //Setup where the user's file will go
   destination(req, file, callback) {
-    callback(null, "./public/sounds");
+    callback(null, process.env.SOUND_DIR);
   },
   filename(req, file, callback) {
     callback(null, Date.now() + file.originalname);
