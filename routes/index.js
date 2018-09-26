@@ -28,15 +28,4 @@ router
 // Logout
 router.get("/logout", helpers.logoutUser);
 
-// forgot password
-router
-  .route("/forgot")
-  .get(helpers.forgotPassword)
-  .post(helpers.resetPassword);
-
-router
-  .route("/reset/:token")
-  .get(helpers.setNewPassword)
-  .post(helpers.newPassword);
-
 module.exports = router;
