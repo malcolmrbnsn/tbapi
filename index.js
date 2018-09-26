@@ -46,9 +46,6 @@ var sess = {
     maxAge: 3600000
   }
 };
-if (app.get("env") === "production") {
-  sess.cookie.secure = true; // serve secure cookies
-}
 
 app.use(session(sess));
 // Passport
