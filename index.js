@@ -10,7 +10,7 @@
 const express = require("express"),
   http = require("http"),
   https = require("https"),
-  fs = require("fs"),
+  fs = require("fs"),3
   path = require("path"),
   app = express();
 require("dotenv").config();
@@ -119,7 +119,7 @@ http.createServer(app).listen(HTTP_PORT, IP);
 console.log(`SERVER: Running on http://${IP}:${HTTP_PORT}`);
 
 // HTTPS server
-if (process.env.NODE_ENV === "prod") {
+if (process.env.NODE_ENV === "production") {
   const certDir = process.env.SSL_CERT_DIR;
   // Certificate
   const privateKey = fs.readFileSync(path.join(certDir, "privkey.pem"), "utf8");
