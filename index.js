@@ -10,7 +10,7 @@
 const express = require("express"),
   http = require("http"),
   https = require("https"),
-  fs = require("fs"),3
+  fs = require("fs"),
   path = require("path"),
   app = express();
 require("dotenv").config();
@@ -116,10 +116,11 @@ app.use(errorHandler);
 
 // HTTP server
 http.createServer(app).listen(HTTP_PORT, IP);
-console.log(`SERVER: Running on http://${IP}:${HTTP_PORT}`);
+console.log(`HTTP-SERVER: Running on http://${IP}:${HTTP_PORT}`);
 
 // HTTPS server
-if (process.env.NODE_ENV === "production") {
+const HTTPS_status = process.env.HTTPS_STATUS || "off";
+if (HTTPS_status === "on") {
   const certDir = process.env.SSL_CERT_DIR;
   // Certificate
   const privateKey = fs.readFileSync(path.join(certDir, "privkey.pem"), "utf8");
@@ -132,5 +133,5 @@ if (process.env.NODE_ENV === "production") {
     ca
   };
   https.createServer(credentials, app).listen(HTTPS_PORT, IP);
-  console.log(`SERVER: Running on http://${IP}:${HTTPS_PORT}`);
+  console.log(`HTTPS-SERVER: Running on https://${IP}:${HTTPS_PORT}`);
 }
