@@ -17,6 +17,7 @@ require("dotenv").config();
 
 // Set up middleware, db
 const db = require("./models");
+const databaseUri = process.env.DB_URI || "mongodb://localhost/tbapi";
 
 const PORT = process.env.PORT || 3000,
   IP = process.env.IP || "0.0.0.0";
@@ -36,7 +37,7 @@ app.use(morgan("dev"));
 var sess = {
   secret: process.env.SESSION_SECRET,
   store: new mongoStore({
-    url: process.env.DB_URI
+    url: databaseUri
   }),
   resave: false,
   saveUninitialized: false,
