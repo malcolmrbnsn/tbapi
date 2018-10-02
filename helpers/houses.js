@@ -137,6 +137,7 @@ exports.deleteHouse = async (req, res, next) => {
     const house = db.House.findById(req.params.id);
     await cloudinary.v2.uploader.destroy(house.imageId);
     req.flash("success", "House deleted successfully!");
+    house.remove();
 
     return res.redirect("/houses");
   } catch (err) {
