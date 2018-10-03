@@ -1,7 +1,7 @@
 const db = require("../models");
 
 // Cloundinary
-var cloudinary = require("cloudinary");
+const cloudinary = require("cloudinary");
 cloudinary.config({
   cloud_name: "tbapi",
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -64,6 +64,7 @@ exports.createHouse = async (req, res, next) => {
     const result = await cloudinary.v2.uploader.upload(req.file.path, {
       eager: eagerOptions
     });
+    console.log("CLOUDINARY: " + result);
     // add cloudinary url for the image to the house object under image property
     req.body.house.image = result.eager[0].secure_url;
     // add image's public_id to house object
@@ -134,7 +135,7 @@ exports.updateHouse = async (req, res, next) => {
 // Delete
 exports.deleteHouse = async (req, res, next) => {
   try {
-    const house = db.House.findById(req.params.id);
+    const house = await db.House.findById(req.params.id);
     await cloudinary.v2.uploader.destroy(house.imageId);
     req.flash("success", "House deleted successfully!");
     house.remove();
