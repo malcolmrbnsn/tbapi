@@ -125,7 +125,6 @@ if (HTTPS_status === "on") {
   // Certificate
   const privateKey = fs.readFileSync(path.join(certDir, "privkey.pem"), "utf8");
   const certificate = fs.readFileSync(path.join(certDir, "cert.pem"), "utf8");
-  const ca = fs.readFileSync(path.join(certDir, "chain.pem"), "utf8");
 
   const credentials = {
     key: privateKey,

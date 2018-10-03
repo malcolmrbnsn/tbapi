@@ -64,7 +64,6 @@ exports.createHouse = async (req, res, next) => {
     const result = await cloudinary.v2.uploader.upload(req.file.path, {
       eager: eagerOptions
     });
-    console.log("CLOUDINARY: " + result);
     // add cloudinary url for the image to the house object under image property
     req.body.house.image = result.eager[0].secure_url;
     // add image's public_id to house object
