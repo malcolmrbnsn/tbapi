@@ -128,8 +128,7 @@ if (HTTPS_status === "on") {
 
   const credentials = {
     key: privateKey,
-    cert: certificate,
-    ca
+    cert: certificate
   };
   https.createServer(credentials, app).listen(HTTPS_PORT, IP);
   console.log(`HTTPS-SERVER: Running on https://${IP}:${HTTPS_PORT}`);
