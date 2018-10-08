@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "test": "snyk test",
-    "pretest": "prettier --write **/*.js"
+    "pretest": "prettier --write **/*.js;eslint . --fix --ext .js"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
