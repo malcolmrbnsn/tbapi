@@ -1,9 +1,5 @@
 const mongoose = require("mongoose");
-const env = process.env.NODE_ENV || "development";
 
-if (env !== "production") {
-  // mongoose.set('debug', true);
-}
 // Mongoose
 mongoose.Promise = global.Promise;
 const databaseUri = process.env.DB_URI || "mongodb://localhost/tbapi";
@@ -15,6 +11,8 @@ mongoose
   )
   .then(() => console.log(`Database connected`))
   .catch(err => console.log(`Database connection error: ${err.message}`));
+
+ mongoose.set("useCreateIndex", true); // Hides collection.ensureIndex deprication warning
 
 module.exports.House = require("./house");
 module.exports.User = require("./user");
