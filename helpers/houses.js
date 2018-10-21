@@ -1,7 +1,7 @@
 const db = require("../models");
 
 // Cloundinary
-var cloudinary = require("cloudinary");
+const cloudinary = require("cloudinary");
 cloudinary.config({
   cloud_name: "tbapi",
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -134,9 +134,10 @@ exports.updateHouse = async (req, res, next) => {
 // Delete
 exports.deleteHouse = async (req, res, next) => {
   try {
-    const house = db.House.findById(req.params.id);
+    const house = await db.House.findById(req.params.id);
     await cloudinary.v2.uploader.destroy(house.imageId);
     req.flash("success", "House deleted successfully!");
+    house.remove();
 
     return res.redirect("/houses");
   } catch (err) {

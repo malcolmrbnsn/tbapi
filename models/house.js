@@ -29,12 +29,16 @@ var houseSchema = new mongoose.Schema({
 
 houseSchema.pre("remove", function(next) {
   try {
-    house.hosts.forEach(host => {
-      Host.findByIdAndRemove(host._id);
-    });
-    house.alarms.forEach(alarm => {
-      Alarm.findByIdAndRemove(alarm);
-    });
+    if (this.hosts) {
+      this.hosts.forEach(host => {
+        Host.findByIdAndRemove(host._id);
+      });
+    }
+    if (this.alarms) {
+      this.alarms.forEach(alarm => {
+        Alarm.findByIdAndRemove(alarm);
+      });
+    }
 
     return next();
   } catch (err) {
