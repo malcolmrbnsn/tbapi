@@ -82,7 +82,10 @@ exports.updateAlarm = async (req, res, next) => {
     const alarm = await db.Alarm.findById(req.params.alarm_id);
     if (req.file) {
       // Delete old sounc
-      fs.unlink(alarm.file.fullpath);
+      fs.unlink(alarm.file.fullpath, err => {
+        console.log(err);
+        // TODO: throw an error here
+      });
       alarm.file.url = "/sounds/" + req.file.filename;
       alarm.file.name = req.file.originalname;
       alarm.file.fullpath = req.file.path;
