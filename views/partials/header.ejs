@@ -32,7 +32,9 @@
         <a class="ui item" href="#">
           Logged in as <%= currentUser.username %>
         </a>
+        <% if(currentUser.isAdmin){ %>
         <a class="ui item <%= typeof page !== 'undefined' && page === 'options' ? 'active' : '' %>" href="/options">Options</a>
+        <% } %>
         <a class="ui item" href="/logout">Logout</a>
         <% } %>
   </div>
@@ -50,7 +52,9 @@
           <a class="ui item desktop-only" href="#">
             Logged in as <%= currentUser.username %>
           </a>
+          <% if(currentUser.isAdmin){ %>
           <a class="ui item <%= typeof page !== 'undefined' && page === 'options' ? 'active' : '' %> desktop-only" href="/options">Options</a>
+          <% } %>
           <a class="ui item desktop-only" href="/logout">Logout</a>
           <% } %>
             <a class="ui item mobile-only" id="expandheader">
