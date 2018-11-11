@@ -27,6 +27,7 @@ const indexRoutes = require("./routes/index"),
   hostRoutes = require("./routes/hosts"),
   alarmRoutes = require("./routes/alarms"),
   apiRoutes = require("./routes/api"),
+  optionRoutes = require("./routes/options"),
   errorHandler = require("./helpers/error");
 
 // Logger
@@ -100,6 +101,7 @@ app.use("/houses", houseRoutes);
 app.use("/api", apiRoutes);
 app.use("/houses/:id/hosts", hostRoutes);
 app.use("/houses/:id/alarms", alarmRoutes);
+app.use("/options", optionRoutes)
 
 // Error listener
 app.use(function(error, req, res, next) {
