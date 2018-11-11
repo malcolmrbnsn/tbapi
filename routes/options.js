@@ -1,10 +1,9 @@
-const express = require('express'),
-    router = express.Router()
+const express = require("express"),
+  router = express.Router(),
+  helpers = require("../helpers/options"),
+  auth = require("../middleware/auth"),
+  { isAdmin } = auth;
 
-
-router.get("/", (req, res, next) => {
-    res.send("HELLO!")
-})
-
+router.get("/", isAdmin, helpers.showOptions);
 
 module.exports = router;

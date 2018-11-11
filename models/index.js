@@ -12,7 +12,7 @@ mongoose
   .then(() => console.log(`Database connected`))
   .catch(err => console.log(`Database connection error: ${err.message}`));
 
- mongoose.set("useCreateIndex", true); // Hides collection.ensureIndex deprication warning
+mongoose.set("useCreateIndex", true); // Hides collection.ensureIndex deprication warning
 
 module.exports.House = require("./house");
 module.exports.User = require("./user");

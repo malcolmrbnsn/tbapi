@@ -101,7 +101,7 @@ app.use("/houses", houseRoutes);
 app.use("/api", apiRoutes);
 app.use("/houses/:id/hosts", hostRoutes);
 app.use("/houses/:id/alarms", alarmRoutes);
-app.use("/options", optionRoutes)
+app.use("/options", optionRoutes);
 
 // Error listener
 app.use(function(error, req, res, next) {
