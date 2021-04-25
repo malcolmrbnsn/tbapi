@@ -17,7 +17,7 @@ require("dotenv").config();
 
 // Options
 const databaseUri = process.env.DB_URI || "mongodb://localhost/tbapi",
-  HTTP_PORT = process.env.HTTP_PORT || 3000,
+  HTTP_PORT = process.env.PORT || 3000,
   HTTPS_PORT = process.env.HTTPS_PORT || 3001,
   IP = process.env.IP || "0.0.0.0";
 
