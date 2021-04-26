@@ -4,13 +4,18 @@ const mongoose = require("mongoose"),
 var hostSchema = new mongoose.Schema({
   hostname: {
     type: String,
-    unique: true
+    unique: true,
+    required: true
   },
-  name: String,
+  name: {
+    type: String,
+    required: true
+  },
   house: {
     id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "House"
+      ref: "House",
+      required: true
     }
   },
   alarms: [
@@ -21,7 +26,8 @@ var hostSchema = new mongoose.Schema({
   ],
   created: {
     type: Date,
-    default: Date.now
+    default: Date.now,
+    required: true
   }
 });
 

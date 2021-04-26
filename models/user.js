@@ -7,17 +7,19 @@ var UserSchema = new mongoose.Schema({
     unique: true,
     required: true
   },
-  password: String,
+  password: {
+    type: String,
+    required: true
+  },
   email: {
     type: String,
     unique: true,
     required: true
   },
-  resetPasswordToken: String,
-  resetPasswordExpires: Date,
   isAdmin: {
     type: Boolean,
-    default: false
+    default: false,
+    required: true
   }
 });
 

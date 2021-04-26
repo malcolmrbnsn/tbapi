@@ -64,12 +64,16 @@ exports.createHouse = async (req, res, next) => {
     const result = await cloudinary.v2.uploader.upload(req.file.path, {
       eager: eagerOptions
     });
+
     // add cloudinary url for the image to the house object under image property
     req.body.house.image = result.eager[0].secure_url;
+
     // add image's public_id to house object
     req.body.house.imageId = result.public_id;
+
     // add author to house
     req.body.house.author = req.user._id;
+
     const house = await db.House.create(req.body.house);
     req.flash("success", "House created");
 

@@ -5,13 +5,21 @@ const mongoose = require("mongoose"),
 var houseSchema = new mongoose.Schema({
   name: {
     type: String,
-    unique: true
+    unique: true,
+    required: true
   },
-  image: String,
-  imageId: String,
+  image: {
+    type: String,
+    required: true
+  },
+  imageId: {
+    type: String,
+    required: true
+  },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
+    required: true
   },
   hosts: [
     {

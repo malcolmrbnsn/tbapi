@@ -6,13 +6,20 @@ var alarmSchema = new mongoose.Schema({
     type: String,
     required: true
   },
-  minute: Number,
-  hour: Number,
-  dow: [],
+  minute: {
+    type: Number,
+    required: true
+  },
+  hour: {
+    type: Number,
+    required: true
+  },
+  dow: [Number],
   house: {
     id: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "House"
+      ref: "House",
+      required: true
     }
   },
   hosts: [
@@ -23,22 +30,30 @@ var alarmSchema = new mongoose.Schema({
   ],
   file: {
     url: {
-      type: String
+      type: String,
+      required: true
     },
     name: {
-      type: String
+      type: String,
+      required: true
     },
     fullpath: {
-      type: String
+      type: String,
+      required: true
     }
   },
   sound: {
-    type: String
+    type: String,
+    required: true
   },
-  soundId: String,
+  soundId: {
+    type: String,
+    required: true
+  },
   author: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "User"
+    ref: "User",
+    required: true
   },
   created: {
     type: Date,
@@ -46,7 +61,8 @@ var alarmSchema = new mongoose.Schema({
   },
   active: {
     type: Boolean,
-    default: true
+    default: true,
+    required: true
   }
 });
 
